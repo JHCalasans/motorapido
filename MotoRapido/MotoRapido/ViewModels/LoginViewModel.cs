@@ -1,0 +1,100 @@
+﻿using Prism.Commands;
+using Prism.Mvvm;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Security.Cryptography;
+using System.Text;
+using Acr.UserDialogs;
+using MotoRapido.Models;
+using Newtonsoft.Json;
+using Prism.Navigation;
+using Prism.Services;
+
+namespace MotoRapido.ViewModels
+{
+    public class LoginViewModel : ViewModelBase
+    {
+
+        public DelegateCommand LoginCommand => new DelegateCommand(Logar);
+
+        private String _login;
+
+        public String Login
+        {
+            get { return _login; }
+            set { SetProperty(ref _login, value); }
+
+        }
+
+        private String _senha;
+
+        public String Senha
+        {
+            get { return _senha; }
+            set { SetProperty(ref _senha, value); }
+
+        }
+
+        public LoginViewModel(INavigationService navigationService, IPageDialogService dialogService)
+            : base(navigationService, dialogService)
+        {
+        }
+
+
+        private async void Logar()
+        {
+            try
+            {
+                UserDialogs.Instance.ShowLoading("Carregando...");
+                Motorista motorista = new Motorista();
+                motorista.senha = HashPassword(Senha);
+                motorista.login = Login;
+                var json = JsonConvert.SerializeObject(motorista);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await IniciarCliente().PostAsync("motorista/login", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var respStr = await response.Content.ReadAsStringAsync();
+                    MotoristaLogado = JsonConvert.DeserializeObject<Motorista>(respStr);
+                    await NavigationService.NavigateAsync("Home");
+                }
+                else
+                {
+                    await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
+                }
+
+            }
+            catch (Exception e)
+            {
+                await DialogService.DisplayAlertAsync("Aviso", "Falha ao efetuar login", "OK");
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
+
+
+        }
+
+        private static string HashPassword(string str)
+        {
+            SHA256 sha256 = SHA256Managed.Create();
+            byte[] bytes = Encoding.UTF8.GetBytes(str);
+            byte[] hash = sha256.ComputeHash(bytes);
+            return GetStringFromHash(hash);
+        }
+        private static string GetStringFromHash(byte[] hash)
+        {
+            StringBuilder result = new StringBuilder();
+            for (int i = 0; i < hash.Length; i++)
+            {
+                result.Append(hash[i].ToString("X2"));
+            }
+            return result.ToString();
+        }
+    }
+}
