@@ -6,7 +6,11 @@
              x:Class="MotoRapido.Views.Login" 
              NavigationPage.HasNavigationBar="False" >
 
-    <AbsoluteLayout BackgroundColor="#DFE7EE">
+    <AbsoluteLayout >
+
+        <Image Source="background.png" AbsoluteLayout.LayoutBounds="0,0,1,1"
+               AbsoluteLayout.LayoutFlags="All" Aspect="AspectFill"></Image>
+
         <Image Source="logo_motorapido.png" AbsoluteLayout.LayoutBounds="0.5,0.3,0.6,0.2"
                AbsoluteLayout.LayoutFlags="All"></Image>
         

@@ -1,4 +1,5 @@
-﻿using MotoRapido.ViewModels;
+﻿using Acr.Settings;
+using MotoRapido.ViewModels;
 using MotoRapido.Views;
 using Prism.Unity;
 using Xamarin.Forms;
@@ -21,8 +22,10 @@ namespace MotoRapido
         protected override async void OnInitialized()
         {
             InitializeComponent();
-
-            await NavigationService.NavigateAsync("NavigationPage/Login");
+            if(Settings.Current.Contains("MotoristaLogado"))
+                await NavigationService.NavigateAsync("NavigationPage/Home");
+            else
+                await NavigationService.NavigateAsync("NavigationPage/Login");
         }
 
         protected override void RegisterTypes()

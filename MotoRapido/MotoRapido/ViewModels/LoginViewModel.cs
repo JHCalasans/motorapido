@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using Acr.Settings;
 using Acr.UserDialogs;
 using MotoRapido.Models;
 using Newtonsoft.Json;
@@ -54,13 +55,13 @@ namespace MotoRapido.ViewModels
                 var json = JsonConvert.SerializeObject(motorista);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await IniciarCliente().PostAsync("motorista/login", content);
+                var response = await IniciarCliente(false).PostAsync("motorista/login", content);
 
                 if (response.IsSuccessStatusCode)
                 {
                     var respStr = await response.Content.ReadAsStringAsync();
-                    MotoristaLogado = JsonConvert.DeserializeObject<Motorista>(respStr);
-                    await NavigationService.NavigateAsync("Home");
+                    Settings.Current.Set("MotoristaLogado", JsonConvert.DeserializeObject<Motorista>(respStr));
+                    await NavigationService.NavigateAsync("//NavigationPage/Home");
                 }
                 else
                 {

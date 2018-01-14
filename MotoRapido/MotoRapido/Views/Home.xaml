@@ -1,12 +1,78 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             xmlns:customs="clr-namespace:MotoRapido.Customs;assembly=MotoRapido"
+             xmlns:renderers="clr-namespace:MotoRapido.Renderers;assembly=MotoRapido"
+             xmlns:forms="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:transformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MotoRapido.Views.Home"
-             Title="Home">
-    
-     
-    
-  
+             Title="Início" >
+
+    <StackLayout >
+        <Grid Margin="0,10,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.usuario.png}" Grid.RowSpan="2" WidthRequest="100" HeightRequest="100" Grid.Row="0" Grid.Column="0" Margin="15,0,15,0" VerticalOptions="Center" ></Image>
+
+           
+            <Label Text="{Binding MotoristaLogado.nome}" Grid.Row="0"  Grid.Column="1" FontSize="20"  VerticalOptions="Center" VerticalTextAlignment="Center"
+                   Margin="0,15,0,0" FontAttributes="Bold" Grid.ColumnSpan="2"></Label>
+
+            <!--<Label Text="Livre" Grid.Row="1"  Grid.Column="1" FontSize="20"  VerticalOptions="Center" VerticalTextAlignment="Center"></Label>-->
+
+            <renderers:CurvedCornersLabel Text="  Livre  " CurvedBackgroundColor="#00BB00" TextColor="White" FontAttributes="Bold" CurvedCornerRadius="10" HorizontalTextAlignment="Center"
+                                          Grid.Row="1"  Grid.Column="1" FontSize="20"  VerticalOptions="Center" VerticalTextAlignment="Center"></renderers:CurvedCornersLabel>
+
+            <Label Text="Pos.: 10" Grid.Row="1"  Grid.Column="2" FontSize="20"  VerticalOptions="Center" VerticalTextAlignment="Center"
+                    FontAttributes="Bold" Margin="5,0,0,0"></Label>
+        </Grid>
+        
+        <BoxView HeightRequest="2" BackgroundColor="Blue"></BoxView>
+
+        <Grid ColumnSpacing="20" Margin="10,10,10,10" RowSpacing="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_ocupado.png}" Grid.Row="0" Grid.Column="0" WidthRequest="100" HeightRequest="100">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding DisponibilidadeCommand}" NumberOfTapsRequired="1"></TapGestureRecognizer>
+                </Image.GestureRecognizers>
+            </Image>
+
+            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_ocupado.png}" Grid.Row="0" Grid.Column="1" WidthRequest="100" HeightRequest="100"></Image>
+
+            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_ocupado.png}" Grid.Row="1" Grid.Column="0" WidthRequest="100" HeightRequest="100"></Image>
+
+            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_ocupado.png}" Grid.Row="1" Grid.Column="1" WidthRequest="100" HeightRequest="100"></Image>
+
+            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_ocupado.png}" Grid.Row="2" Grid.Column="0" WidthRequest="100" HeightRequest="100"></Image>
+
+            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_ocupado.png}" Grid.Row="2" Grid.Column="1" WidthRequest="100" HeightRequest="100"></Image>
+        </Grid>
+        
+
+
+
+
+    </StackLayout>
+
+
 </ContentPage>

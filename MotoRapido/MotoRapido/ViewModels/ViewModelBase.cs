@@ -3,8 +3,11 @@ using Prism.Mvvm;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Text;
+using Acr.Settings;
+using MotoRapido.Interfaces;
 using MotoRapido.Models;
 using Prism.Services;
 
@@ -50,15 +53,24 @@ namespace MotoRapido.ViewModels
         }
 
 
-        protected Motorista MotoristaLogado { get; set; }
+        public Motorista MotoristaLogado
+        {
+            get { return Settings.Current.Get<Motorista>("MotoristaLogado"); }
+        }
 
-        protected HttpClient IniciarCliente()
+       
+
+
+        protected HttpClient IniciarCliente(bool comChave)
         {
             var client = new HttpClient();
             client.Timeout = TimeSpan.FromMilliseconds(35000);
             client.BaseAddress = new Uri("http://192.168.0.15:8080/motorapido/ws/");
+            if (comChave)
+                client.DefaultRequestHeaders.Add("Authentication", MotoristaLogado.chaveServicos);
             return client;
-            // client.DefaultRequestHeaders.Add("Authentication",);
         }
+
+
     }
 }
