@@ -5,8 +5,6 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              xmlns:customs="clr-namespace:MotoRapido.Customs;assembly=MotoRapido"
              xmlns:renderers="clr-namespace:MotoRapido.Renderers;assembly=MotoRapido"
-             xmlns:forms="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
-             xmlns:transformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MotoRapido.Views.Home"
              Title="Início" >
@@ -31,8 +29,11 @@
 
             <!--<Label Text="Livre" Grid.Row="1"  Grid.Column="1" FontSize="20"  VerticalOptions="Center" VerticalTextAlignment="Center"></Label>-->
 
-            <renderers:CurvedCornersLabel Text="  Livre  " CurvedBackgroundColor="#00BB00" TextColor="White" FontAttributes="Bold" CurvedCornerRadius="10" HorizontalTextAlignment="Center"
-                                          Grid.Row="1"  Grid.Column="1" FontSize="20"  VerticalOptions="Center" VerticalTextAlignment="Center"></renderers:CurvedCornersLabel>
+            <renderers:CurvedCornersLabel Text=" Livre " CurvedBackgroundColor="#00BB00" TextColor="White" FontAttributes="Bold" CurvedCornerRadius="10" HorizontalTextAlignment="Center"
+                                          Grid.Row="1"  Grid.Column="1" FontSize="20"  VerticalOptions="Center" VerticalTextAlignment="Center" IsVisible="{Binding EstaLivre}"></renderers:CurvedCornersLabel>
+
+            <renderers:CurvedCornersLabel Text=" Ocupado " CurvedBackgroundColor="#BB0000" TextColor="White" FontAttributes="Bold" CurvedCornerRadius="10" HorizontalTextAlignment="Center"
+                                          Grid.Row="1"  Grid.Column="1" FontSize="20"  VerticalOptions="Center" VerticalTextAlignment="Center" IsVisible="{Binding EstaLivre, Converter={StaticResource BooleanConverter}}"></renderers:CurvedCornersLabel>
 
             <Label Text="Pos.: 10" Grid.Row="1"  Grid.Column="2" FontSize="20"  VerticalOptions="Center" VerticalTextAlignment="Center"
                     FontAttributes="Bold" Margin="5,0,0,0"></Label>
@@ -40,8 +41,9 @@
         
         <BoxView HeightRequest="2" BackgroundColor="Blue"></BoxView>
 
-        <Grid ColumnSpacing="20" Margin="10,10,10,10" RowSpacing="20">
+        <Grid ColumnSpacing="10" Margin="30,20,30,10" RowSpacing="20">
             <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
@@ -51,21 +53,25 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_ocupado.png}" Grid.Row="0" Grid.Column="0" WidthRequest="100" HeightRequest="100">
+            <Image Source="{Binding ImgDisponibilidade}" Grid.Row="0" Grid.Column="0" WidthRequest="130" HeightRequest="130">
                 <Image.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding DisponibilidadeCommand}" NumberOfTapsRequired="1"></TapGestureRecognizer>
                 </Image.GestureRecognizers>
             </Image>
 
-            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_ocupado.png}" Grid.Row="0" Grid.Column="1" WidthRequest="100" HeightRequest="100"></Image>
+            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_ocupado.png}" Grid.Row="0" Grid.Column="1" WidthRequest="130" HeightRequest="130"></Image>
 
-            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_ocupado.png}" Grid.Row="1" Grid.Column="0" WidthRequest="100" HeightRequest="100"></Image>
+            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_ocupado.png}" Grid.Row="1" Grid.Column="0" WidthRequest="130" HeightRequest="130"></Image>
 
-            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_ocupado.png}" Grid.Row="1" Grid.Column="1" WidthRequest="100" HeightRequest="100"></Image>
+            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_ocupado.png}" Grid.Row="1" Grid.Column="1" WidthRequest="130" HeightRequest="130"></Image>
 
-            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_ocupado.png}" Grid.Row="2" Grid.Column="0" WidthRequest="100" HeightRequest="100"></Image>
+            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_ocupado.png}" Grid.Row="2" Grid.Column="0" WidthRequest="130" HeightRequest="130"></Image>
 
-            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_ocupado.png}" Grid.Row="2" Grid.Column="1" WidthRequest="100" HeightRequest="100"></Image>
+            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_ocupado.png}" Grid.Row="2" Grid.Column="1" WidthRequest="130" HeightRequest="130"></Image>
+
+            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_ocupado.png}" Grid.Row="3" Grid.Column="0" WidthRequest="130" HeightRequest="130"></Image>
+
+            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_ocupado.png}" Grid.Row="3" Grid.Column="1" WidthRequest="130" HeightRequest="130"></Image>
         </Grid>
         
 

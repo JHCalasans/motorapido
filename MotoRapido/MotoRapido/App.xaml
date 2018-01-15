@@ -3,6 +3,7 @@
 <prism:PrismApplication xmlns="http://xamarin.com/schemas/2014/forms"
                         xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                         xmlns:prism="clr-namespace:Prism.Unity;assembly=Prism.Unity.Forms"
+                        xmlns:customs="clr-namespace:MotoRapido.Customs;assembly=MotoRapido"
                         x:Class="MotoRapido.App">
     <Application.Resources>
 
@@ -18,6 +19,10 @@
                 <Setter Property="BackgroundImage" Value="background.png"/>
             </Style>
             <!-- Styles -->
+
+
+            <!--Converter de booleano-->
+            <customs:InverseBooleanConverter x:Key="BooleanConverter"></customs:InverseBooleanConverter>
         </ResourceDictionary>
 
     </Application.Resources>

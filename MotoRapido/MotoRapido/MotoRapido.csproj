@@ -5,12 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Imagens\btn_disponivel.png" />
     <None Remove="Imagens\btn_ocupado.png" />
     <None Remove="Imagens\usuario.png" />
     <None Remove="perfil.jpg" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Imagens\btn_disponivel.png" />
     <EmbeddedResource Include="Imagens\btn_ocupado.png" />
   </ItemGroup>
 
@@ -23,8 +25,6 @@
     <PackageReference Include="Acr.UserDialogs" Version="6.5.1" />
     <PackageReference Include="Microsoft.Net.Http" Version="2.2.29" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.1-beta1" />
-    <PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.3.2" />
-    <PackageReference Include="Xamarin.FFImageLoading.Transformations" Version="2.3.2" />
     <PackageReference Include="Xamarin.Forms" Version="2.5.0.121934" />
     <PackageReference Include="Prism.Unity.Forms" Version="7.0.0.269-pre" />
   </ItemGroup>

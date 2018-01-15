@@ -13,6 +13,7 @@ using MotoRapido.Views;
 using Newtonsoft.Json;
 using Prism.Navigation;
 using Prism.Services;
+using Xamarin.Forms;
 
 namespace MotoRapido.ViewModels
 {
@@ -20,15 +21,41 @@ namespace MotoRapido.ViewModels
     {
         public DelegateCommand DisponibilidadeCommand => new DelegateCommand(AlterarDisponibilidade);
 
+        private ImageSource _imgDisponibilidade;
+
+        public ImageSource ImgDisponibilidade
+        {
+            get { return _imgDisponibilidade; }
+            set { SetProperty(ref _imgDisponibilidade, value); }
+        }
+
+        private Boolean _estaLivre;
+
+        public Boolean EstaLivre
+        {
+            get { return _estaLivre; }
+            set { SetProperty(ref _estaLivre, value); }
+        }
+
         public HomeViewModel(INavigationService navigationService, IPageDialogService dialogService)
             : base(navigationService, dialogService)
         {
-            
         }
 
         public override void OnNavigatingTo(NavigationParameters parameters)
         {
-           
+            if (MotoristaLogado.disponivel.Equals("S"))
+            {
+                ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ocupado.png");
+                EstaLivre = true;
+            }
+            else
+            {
+                ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_disponivel.png");
+                EstaLivre = false;
+            }
+
+
         }
 
         private async void AlterarDisponibilidade()
@@ -39,9 +66,25 @@ namespace MotoRapido.ViewModels
 
                 var response = await IniciarCliente(true).GetAsync("motorista/alterarDisponivel?codMotorista="+ MotoristaLogado.codigo);
 
+                Motorista motoTemp = new Motorista();
+                motoTemp = MotoristaLogado;
                 if (response.IsSuccessStatusCode)
                 {
-                    await DialogService.DisplayAlertAsync("Aviso", "Mudou", "OK");
+                    if (motoTemp.disponivel.Equals("S"))
+                    {
+                        motoTemp.disponivel = "N";
+                        ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_disponivel.png");
+                        EstaLivre = false;
+                    }
+                    else
+                    {
+                        motoTemp.disponivel = "S";
+                        ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ocupado.png");
+                        EstaLivre = true;
+                    }
+
+                    Settings.Current.Set("MotoristaLogado", motoTemp);
+                    // await DialogService.DisplayAlertAsync("Aviso", "Mudou", "OK");
                 }
                 else
                 {
