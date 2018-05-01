@@ -2,6 +2,7 @@
 using MotoRapido.ViewModels;
 using MotoRapido.Views;
 using Prism.Unity;
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -22,7 +23,13 @@ namespace MotoRapido
         protected override async void OnInitialized()
         {
             InitializeComponent();
-            if(Settings.Current.Contains("MotoristaLogado"))
+            //Device.StartTimer(TimeSpan.FromSeconds(10), () =>
+            //{
+            //    // Do something
+            //     Application.Current.MainPage.DisplayAlert("Aviso", "Falha ao efetuar login", "OK");
+            //    return true;  // True = Repeat again, False = Stop the timer
+            //});
+            if (CrossSettings.Current.Contains("MotoristaLogado"))
                 await NavigationService.NavigateAsync("NavigationPage/Home");
             else
                 await NavigationService.NavigateAsync("NavigationPage/Login");

@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using MotoRapido.ViewModels;
+using Xamarin.Forms;
 
 namespace MotoRapido.Views
 {
@@ -7,6 +8,15 @@ namespace MotoRapido.Views
         public Login()
         {
             InitializeComponent();
+        }
+
+        protected override void OnDisappearing()
+        {
+            var tes = BindingContext as LoginViewModel;
+            tes.Dispose();
+            base.OnDisappearing();
+            BindingContext = null;
+            Content = null;
         }
     }
 }

@@ -10,6 +10,7 @@ using Acr.Settings;
 using MotoRapido.Interfaces;
 using MotoRapido.Models;
 using Prism.Services;
+using MotoRapido.Customs;
 
 namespace MotoRapido.ViewModels
 {
@@ -19,12 +20,15 @@ namespace MotoRapido.ViewModels
 
         protected IPageDialogService DialogService { get; private set; }
 
-        private string _title;
-        public string Title
+        private StoppableTimer _stoppableTimer;
+
+        public StoppableTimer StoppableTimer
         {
-            get { return _title; }
-            set { SetProperty(ref _title, value); }
+            get => _stoppableTimer;
+            set { SetProperty(ref _stoppableTimer, value); }
         }
+
+
 
         public ViewModelBase(INavigationService navigationService, IPageDialogService dialogService)
         {
@@ -52,10 +56,40 @@ namespace MotoRapido.ViewModels
             
         }
 
+        public void iniciarTimer()
+        {
+            if (StoppableTimer == null)
+                StoppableTimer = new StoppableTimer(TimeSpan.FromSeconds(2), null);
+
+            StoppableTimer.Start();
+            //int count = 0;
+            //Device.StartTimer(TimeSpan.FromSeconds(2), () =>
+            //{
+
+            //    Debug.WriteLine(count + " - " + TimerOn);
+            //    count++;
+            //    return TimerOn; // True = Repeat again, False = Stop the timer
+            //});
+        }
+
+        public void pararTimer()
+        {
+            //StoppableTimer = new StoppableTimer(TimeSpan.FromSeconds(2), teste);
+            StoppableTimer.Stop();
+            //int count = 0;
+            //Device.StartTimer(TimeSpan.FromSeconds(2), () =>
+            //{
+
+            //    Debug.WriteLine(count + " - " + TimerOn);
+            //    count++;
+            //    return TimerOn; // True = Repeat again, False = Stop the timer
+            //});
+        }
+
 
         public Motorista MotoristaLogado
         {
-            get { return Settings.Current.Get<Motorista>("MotoristaLogado"); }
+            get { return CrossSettings.Current.Get<Motorista>("MotoristaLogado"); }
         }
 
        

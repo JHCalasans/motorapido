@@ -14,7 +14,7 @@ namespace MotoRapido.ViewModels
         public MainPageViewModel(INavigationService navigationService,IPageDialogService dialogService) 
             : base (navigationService, dialogService)
         {
-            Title = "Main Page";
+            //Title = "Main Page";
         }
          
        

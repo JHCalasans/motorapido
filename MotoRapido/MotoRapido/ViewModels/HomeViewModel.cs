@@ -83,7 +83,7 @@ namespace MotoRapido.ViewModels
                         EstaLivre = true;
                     }
 
-                    Settings.Current.Set("MotoristaLogado", motoTemp);
+                    CrossSettings.Current.Set("MotoristaLogado", motoTemp);
                     // await DialogService.DisplayAlertAsync("Aviso", "Mudou", "OK");
                 }
                 else

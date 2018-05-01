@@ -43,6 +43,12 @@ namespace MotoRapido.ViewModels
         {
         }
 
+        public void Dispose()
+        {
+            Senha = null;
+            Login = null;
+        }
+
 
         private async void Logar()
         {
@@ -60,7 +66,7 @@ namespace MotoRapido.ViewModels
                 if (response.IsSuccessStatusCode)
                 {
                     var respStr = await response.Content.ReadAsStringAsync();
-                    Settings.Current.Set("MotoristaLogado", JsonConvert.DeserializeObject<Motorista>(respStr));
+                    CrossSettings.Current.Set("MotoristaLogado", JsonConvert.DeserializeObject<Motorista>(respStr));
                     await NavigationService.NavigateAsync("//NavigationPage/Home");
                 }
                 else
