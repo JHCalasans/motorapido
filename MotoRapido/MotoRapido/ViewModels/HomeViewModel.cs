@@ -19,7 +19,7 @@ namespace MotoRapido.ViewModels
 {
 	public class HomeViewModel : ViewModelBase
     {
-        public DelegateCommand DisponibilidadeCommand => new DelegateCommand(AlterarDisponibilidade);
+        public DelegateCommand DisponibilidadeCommand => new DelegateCommand(AlterarDisponibilidade);       
 
         private ImageSource _imgDisponibilidade;
 
@@ -40,6 +40,10 @@ namespace MotoRapido.ViewModels
         public HomeViewModel(INavigationService navigationService, IPageDialogService dialogService)
             : base(navigationService, dialogService)
         {
+            if (MotoristaLogado.disponivel.Equals("S"))
+            {
+                iniciarTimerPosicao();
+            }
         }
 
         public override void OnNavigatingTo(NavigationParameters parameters)
@@ -75,12 +79,15 @@ namespace MotoRapido.ViewModels
                         motoTemp.disponivel = "N";
                         ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_disponivel.png");
                         EstaLivre = false;
+                        pararTimerPosicao();
                     }
                     else
                     {
                         motoTemp.disponivel = "S";
                         ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ocupado.png");
                         EstaLivre = true;
+                        CrossSettings.Current.Set("isTimerOn", true);
+                        iniciarTimerPosicao();
                     }
 
                     CrossSettings.Current.Set("MotoristaLogado", motoTemp);

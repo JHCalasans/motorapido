@@ -42,5 +42,7 @@ namespace MotoRapido
             Container.RegisterTypeForNavigation<Login>();
             Container.RegisterTypeForNavigation<Home>();
         }
+
+        
     }
 }

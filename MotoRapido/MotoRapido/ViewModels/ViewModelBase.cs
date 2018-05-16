@@ -11,15 +11,19 @@ using MotoRapido.Interfaces;
 using MotoRapido.Models;
 using Prism.Services;
 using MotoRapido.Customs;
+using Plugin.Geolocator.Abstractions;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Plugin.Geolocator;
+using Plugin.Permissions;
+using Plugin.Permissions.Abstractions;
 
 namespace MotoRapido.ViewModels
 {
     public class ViewModelBase : BindableBase, INavigationAware, IDestructible
     {
         protected INavigationService NavigationService { get; private set; }
-
         protected IPageDialogService DialogService { get; private set; }
-
         private StoppableTimer _stoppableTimer;
 
         public StoppableTimer StoppableTimer
@@ -27,8 +31,6 @@ namespace MotoRapido.ViewModels
             get => _stoppableTimer;
             set { SetProperty(ref _stoppableTimer, value); }
         }
-
-
 
         public ViewModelBase(INavigationService navigationService, IPageDialogService dialogService)
         {
@@ -38,30 +40,78 @@ namespace MotoRapido.ViewModels
 
         public virtual void OnNavigatedFrom(NavigationParameters parameters)
         {
-            
         }
 
         public virtual void OnNavigatedTo(NavigationParameters parameters)
         {
-            
         }
 
         public virtual void OnNavigatingTo(NavigationParameters parameters)
         {
-            
         }
 
         public virtual void Destroy()
         {
-            
         }
 
-        public void iniciarTimer()
+        public async void Localizar()
         {
-            if (StoppableTimer == null)
-                StoppableTimer = new StoppableTimer(TimeSpan.FromSeconds(2), null);
+            try
+            {
+                var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
+                if (status != PermissionStatus.Granted)
+                {
+                    if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Location))
+                    {
+                        await DialogService.DisplayAlertAsync("Aviso", "Preciso acessar sua localização", "OK");
+                    }
 
-            StoppableTimer.Start();
+                    var results = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Location);
+
+                    if (results.ContainsKey(Permission.Location))
+                        status = results[Permission.Location];
+                }
+
+                if (status == PermissionStatus.Granted)
+                {
+                    var posicao = await GetCurrentPosition();
+                    VerificaPosicaoParam param = new VerificaPosicaoParam
+                    {
+                        codMotorista = MotoristaLogado.codigo,
+                        latitude = posicao.Latitude.ToString(),
+                        longitude = posicao.Longitude.ToString()
+                    };
+
+                    var json = JsonConvert.SerializeObject(param);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                    var response = await IniciarCliente(true).PostAsync("motorista/verificarPosicao", content);
+
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result,
+                            "OK");
+                    }
+                }
+                else if (status != PermissionStatus.Unknown)
+                {
+                    await DialogService.DisplayAlertAsync("Aviso", "Permissão apra acessar localização negada.", "OK");
+                }
+            }
+            catch (Exception e)
+            {
+            }
+        }
+
+        public void iniciarTimerPosicao()
+        {
+            if (StoppableTimer == null) StoppableTimer = new StoppableTimer(TimeSpan.FromSeconds(2), Localizar);
+
+            if (CrossSettings.Current.Get<Boolean>("isTimerOn"))
+                StoppableTimer.Start();
+            // CrossSettings.Current.Set("isTimerOn", true);
+
+
             //int count = 0;
             //Device.StartTimer(TimeSpan.FromSeconds(2), () =>
             //{
@@ -72,10 +122,11 @@ namespace MotoRapido.ViewModels
             //});
         }
 
-        public void pararTimer()
+        public void pararTimerPosicao()
         {
             //StoppableTimer = new StoppableTimer(TimeSpan.FromSeconds(2), teste);
             StoppableTimer.Stop();
+            CrossSettings.Current.Set("isTimerOn", false);
             //int count = 0;
             //Device.StartTimer(TimeSpan.FromSeconds(2), () =>
             //{
@@ -85,26 +136,51 @@ namespace MotoRapido.ViewModels
             //    return TimerOn; // True = Repeat again, False = Stop the timer
             //});
         }
-
 
         public Motorista MotoristaLogado
         {
             get { return CrossSettings.Current.Get<Motorista>("MotoristaLogado"); }
         }
 
-       
-
-
         protected HttpClient IniciarCliente(bool comChave)
         {
             var client = new HttpClient();
             client.Timeout = TimeSpan.FromMilliseconds(35000);
             client.BaseAddress = new Uri("http://192.168.0.15:8080/motorapido/ws/");
-            if (comChave)
-                client.DefaultRequestHeaders.Add("Authentication", MotoristaLogado.chaveServicos);
+            if (comChave) client.DefaultRequestHeaders.Add("Authentication", MotoristaLogado.chaveServicos);
             return client;
         }
 
+        public static async Task<Position> GetCurrentPosition()
+        {
+            Position position = null;
+            try
+            {
+                var locator = CrossGeolocator.Current;
+                locator.DesiredAccuracy = 100;
+                position = await locator.GetLastKnownPositionAsync();
+                if (position != null)
+                {
+                    //got a cahched position, so let's use it.
+                    return position;
+                }
 
+                if (!locator.GetIsGeolocationAvailableAsync().Result ||
+                    !locator.GetIsGeolocationEnabledAsync().Result)
+                {
+                    //not available or enabled
+                    return null;
+                }
+
+                position = await locator.GetPositionAsync(TimeSpan.FromSeconds(20), null, true);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("falha ao pegar localização: " + ex);
+            }
+
+
+            return position;
+        }
     }
 }

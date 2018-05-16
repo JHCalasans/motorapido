@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Imagens\botao_historico.png" />
     <None Remove="Imagens\btn_disponivel.png" />
     <None Remove="Imagens\btn_ocupado.png" />
     <None Remove="Imagens\usuario.png" />
@@ -12,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Imagens\botao_historico.png" />
     <EmbeddedResource Include="Imagens\btn_disponivel.png" />
     <EmbeddedResource Include="Imagens\btn_ocupado.png" />
   </ItemGroup>
@@ -25,6 +27,7 @@
     <PackageReference Include="Acr.UserDialogs" Version="7.0.1" />
     <PackageReference Include="Microsoft.Net.Http" Version="2.2.29" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Plugin.Permissions" Version="2.2.1" />
     <PackageReference Include="Xam.Plugin.Geolocator" Version="5.0.0.187-beta" />
     <PackageReference Include="Xamarin.Forms" Version="2.5.0.121934" />
     <PackageReference Include="Prism.Unity.Forms" Version="7.0.0.269-pre" />
