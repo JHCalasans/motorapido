@@ -50,12 +50,12 @@ namespace MotoRapido.ViewModels
         {
             if (MotoristaLogado.disponivel.Equals("S"))
             {
-                ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ocupado.png");
+                ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_indisponive.png");
                 EstaLivre = true;
             }
             else
             {
-                ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_disponivel.png");
+                ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_disponive.png");
                 EstaLivre = false;
             }
 
@@ -84,7 +84,7 @@ namespace MotoRapido.ViewModels
                     else
                     {
                         motoTemp.disponivel = "S";
-                        ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ocupado.png");
+                        ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_indisponive.png");
                         EstaLivre = true;
                         CrossSettings.Current.Set("isTimerOn", true);
                         iniciarTimerPosicao();
