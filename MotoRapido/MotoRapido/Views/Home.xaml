@@ -59,18 +59,20 @@
                 </Image.GestureRecognizers>
             </Image>
 
-            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_historico.png}" Grid.Row="0" Grid.Column="1" WidthRequest="130" HeightRequest="130">
-                <Image.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding DisponibilidadeCommand}" NumberOfTapsRequired="1"></TapGestureRecognizer>
-                </Image.GestureRecognizers>
-            </Image>
+            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_chamadas.png}" Grid.Row="0" Grid.Column="1" WidthRequest="130" HeightRequest="130"></Image>
+
 
             <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_mensagens.png}" Grid.Row="1" Grid.Column="0" WidthRequest="130" HeightRequest="130"></Image>
 
             <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_areas.png}" Grid.Row="1" Grid.Column="1" WidthRequest="130" HeightRequest="130"></Image>
 
-            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.vazio.png}" Grid.Row="2" Grid.Column="0" WidthRequest="130" HeightRequest="130"></Image>
-
+           
+            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_historico.png}" Grid.Row="2" Grid.Column="0" WidthRequest="130" HeightRequest="130">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding DisponibilidadeCommand}" NumberOfTapsRequired="1"></TapGestureRecognizer>
+                </Image.GestureRecognizers>
+            </Image>
+            
             <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.vazio.png}" Grid.Row="2" Grid.Column="1" WidthRequest="130" HeightRequest="130"></Image>
 
             <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.vazio.png}" Grid.Row="3" Grid.Column="0" WidthRequest="130" HeightRequest="130"></Image>

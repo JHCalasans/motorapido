@@ -17,6 +17,8 @@ using Newtonsoft.Json;
 using Plugin.Geolocator;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
+using System.Drawing;
+using System.Linq;
 
 namespace MotoRapido.ViewModels
 {
@@ -158,15 +160,15 @@ namespace MotoRapido.ViewModels
             {
                 var locator = CrossGeolocator.Current;
                 locator.DesiredAccuracy = 100;
-                position = await locator.GetLastKnownPositionAsync();
+                position = await locator.GetLastKnownLocationAsync();
                 if (position != null)
                 {
                     //got a cahched position, so let's use it.
                     return position;
                 }
 
-                if (!locator.GetIsGeolocationAvailableAsync().Result ||
-                    !locator.GetIsGeolocationEnabledAsync().Result)
+                if (!locator.IsGeolocationAvailable ||
+                    !locator.IsGeolocationEnabled)
                 {
                     //not available or enabled
                     return null;
@@ -182,5 +184,34 @@ namespace MotoRapido.ViewModels
 
             return position;
         }
+
+        
+        //public static bool IsInPolygon(Point[] poly, Point point)
+        //{
+        //    var coef = poly.Skip(1).Select((p, i) =>
+        //            (point.Y - poly[i].Y) * (p.X - poly[i].X)
+        //            - (point.X - poly[i].X) * (p.Y - poly[i].Y))
+        //        .ToList();
+
+        //    if (coef.Any(p => p == 0))
+        //        return true;
+
+        //    for (int i = 1; i < coef.Count(); i++)
+        //    {
+        //        if (coef[i] * coef[i - 1] < 0)
+        //            return false;
+        //    }
+        //    return true;
+        //}
+
+        //protected void MontarPoligonos(List<CoordenadasArea> lista)
+        //{
+        //    var resultado = lista.GroupBy(coord => coord.area.codigo).Select(group => group.First());
+        //    foreach (var res in resultado)
+        //    {
+        //        var list = lista.Where(area => area.area == res.area);
+
+        //    }
+        //}
     }
 }

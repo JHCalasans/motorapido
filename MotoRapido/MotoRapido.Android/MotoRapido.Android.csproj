@@ -65,6 +65,9 @@
     <PackageReference Include="Acr.UserDialogs">
       <Version>7.0.1</Version>
     </PackageReference>
+    <PackageReference Include="Com.OneSignal">
+      <Version>3.1.1</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Net.Http">
       <Version>2.2.29</Version>
     </PackageReference>
@@ -78,7 +81,7 @@
       <Version>4.3.3</Version>
     </PackageReference>
     <PackageReference Include="Xam.Plugin.Geolocator">
-      <Version>5.0.0.187-beta</Version>
+      <Version>4.5.0.6</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.Annotations">
       <Version>27.0.2</Version>
@@ -98,7 +101,7 @@
     <PackageReference Include="Xamarin.Android.Support.Media.Compat">
       <Version>27.0.2</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="2.5.0.121934" />
+    <PackageReference Include="Xamarin.Forms" Version="3.0.0.482510" />
     <PackageReference Include="Xamarin.Android.Support.Design" Version="27.0.2" />
     <PackageReference Include="Xamarin.Android.Support.v7.AppCompat" Version="27.0.2" />
     <PackageReference Include="Xamarin.Android.Support.v4" Version="27.0.2" />
@@ -123,7 +126,9 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\motorapido.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\AndroidManifest.xml" />
+    <None Include="Properties\AndroidManifest.xml">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Tabbar.axml" />

@@ -58,7 +58,11 @@ namespace MotoRapido.ViewModels
                 ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_disponive.png");
                 EstaLivre = false;
             }
+            
+        }
 
+        private void BuscarInformacoesBase()
+        {
 
         }
 
