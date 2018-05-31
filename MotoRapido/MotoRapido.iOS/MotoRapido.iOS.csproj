@@ -150,6 +150,9 @@
     <PackageReference Include="Plugin.Permissions">
       <Version>2.2.1</Version>
     </PackageReference>
+    <PackageReference Include="Xam.Plugin.DeviceInfo">
+      <Version>4.0.0.13</Version>
+    </PackageReference>
     <PackageReference Include="Xam.Plugin.Geolocator">
       <Version>4.5.0.6</Version>
     </PackageReference>

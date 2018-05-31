@@ -59,5 +59,8 @@ namespace MotoRapido.Models
         public String disponivel{ get; set; }
 
         public String chaveServicos { get; set; }
+
+        public String idPush { get; set; }
+        
     }
 }

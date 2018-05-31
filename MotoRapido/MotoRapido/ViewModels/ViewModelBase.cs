@@ -148,7 +148,7 @@ namespace MotoRapido.ViewModels
         {
             var client = new HttpClient();
             client.Timeout = TimeSpan.FromMilliseconds(35000);
-            client.BaseAddress = new Uri("http://192.168.0.15:8080/motorapido/ws/");
+            client.BaseAddress = new Uri("http://192.168.0.12:8080/motorapido/ws/");
             if (comChave) client.DefaultRequestHeaders.Add("Authentication", MotoristaLogado.chaveServicos);
             return client;
         }

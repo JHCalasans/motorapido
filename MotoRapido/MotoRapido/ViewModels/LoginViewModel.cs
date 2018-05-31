@@ -12,6 +12,7 @@ using MotoRapido.Models;
 using Newtonsoft.Json;
 using Prism.Navigation;
 using Prism.Services;
+using Com.OneSignal;
 
 namespace MotoRapido.ViewModels
 {
@@ -58,9 +59,11 @@ namespace MotoRapido.ViewModels
                 Motorista motorista = new Motorista();
                 motorista.senha = HashPassword(Senha);
                 motorista.login = Login;
+               
+                OneSignal.Current.IdsAvailable((id, token) => motorista.idPush = id);
+
                 var json = JsonConvert.SerializeObject(motorista);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
-
                 var response = await IniciarCliente(false).PostAsync("motorista/login", content);
 
                 if (response.IsSuccessStatusCode)

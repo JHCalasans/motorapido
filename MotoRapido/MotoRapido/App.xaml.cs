@@ -37,21 +37,18 @@ namespace MotoRapido
           
 
             InitializeComponent();
-            //Device.StartTimer(TimeSpan.FromSeconds(10), () =>
-            //{
-            //    // Do something
-            //     Application.Current.MainPage.DisplayAlert("Aviso", "Falha ao efetuar login", "OK");
-            //    return true;  // True = Repeat again, False = Stop the timer
-            //});
 
-            if(CrossSettings.Current.Contains("existeChamada"))
-                await NavigationService.NavigateAsync("Chamada");
 
-            await NavigationService.NavigateAsync("Chamada");
-            //if (CrossSettings.Current.Contains("MotoristaLogado"))
-            //    await NavigationService.NavigateAsync("NavigationPage/Home");
-            //else
-            //    await NavigationService.NavigateAsync("NavigationPage/Login");
+
+            if (CrossSettings.Current.Contains("MotoristaLogado"))
+            {
+                if (CrossSettings.Current.Contains("existeChamada"))
+                    await NavigationService.NavigateAsync("Chamada");
+                else
+                    await NavigationService.NavigateAsync("NavigationPage/Home");
+            }
+            else
+                await NavigationService.NavigateAsync("NavigationPage/Login");
         }
 
         // Called when your app is in focus and a notificaiton is recieved.
