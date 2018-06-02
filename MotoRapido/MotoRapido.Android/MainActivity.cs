@@ -3,6 +3,7 @@ using Android.App;
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
+using Plugin.CurrentActivity;
 using Plugin.Permissions;
 using Prism.Unity;
 using Unity;
@@ -22,7 +23,7 @@ namespace MotoRapido.Droid
             UserDialogs.Init(this);
             global::Xamarin.Forms.Forms.Init(this, bundle);
 
-            Plugin.CurrentActivity.CrossCurrentActivity.Current.Activity = this;
+            CrossCurrentActivity.Current.Init(this, bundle);
 
             LoadApplication(new App(new AndroidInitializer()));
 

@@ -60,46 +60,27 @@ namespace MotoRapido.ViewModels
         public async void Localizar()
         {
             try
-            {
-                var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
-                if (status != PermissionStatus.Granted)
+            { 
+                var posicao = await GetCurrentPosition();
+                VerificaPosicaoParam param = new VerificaPosicaoParam
                 {
-                    if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Location))
-                    {
-                        await DialogService.DisplayAlertAsync("Aviso", "Preciso acessar sua localização", "OK");
-                    }
+                    codMotorista = MotoristaLogado.codigo,
+                    latitude = posicao.Latitude.ToString(),
+                    longitude = posicao.Longitude.ToString()
+                };
 
-                    var results = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Location);
+                var json = JsonConvert.SerializeObject(param);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                    if (results.ContainsKey(Permission.Location))
-                        status = results[Permission.Location];
-                }
+                var response = await IniciarCliente(true).PostAsync("motorista/verificarPosicao", content);
 
-                if (status == PermissionStatus.Granted)
+                if (!response.IsSuccessStatusCode)
                 {
-                    var posicao = await GetCurrentPosition();
-                    VerificaPosicaoParam param = new VerificaPosicaoParam
-                    {
-                        codMotorista = MotoristaLogado.codigo,
-                        latitude = posicao.Latitude.ToString(),
-                        longitude = posicao.Longitude.ToString()
-                    };
-
-                    var json = JsonConvert.SerializeObject(param);
-                    var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                    var response = await IniciarCliente(true).PostAsync("motorista/verificarPosicao", content);
-
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result,
-                            "OK");
-                    }
+                    await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result,
+                        "OK");
                 }
-                else if (status != PermissionStatus.Unknown)
-                {
-                    await DialogService.DisplayAlertAsync("Aviso", "Permissão apra acessar localização negada.", "OK");
-                }
+                
+              
             }
             catch (Exception e)
             {
@@ -165,19 +146,19 @@ namespace MotoRapido.ViewModels
             {
                 var locator = CrossGeolocator.Current;
                 locator.DesiredAccuracy = 100;
-               // position = await locator.GetLastKnownLocationAsync();
+                // position = await locator.GetLastKnownLocationAsync();
                 //if (position != null)
                 //{
                 //    //got a cahched position, so let's use it.
                 //    return position;
                 //}
 
-                //if (!locator.IsGeolocationAvailable ||
-                //    !locator.IsGeolocationEnabled)
-                //{
-                //    //not available or enabled
-                //    return null;
-                //}
+                if (!locator.IsGeolocationAvailable ||
+                    !locator.IsGeolocationEnabled)
+                {
+                    //not available or enabled
+                    return null;
+                }
 
                 position = await locator.GetPositionAsync(null, new CancellationToken(false), true);
             }

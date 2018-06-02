@@ -14,6 +14,8 @@ using Newtonsoft.Json;
 using Prism.Navigation;
 using Prism.Services;
 using Xamarin.Forms;
+using Plugin.Permissions;
+using Plugin.Permissions.Abstractions;
 
 namespace MotoRapido.ViewModels
 {
@@ -39,13 +41,43 @@ namespace MotoRapido.ViewModels
             set { SetProperty(ref _estaLivre, value); }
         }
 
+        PermissionStatus status;
+
         public HomeViewModel(INavigationService navigationService, IPageDialogService dialogService)
             : base(navigationService, dialogService)
         {
-            if (MotoristaLogado.disponivel.Equals("S"))
+
+             VerificaPermissaoLocalizacao();
+
+           
+        }
+
+        private async void VerificaPermissaoLocalizacao()
+        {
+             status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
+            if (status != PermissionStatus.Granted)
             {
-                iniciarTimerPosicao();                
+                if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Location))
+                {
+                    await DialogService.DisplayAlertAsync("Aviso", "Preciso acessar sua localização", "OK");
+                }
+
+                var results = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Location);
+
+                if (results.ContainsKey(Permission.Location))
+                    status = results[Permission.Location];
             }
+            if (status == PermissionStatus.Granted)
+            {
+                if (MotoristaLogado.disponivel.Equals("S"))
+                {
+                    iniciarTimerPosicao();
+                }
+            }else if (status == PermissionStatus.Unknown || status == PermissionStatus.Denied)
+             {
+                await DialogService.DisplayAlertAsync("Aviso", "Permissão apra acessar localização negada.", "OK");
+             }
+
         }
 
         public override void OnNavigatingTo(NavigationParameters parameters)

@@ -26,7 +26,9 @@ namespace MotoRapido.Droid
         public override void OnCreate()
         {
             base.OnCreate();
+            CrossCurrentActivity.Current.Init(this);
             RegisterActivityLifecycleCallbacks(this);
+
         }
         public override void OnTerminate()
         {
