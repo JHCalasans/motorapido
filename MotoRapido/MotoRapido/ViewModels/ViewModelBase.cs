@@ -19,6 +19,7 @@ using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 
 namespace MotoRapido.ViewModels
 {
@@ -105,12 +106,16 @@ namespace MotoRapido.ViewModels
             }
         }
 
-        public void iniciarTimerPosicao()
+        
+
+        public async void iniciarTimerPosicao()
         {
             if (StoppableTimer == null) StoppableTimer = new StoppableTimer(TimeSpan.FromSeconds(2), Localizar);
 
-            if (CrossSettings.Current.Get<Boolean>("isTimerOn"))
+            if (CrossSettings.Current.Get<bool>("IsTimerOn"))
                 StoppableTimer.Start();
+           // await  StartListening();
+           // StoppableTimer.Start();
             // CrossSettings.Current.Set("isTimerOn", true);
 
 
@@ -160,21 +165,21 @@ namespace MotoRapido.ViewModels
             {
                 var locator = CrossGeolocator.Current;
                 locator.DesiredAccuracy = 100;
-                position = await locator.GetLastKnownLocationAsync();
-                if (position != null)
-                {
-                    //got a cahched position, so let's use it.
-                    return position;
-                }
+               // position = await locator.GetLastKnownLocationAsync();
+                //if (position != null)
+                //{
+                //    //got a cahched position, so let's use it.
+                //    return position;
+                //}
 
-                if (!locator.IsGeolocationAvailable ||
-                    !locator.IsGeolocationEnabled)
-                {
-                    //not available or enabled
-                    return null;
-                }
+                //if (!locator.IsGeolocationAvailable ||
+                //    !locator.IsGeolocationEnabled)
+                //{
+                //    //not available or enabled
+                //    return null;
+                //}
 
-                position = await locator.GetPositionAsync(TimeSpan.FromSeconds(20), null, true);
+                position = await locator.GetPositionAsync(null, new CancellationToken(false), true);
             }
             catch (Exception ex)
             {
@@ -185,7 +190,50 @@ namespace MotoRapido.ViewModels
             return position;
         }
 
-        
+
+        public async Task StartListening()
+        {
+            if (CrossGeolocator.Current.IsListening)
+                return;
+
+            await CrossGeolocator.Current.StartListeningAsync(TimeSpan.FromSeconds(5), 10, true);
+
+            CrossGeolocator.Current.PositionChanged += PositionChanged;
+            CrossGeolocator.Current.PositionError += PositionError;
+        }
+
+        private void PositionChanged(object sender, PositionEventArgs e)
+        {
+
+            //If updating the UI, ensure you invoke on main thread
+            var position = e.Position;
+            var output = "Full: Lat: " + position.Latitude + " Long: " + position.Longitude;
+            output += "\n" + $"Time: {position.Timestamp}";
+            output += "\n" + $"Heading: {position.Heading}";
+            output += "\n" + $"Speed: {position.Speed}";
+            output += "\n" + $"Accuracy: {position.Accuracy}";
+            output += "\n" + $"Altitude: {position.Altitude}";
+            output += "\n" + $"Altitude Accuracy: {position.AltitudeAccuracy}";
+            Debug.WriteLine(output);
+        }
+
+        private void PositionError(object sender, PositionErrorEventArgs e)
+        {
+            Debug.WriteLine(e.Error);
+            //Handle event here for errors
+        }
+
+        async Task StopListening()
+        {
+            if (!CrossGeolocator.Current.IsListening)
+                return;
+
+            await CrossGeolocator.Current.StopListeningAsync();
+
+            CrossGeolocator.Current.PositionChanged -= PositionChanged;
+            CrossGeolocator.Current.PositionError -= PositionError;
+        }
+
         //public static bool IsInPolygon(Point[] poly, Point point)
         //{
         //    var coef = poly.Skip(1).Select((p, i) =>

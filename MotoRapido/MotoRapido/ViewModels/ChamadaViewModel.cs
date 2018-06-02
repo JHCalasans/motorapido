@@ -25,8 +25,8 @@ namespace MotoRapido.ViewModels
         public ChamadaViewModel(INavigationService navigationService, IPageDialogService dialogService)
             : base(navigationService, dialogService)
         {
-            if (CrossSettings.Current.Contains("existeChamada"))            
-                CrossSettings.Current.Remove("CrossSettings");
+            if (CrossSettings.Current.Contains("ExisteChamada"))            
+                CrossSettings.Current.Remove("ExisteChamada");
 
             UrlMapa = "https://www.google.com/maps/search/?api=1&query=-10.950752,-37.069523";
             //"http://maps.google.com/maps?&daddr=-10.950752,-37.069523";

@@ -42,13 +42,19 @@ namespace MotoRapido
 
             if (CrossSettings.Current.Contains("MotoristaLogado"))
             {
-                if (CrossSettings.Current.Contains("existeChamada"))
-                    await NavigationService.NavigateAsync("Chamada");
+                if (CrossSettings.Current.Contains("ExisteChamada"))
+                    await NavigationService.NavigateAsync("NavigationPage/Home/Chamada");
                 else
                     await NavigationService.NavigateAsync("NavigationPage/Home");
             }
             else
                 await NavigationService.NavigateAsync("NavigationPage/Login");
+        }
+
+
+        protected override void OnResume()
+        {
+            base.OnResume();
         }
 
         // Called when your app is in focus and a notificaiton is recieved.
@@ -58,7 +64,16 @@ namespace MotoRapido
         {
             OSNotificationPayload payload = notification.payload;
             string message = payload.body;
-         
+            Dictionary<string, object> additionalData = payload.additionalData;
+
+            if (additionalData != null)
+            {
+                if (additionalData.ContainsKey("mdn_area"))
+                {
+                    CrossSettings.Current.Set("atualizarDados", true);
+                }
+            }
+
         }
 
         // Called when a notification is opened.
@@ -70,19 +85,16 @@ namespace MotoRapido
             Dictionary<string, object> additionalData = payload.additionalData;
             string message = payload.body;
             string actionID = result.action.actionID;
-            
-            CrossSettings.Current.Set("existeChamada", true);
-            AppNavigationService.NavigateAsync("Chamada");
 
+            if (additionalData != null)
+            {
+                if (additionalData.ContainsKey("chamada"))
+                {
+                    CrossSettings.Current.Set("ExisteChamada", true);
+                    AppNavigationService.NavigateAsync("Home/Chamada");
+                }
+            }
             
-            //if (additionalData != null)
-            //{
-            //    if (additionalData.ContainsKey("discount"))
-            //    {
-            //      //  extraMessage = (string)additionalData["discount"];
-            //        // Take user to your store.
-            //    }
-            //}
             //if (actionID != null)
             //{
             //    if (actionID.Equals("__DEFAULT__"))
@@ -102,6 +114,7 @@ namespace MotoRapido
             Container.RegisterTypeForNavigation<Login>();
             Container.RegisterTypeForNavigation<Home>();
             Container.RegisterTypeForNavigation<Chamada>();
+            Container.RegisterTypeForNavigation<Mensagem>();
         }
 
         

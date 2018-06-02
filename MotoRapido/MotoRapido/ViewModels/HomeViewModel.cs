@@ -19,7 +19,9 @@ namespace MotoRapido.ViewModels
 {
 	public class HomeViewModel : ViewModelBase
     {
-        public DelegateCommand DisponibilidadeCommand => new DelegateCommand(AlterarDisponibilidade);       
+        public DelegateCommand DisponibilidadeCommand => new DelegateCommand(AlterarDisponibilidade);
+
+        public DelegateCommand MensagemCommand => new DelegateCommand(IrParaMensagem);
 
         private ImageSource _imgDisponibilidade;
 
@@ -42,7 +44,7 @@ namespace MotoRapido.ViewModels
         {
             if (MotoristaLogado.disponivel.Equals("S"))
             {
-                iniciarTimerPosicao();
+                iniciarTimerPosicao();                
             }
         }
 
@@ -64,6 +66,11 @@ namespace MotoRapido.ViewModels
         private void BuscarInformacoesBase()
         {
 
+        }
+        
+        private async void IrParaMensagem()
+        {
+            await NavigationService.NavigateAsync("Mensagem");
         }
 
         private async void AlterarDisponibilidade()

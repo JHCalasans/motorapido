@@ -70,7 +70,7 @@ namespace MotoRapido.ViewModels
                 {
                     var respStr = await response.Content.ReadAsStringAsync();
                     CrossSettings.Current.Set("MotoristaLogado", JsonConvert.DeserializeObject<Motorista>(respStr));
-                    CrossSettings.Current.Set("isTimerOn", MotoristaLogado.disponivel.Equals("S"));
+                    CrossSettings.Current.Set("IsTimerOn", MotoristaLogado.disponivel.Equals("S"));
                     await NavigationService.NavigateAsync("//NavigationPage/Home");
                 }
                 else

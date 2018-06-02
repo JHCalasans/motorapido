@@ -115,6 +115,7 @@
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
     <Compile Include="CurvedCornersLabelRenderer.cs" />
+    <Compile Include="MainApplication.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
