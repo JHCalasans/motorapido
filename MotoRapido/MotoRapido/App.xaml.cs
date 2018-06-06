@@ -40,6 +40,7 @@ namespace MotoRapido
 
 
 
+
             if (CrossSettings.Current.Contains("MotoristaLogado"))
             {
                 if (CrossSettings.Current.Contains("ExisteChamada"))

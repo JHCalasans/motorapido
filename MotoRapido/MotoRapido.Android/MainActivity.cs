@@ -23,7 +23,7 @@ namespace MotoRapido.Droid
             UserDialogs.Init(this);
             global::Xamarin.Forms.Forms.Init(this, bundle);
 
-            CrossCurrentActivity.Current.Init(this, bundle);
+           // CrossCurrentActivity.Current.Init(this, bundle);
 
             LoadApplication(new App(new AndroidInitializer()));
 
