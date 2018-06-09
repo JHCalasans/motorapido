@@ -18,7 +18,7 @@
 	<permission android:name="br.com.motorapido.permission.C2D_MESSAGE" android:protectionLevel="signature" />
 	<uses-permission android:name="br.com.motorapido.permission.C2D_MESSAGE" />
 	<uses-permission android:name="android.permission.LOCATION_HARDWARE" />
-	<application android:label="Moto Rápido">
+	<application android:label="Moto Rápido" android:icon="@drawable/ic_launcher">
 		<receiver android:name="com.onesignal.GcmBroadcastReceiver" android:permission="com.google.android.c2dm.permission.SEND">
 			<intent-filter>
 				<action android:name="com.google.android.c2dm.intent.RECEIVE" />

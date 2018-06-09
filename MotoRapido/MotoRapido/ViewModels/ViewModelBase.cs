@@ -1,67 +1,100 @@
-﻿using Prism.Commands;
-using Prism.Mvvm;
-using Prism.Navigation;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Net.Http;
-using System.Text;
-using Acr.Settings;
-using MotoRapido.Interfaces;
-using MotoRapido.Models;
-using Prism.Services;
-using MotoRapido.Customs;
-using Plugin.Geolocator.Abstractions;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Plugin.Geolocator;
-using Plugin.Permissions;
-using Plugin.Permissions.Abstractions;
-using System.Drawing;
-using System.Linq;
-using System.Threading;
-
-namespace MotoRapido.ViewModels
+﻿namespace MotoRapido.ViewModels
 {
+    using Acr.Settings;
+    using MotoRapido.Customs;
+    using MotoRapido.Models;
+    using Newtonsoft.Json;
+    using Plugin.Geolocator;
+    using Plugin.Geolocator.Abstractions;
+    using Prism.Mvvm;
+    using Prism.Navigation;
+    using Prism.Services;
+    using System;
+    using System.Diagnostics;
+    using System.Net.Http;
+    using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    /// <summary>
+    /// Defines the <see cref="ViewModelBase" />
+    /// </summary>
     public class ViewModelBase : BindableBase, INavigationAware, IDestructible
     {
+        /// <summary>
+        /// Gets the NavigationService
+        /// </summary>
         protected INavigationService NavigationService { get; private set; }
+
+        /// <summary>
+        /// Gets the DialogService
+        /// </summary>
         protected IPageDialogService DialogService { get; private set; }
+
+        /// <summary>
+        /// Defines the _stoppableTimer
+        /// </summary>
         private StoppableTimer _stoppableTimer;
 
+        /// <summary>
+        /// Gets or sets the StoppableTimer
+        /// </summary>
         public StoppableTimer StoppableTimer
         {
             get => _stoppableTimer;
             set { SetProperty(ref _stoppableTimer, value); }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ViewModelBase"/> class.
+        /// </summary>
+        /// <param name="navigationService">The navigationService<see cref="INavigationService"/></param>
+        /// <param name="dialogService">The dialogService<see cref="IPageDialogService"/></param>
         public ViewModelBase(INavigationService navigationService, IPageDialogService dialogService)
         {
             NavigationService = navigationService;
             DialogService = dialogService;
         }
 
+        /// <summary>
+        /// The OnNavigatedFrom
+        /// </summary>
+        /// <param name="parameters">The parameters<see cref="NavigationParameters"/></param>
         public virtual void OnNavigatedFrom(NavigationParameters parameters)
         {
         }
 
+        /// <summary>
+        /// The OnNavigatedTo
+        /// </summary>
+        /// <param name="parameters">The parameters<see cref="NavigationParameters"/></param>
         public virtual void OnNavigatedTo(NavigationParameters parameters)
         {
         }
 
+        /// <summary>
+        /// The OnNavigatingTo
+        /// </summary>
+        /// <param name="parameters">The parameters<see cref="NavigationParameters"/></param>
         public virtual void OnNavigatingTo(NavigationParameters parameters)
         {
         }
 
+        /// <summary>
+        /// The Destroy
+        /// </summary>
         public virtual void Destroy()
         {
         }
 
-        public async void Localizar()
+        /// <summary>
+        /// The Localizar
+        /// </summary>
+        public async void Localizar(Position posicao)
         {
             try
-            { 
-                var posicao = await GetCurrentPosition();
+            {
+               
                 VerificaPosicaoParam param = new VerificaPosicaoParam
                 {
                     codMotorista = MotoristaLogado.codigo,
@@ -79,57 +112,52 @@ namespace MotoRapido.ViewModels
                     await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result,
                         "OK");
                 }
-                
-              
+
+
             }
             catch (Exception e)
             {
+                await DialogService.DisplayAlertAsync("Aviso", "Falha ao verificar posição", "OK");
             }
         }
 
-        
-
+        /// <summary>
+        /// The iniciarTimerPosicao
+        /// </summary>
         public async void iniciarTimerPosicao()
         {
-            if (StoppableTimer == null) StoppableTimer = new StoppableTimer(TimeSpan.FromSeconds(2), Localizar);
+            //   if (StoppableTimer == null) StoppableTimer = new StoppableTimer(TimeSpan.FromSeconds(2), Localizar);
 
             if (CrossSettings.Current.Get<bool>("IsTimerOn"))
-                StoppableTimer.Start();
-           // await  StartListening();
-           // StoppableTimer.Start();
-            // CrossSettings.Current.Set("isTimerOn", true);
-
-
-            //int count = 0;
-            //Device.StartTimer(TimeSpan.FromSeconds(2), () =>
-            //{
-
-            //    Debug.WriteLine(count + " - " + TimerOn);
-            //    count++;
-            //    return TimerOn; // True = Repeat again, False = Stop the timer
-            //});
+                await StartListening();
         }
 
+        /// <summary>
+        /// The pararTimerPosicao
+        /// </summary>
         public void pararTimerPosicao()
         {
             //StoppableTimer = new StoppableTimer(TimeSpan.FromSeconds(2), teste);
             StoppableTimer.Stop();
             CrossSettings.Current.Set("isTimerOn", false);
-            //int count = 0;
-            //Device.StartTimer(TimeSpan.FromSeconds(2), () =>
-            //{
-
-            //    Debug.WriteLine(count + " - " + TimerOn);
-            //    count++;
-            //    return TimerOn; // True = Repeat again, False = Stop the timer
-            //});
         }
 
+        /// <summary>
+        /// Gets the MotoristaLogado
+        /// </summary>
         public Motorista MotoristaLogado
         {
             get { return CrossSettings.Current.Get<Motorista>("MotoristaLogado"); }
         }
 
+
+
+        private Position ultimaLocalizacaoValida { get; set; }
+        /// <summary>
+        /// The IniciarCliente
+        /// </summary>
+        /// <param name="comChave">The comChave<see cref="bool"/></param>
+        /// <returns>The <see cref="HttpClient"/></returns>
         protected HttpClient IniciarCliente(bool comChave)
         {
             var client = new HttpClient();
@@ -139,6 +167,10 @@ namespace MotoRapido.ViewModels
             return client;
         }
 
+        /// <summary>
+        /// The GetCurrentPosition
+        /// </summary>
+        /// <returns>The <see cref="Task{Position}"/></returns>
         public static async Task<Position> GetCurrentPosition()
         {
             Position position = null;
@@ -171,40 +203,67 @@ namespace MotoRapido.ViewModels
             return position;
         }
 
-
+        /// <summary>
+        /// The StartListening
+        /// </summary>
+        /// <returns>The <see cref="Task"/></returns>
         public async Task StartListening()
         {
-            if (CrossGeolocator.Current.IsListening)
-                return;
+            if (CrossSettings.Current.Get<bool>("IsTimerOn"))
+            {
+                if (CrossGeolocator.Current.IsListening)
+                    return;
 
-            await CrossGeolocator.Current.StartListeningAsync(TimeSpan.FromSeconds(5), 10, true);
+                CrossGeolocator.Current.PositionChanged += PositionChanged;
+                CrossGeolocator.Current.PositionError += PositionError;
 
-            CrossGeolocator.Current.PositionChanged += PositionChanged;
-            CrossGeolocator.Current.PositionError += PositionError;
+                await CrossGeolocator.Current.StartListeningAsync(TimeSpan.FromSeconds(5), 10, false);
+
+             
+            }
         }
 
+        /// <summary>
+        /// The PositionChanged
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/></param>
+        /// <param name="e">The e<see cref="PositionEventArgs"/></param>
         private void PositionChanged(object sender, PositionEventArgs e)
         {
 
             //If updating the UI, ensure you invoke on main thread
             var position = e.Position;
-            var output = "Full: Lat: " + position.Latitude + " Long: " + position.Longitude;
-            output += "\n" + $"Time: {position.Timestamp}";
-            output += "\n" + $"Heading: {position.Heading}";
-            output += "\n" + $"Speed: {position.Speed}";
-            output += "\n" + $"Accuracy: {position.Accuracy}";
-            output += "\n" + $"Altitude: {position.Altitude}";
-            output += "\n" + $"Altitude Accuracy: {position.AltitudeAccuracy}";
-            Debug.WriteLine(output);
+            if (ultimaLocalizacaoValida == null || isLocalizacaoDiferente(position , ultimaLocalizacaoValida))
+            {
+                Localizar(position);
+                ultimaLocalizacaoValida = position;
+            }
+
+
+          
         }
 
+        private bool isLocalizacaoDiferente(Position localizacao1, Position localizacao2)
+        {
+            return localizacao1.Latitude != localizacao2.Latitude || localizacao1.Altitude != localizacao2.Altitude;
+           
+        }
+
+        /// <summary>
+        /// The PositionError
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/></param>
+        /// <param name="e">The e<see cref="PositionErrorEventArgs"/></param>
         private void PositionError(object sender, PositionErrorEventArgs e)
         {
             Debug.WriteLine(e.Error);
-            //Handle event here for errors
         }
 
-        async Task StopListening()
+        /// <summary>
+        /// The StopListening
+        /// </summary>
+        /// <returns>The <see cref="Task"/></returns>
+        internal async Task StopListening()
         {
             if (!CrossGeolocator.Current.IsListening)
                 return;
@@ -214,33 +273,5 @@ namespace MotoRapido.ViewModels
             CrossGeolocator.Current.PositionChanged -= PositionChanged;
             CrossGeolocator.Current.PositionError -= PositionError;
         }
-
-        //public static bool IsInPolygon(Point[] poly, Point point)
-        //{
-        //    var coef = poly.Skip(1).Select((p, i) =>
-        //            (point.Y - poly[i].Y) * (p.X - poly[i].X)
-        //            - (point.X - poly[i].X) * (p.Y - poly[i].Y))
-        //        .ToList();
-
-        //    if (coef.Any(p => p == 0))
-        //        return true;
-
-        //    for (int i = 1; i < coef.Count(); i++)
-        //    {
-        //        if (coef[i] * coef[i - 1] < 0)
-        //            return false;
-        //    }
-        //    return true;
-        //}
-
-        //protected void MontarPoligonos(List<CoordenadasArea> lista)
-        //{
-        //    var resultado = lista.GroupBy(coord => coord.area.codigo).Select(group => group.First());
-        //    foreach (var res in resultado)
-        //    {
-        //        var list = lista.Where(area => area.area == res.area);
-
-        //    }
-        //}
     }
 }
