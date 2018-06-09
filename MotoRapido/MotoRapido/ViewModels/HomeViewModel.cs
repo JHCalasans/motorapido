@@ -41,14 +41,28 @@ namespace MotoRapido.ViewModels
             set { SetProperty(ref _estaLivre, value); }
         }
 
+        
+        private Color _corDeFundoStatus;
+        public Color CorDeFundoStatus
+        {
+            get => _corDeFundoStatus;
+            set => SetProperty(ref _corDeFundoStatus, value);
+        }
+       
+
+        private String _textoStatus;
+        public string TextoStatus
+        {
+            get => _textoStatus;
+            set => SetProperty(ref _textoStatus, value);
+        }
+
         PermissionStatus status;
 
         public HomeViewModel(INavigationService navigationService, IPageDialogService dialogService)
             : base(navigationService, dialogService)
         {
-
              VerificaPermissaoLocalizacao();
-
            
         }
 
@@ -84,13 +98,17 @@ namespace MotoRapido.ViewModels
         {
             if (MotoristaLogado.disponivel.Equals("S"))
             {
-                ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_indisponive.png");
+                ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_indisponivel.png");
                 EstaLivre = true;
+                CorDeFundoStatus = Color.Green;
+                TextoStatus = "LIVRE";
             }
             else
             {
-                ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_disponive.png");
+                ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_disponivel.png");
                 EstaLivre = false;
+                CorDeFundoStatus = Color.Red;
+                TextoStatus = "OCUPADO";
             }
             
         }
@@ -120,15 +138,20 @@ namespace MotoRapido.ViewModels
                     if (motoTemp.disponivel.Equals("S"))
                     {
                         motoTemp.disponivel = "N";
-                        ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_disponivel.png");
+                        ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_disponivel.png");
                         EstaLivre = false;
-                        pararTimerPosicao();
+                        CorDeFundoStatus = Color.Red;
+                        TextoStatus = "OCUPADO";
+
+                        await StopListening();
                     }
                     else
                     {
                         motoTemp.disponivel = "S";
-                        ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_indisponive.png");
+                        ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_indisponivel.png");
                         EstaLivre = true;
+                        CorDeFundoStatus = Color.Green;
+                        TextoStatus = "LIVRE";
                         CrossSettings.Current.Set("isTimerOn", true);
                         iniciarTimerPosicao();
                     }

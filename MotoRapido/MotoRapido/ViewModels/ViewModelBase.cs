@@ -90,11 +90,12 @@
         /// <summary>
         /// The Localizar
         /// </summary>
+        /// <param name="posicao">The posicao<see cref="Position"/></param>
         public async void Localizar(Position posicao)
         {
             try
             {
-               
+
                 VerificaPosicaoParam param = new VerificaPosicaoParam
                 {
                     codMotorista = MotoristaLogado.codigo,
@@ -111,6 +112,11 @@
                 {
                     await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result,
                         "OK");
+                }
+                else
+                {
+                    var respStr = await response.Content.ReadAsStringAsync();
+                    AreaPosicao = JsonConvert.DeserializeObject<RetornoVerificaPosicao>(respStr);
                 }
 
 
@@ -138,8 +144,8 @@
         public void pararTimerPosicao()
         {
             //StoppableTimer = new StoppableTimer(TimeSpan.FromSeconds(2), teste);
-            StoppableTimer.Stop();
-            CrossSettings.Current.Set("isTimerOn", false);
+            //StoppableTimer.Stop();
+           
         }
 
         /// <summary>
@@ -150,9 +156,25 @@
             get { return CrossSettings.Current.Get<Motorista>("MotoristaLogado"); }
         }
 
+        /// <summary>
+        /// Defines the _areaPosicao
+        /// </summary>
+        private RetornoVerificaPosicao _areaPosicao;
 
+        /// <summary>
+        /// Gets or sets the AreaPosicao
+        /// </summary>
+        public RetornoVerificaPosicao AreaPosicao
+        {
+            get { return _areaPosicao; }
+            set { SetProperty(ref _areaPosicao, value); }
+        }
 
+        /// <summary>
+        /// Gets or sets the ultimaLocalizacaoValida
+        /// </summary>
         private Position ultimaLocalizacaoValida { get; set; }
+
         /// <summary>
         /// The IniciarCliente
         /// </summary>
@@ -217,9 +239,13 @@
                 CrossGeolocator.Current.PositionChanged += PositionChanged;
                 CrossGeolocator.Current.PositionError += PositionError;
 
-                await CrossGeolocator.Current.StartListeningAsync(TimeSpan.FromSeconds(5), 10, false);
+                await CrossGeolocator.Current.StartListeningAsync(TimeSpan.FromSeconds(5), 10, false, new ListenerSettings
+                {
+                    AllowBackgroundUpdates = true,
+                    PauseLocationUpdatesAutomatically = false
+                });
 
-             
+
             }
         }
 
@@ -233,20 +259,22 @@
 
             //If updating the UI, ensure you invoke on main thread
             var position = e.Position;
-            if (ultimaLocalizacaoValida == null || isLocalizacaoDiferente(position , ultimaLocalizacaoValida))
+            if (ultimaLocalizacaoValida == null || isLocalizacaoDiferente(position, ultimaLocalizacaoValida))
             {
                 Localizar(position);
                 ultimaLocalizacaoValida = position;
             }
-
-
-          
         }
 
+        /// <summary>
+        /// The isLocalizacaoDiferente
+        /// </summary>
+        /// <param name="localizacao1">The localizacao1<see cref="Position"/></param>
+        /// <param name="localizacao2">The localizacao2<see cref="Position"/></param>
+        /// <returns>The <see cref="bool"/></returns>
         private bool isLocalizacaoDiferente(Position localizacao1, Position localizacao2)
         {
             return localizacao1.Latitude != localizacao2.Latitude || localizacao1.Altitude != localizacao2.Altitude;
-           
         }
 
         /// <summary>
@@ -272,6 +300,8 @@
 
             CrossGeolocator.Current.PositionChanged -= PositionChanged;
             CrossGeolocator.Current.PositionError -= PositionError;
+
+            CrossSettings.Current.Set("isTimerOn", false);
         }
     }
 }

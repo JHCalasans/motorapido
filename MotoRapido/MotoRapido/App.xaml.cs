@@ -110,12 +110,13 @@ namespace MotoRapido
 
         protected override void RegisterTypes()
         {
-            Container.RegisterTypeForNavigation<NavigationPage>();
+           // Container.RegisterTypeForNavigation<NavigationPage>();
             Container.RegisterTypeForNavigation<MainPage>();
             Container.RegisterTypeForNavigation<Login>();
             Container.RegisterTypeForNavigation<Home>();
             Container.RegisterTypeForNavigation<Chamada>();
             Container.RegisterTypeForNavigation<Mensagem>();
+            Container.RegisterTypeForNavigation<Views.NavigationPage>();
         }
 
         

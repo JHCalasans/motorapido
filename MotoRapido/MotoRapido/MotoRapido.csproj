@@ -9,7 +9,7 @@
     <None Remove="Imagens\btn_areas.png" />
     <None Remove="Imagens\btn_chamadas.png" />
     <None Remove="Imagens\btn_ficar_disponivel.png" />
-    <None Remove="Imagens\btn_ficar_indisponive.png" />
+    <None Remove="Imagens\btn_ficar_indisponivel.png" />
     <None Remove="Imagens\btn_historico.png" />
     <None Remove="Imagens\btn_indisponivel.png" />
     <None Remove="Imagens\btn_mensagens.png" />
@@ -29,7 +29,7 @@
     <EmbeddedResource Include="Imagens\btn_chamadas.png" />
     <EmbeddedResource Include="Imagens\btn_ficar_disponivel.png" />
     <EmbeddedResource Include="Imagens\btn_historico.png" />
-    <EmbeddedResource Include="Imagens\btn_ficar_indisponive.png" />
+    <EmbeddedResource Include="Imagens\btn_ficar_indisponivel.png" />
     <EmbeddedResource Include="Imagens\btn_mensagens.png" />
     <EmbeddedResource Include="Imagens\btn_ocupado.png" />
   </ItemGroup>
@@ -63,6 +63,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Mensagem.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\NavigationPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

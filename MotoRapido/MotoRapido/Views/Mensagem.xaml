@@ -3,9 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="MotoRapido.Views.Mensagem">
+             x:Class="MotoRapido.Views.Mensagem"
+             Title="Mensagens">
 
 
-    <Label Text="MENSAGENS"></Label>
+    <StackLayout>
+        <ListView ItemsSource="{Binding }">
+            
+            
+            
+        </ListView>
+        
+        
+    </StackLayout>
   
 </ContentPage>

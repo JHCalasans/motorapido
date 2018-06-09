@@ -116,6 +116,7 @@
     <PackageReference Include="Prism.Unity.Forms" Version="7.0.0.269-pre" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LocalService.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="CurvedCornersLabelRenderer.cs" />
     <Compile Include="MainApplication.cs" />

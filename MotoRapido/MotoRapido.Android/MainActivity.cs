@@ -1,6 +1,7 @@
 ﻿using Acr.UserDialogs;
 using Android.App;
 using Android.Content.PM;
+using Android.Locations;
 using Android.OS;
 using Android.Runtime;
 using Plugin.CurrentActivity;
@@ -34,7 +35,7 @@ namespace MotoRapido.Droid
             PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-
+        
     }
 
 
