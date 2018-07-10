@@ -14,6 +14,7 @@
     <None Remove="Imagens\btn_indisponivel.png" />
     <None Remove="Imagens\btn_mensagens.png" />
     <None Remove="Imagens\btn_ocupado.png" />
+    <None Remove="Imagens\send_button.png" />
     <None Remove="Imagens\usuario.png" />
     <None Remove="Imagens\vazio.png" />
     <None Remove="perfil.jpg" />
@@ -32,6 +33,7 @@
     <EmbeddedResource Include="Imagens\btn_ficar_indisponivel.png" />
     <EmbeddedResource Include="Imagens\btn_mensagens.png" />
     <EmbeddedResource Include="Imagens\btn_ocupado.png" />
+    <EmbeddedResource Include="Imagens\send_button.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -53,6 +55,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Customs\Cells\TextInViewCell.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Customs\Cells\TextOutViewCell.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\Chamada.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>

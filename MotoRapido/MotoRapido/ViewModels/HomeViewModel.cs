@@ -120,6 +120,44 @@ namespace MotoRapido.ViewModels
         
         private async void IrParaMensagem()
         {
+
+            if (!CrossSettings.Current.Contains("mensagens") || CrossSettings.Current.Get<List<MensagemMotoristaFuncionario>>("mensagens").Count < 1)
+            {
+                try
+                {
+                    UserDialogs.Instance.ShowLoading("Carregando...");
+
+                    MensagemParam param = new MensagemParam
+                    {
+                        codMotorista = MotoristaLogado.codigo
+                    };
+
+                    var json = JsonConvert.SerializeObject(param);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                    var response = await IniciarCliente(true).PostAsync("motorista/atualizarMensagens", content);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var respStr = await response.Content.ReadAsStringAsync();
+                        CrossSettings.Current.Set("mensagens", JsonConvert.DeserializeObject<List<Message>>(respStr));
+                       
+                    }
+                    else
+                    {
+                        await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    await DialogService.DisplayAlertAsync("Aviso", "Falha ao buscar mensagens", "OK");
+                }
+                finally
+                {
+                    UserDialogs.Instance.HideLoading();
+                }
+
+            }
             await NavigationService.NavigateAsync("Mensagem");
         }
 
