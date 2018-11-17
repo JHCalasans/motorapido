@@ -184,10 +184,16 @@
         {
             var client = new HttpClient();
             client.Timeout = TimeSpan.FromMilliseconds(35000);
-            client.BaseAddress = new Uri("http://192.168.0.18:8080/motorapido/ws/");
+            client.BaseAddress = new Uri(_urlBase);
             if (comChave) client.DefaultRequestHeaders.Add("Authentication", MotoristaLogado.chaveServicos);
             return client;
         }
+
+
+
+        private String _urlBase = "http://192.168.0.10:8080/motorapido/ws/";
+
+       // private String _urlBase = "http://104.236.95.238:8080/motorapido/ws/";
 
         /// <summary>
         /// The GetCurrentPosition
