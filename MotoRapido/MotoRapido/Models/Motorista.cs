@@ -42,7 +42,7 @@ namespace MotoRapido.Models
 
         public String banco{ get; set; }
 
-        public String comprovanteResidencial{ get; set; }
+        //public String comprovanteResidencia{ get; set; }
 
         public String email{ get; set; }
 
@@ -54,9 +54,11 @@ namespace MotoRapido.Models
 
         public DateTime dataVencimentoCNH{ get; set; }
 
-        public byte[] docCriminais{ get; set; }
+       // public byte[] docCriminais{ get; set; }
 
         public String disponivel{ get; set; }
+
+        public String bloqueado { get; set; }
 
         public String chaveServicos { get; set; }
 

@@ -1,0 +1,107 @@
+﻿using Acr.Settings;
+using Acr.UserDialogs;
+using MotoRapido.Models;
+using Newtonsoft.Json;
+using Prism.Commands;
+using Prism.Mvvm;
+using Prism.Navigation;
+using Prism.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Text;
+
+namespace MotoRapido.ViewModels
+{
+	public class ConfiguracaoViewModel : ViewModelBase
+    {
+        public DelegateCommand AlterarSenhaCommand => new DelegateCommand(AlterarSenha);
+
+        public DelegateCommand LogOffCommand => new DelegateCommand(LogOff);
+
+        public ConfiguracaoViewModel(INavigationService navigationService, IPageDialogService dialogService)
+            : base(navigationService, dialogService)
+        {
+        }
+
+        public async void LogOff()
+        {
+            try
+            {
+                var resposta = await DialogService.DisplayAlertAsync("AVISO", "Deseja realmente sair?", "Sim", "Não");
+                if (resposta)
+                {
+                    UserDialogs.Instance.ShowLoading("Processando...", MaskType.Gradient);
+
+                    var json = JsonConvert.SerializeObject(MotoristaLogado);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                    var client = new HttpClient();
+                    client.Timeout = TimeSpan.FromMilliseconds(25000);
+
+
+                    using (var response = await IniciarCliente(true).PostAsync("motorista/logoff",
+                        content))
+                    {
+                        UserDialogs.Instance.HideLoading();
+
+                        CrossSettings.Current.Clear();
+
+                        await NavigationService.NavigateAsync("/NavigationPage/Login", useModalNavigation: true);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                UserDialogs.Instance.HideLoading();
+                await DialogService.DisplayAlertAsync("Aviso", "Falha ao tentar alterar senha", "Ok");
+            }
+
+        }
+
+        public async void AlterarSenha()
+        {
+            try
+            {
+                var resposta = await UserDialogs.Instance.PromptAsync(new PromptConfig()
+                       .SetTitle("Nova Senha")
+                       .SetOkText("Ok")
+                       .SetCancelText("Cancelar")
+                       .SetInputMode(InputType.Password));
+                if (resposta.Ok)
+                {
+                    UserDialogs.Instance.ShowLoading("Processando...", MaskType.Gradient);
+                    Motorista motorista = new Motorista();
+                    motorista.codigo = MotoristaLogado.codigo;
+                    motorista.senha = resposta.Value;
+
+                    var json = JsonConvert.SerializeObject(motorista);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                    var client = new HttpClient();
+                    client.Timeout = TimeSpan.FromMilliseconds(25000);
+
+
+                    using (var response = await IniciarCliente(true).PostAsync("motorista/alterarSenha",
+                        content))
+                    {
+                        UserDialogs.Instance.HideLoading();
+
+                        await DialogService.DisplayAlertAsync("AVISO",
+                            "Senha Alterada Com Sucesso", "Ok");
+
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                UserDialogs.Instance.HideLoading();
+                await DialogService.DisplayAlertAsync("Aviso", "Falha ao tentar alterar senha", "Ok");
+            }
+
+        }
+
+    }
+}

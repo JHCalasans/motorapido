@@ -5,9 +5,9 @@
                 prism:ViewModelLocator.AutowireViewModel="True"
                 x:Class="MotoRapido.Views.NavigationPage">
 
-    <NavigationPage.ToolbarItems>
+    <!--<NavigationPage.ToolbarItems>
         <ToolbarItem Text="Sair" Priority="0" Order="Secondary"></ToolbarItem>
         
-    </NavigationPage.ToolbarItems>
+    </NavigationPage.ToolbarItems>-->
   
 </NavigationPage>

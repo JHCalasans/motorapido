@@ -8,13 +8,17 @@
     <None Remove="Imagens\botao_historico.png" />
     <None Remove="Imagens\btn_areas.png" />
     <None Remove="Imagens\btn_chamadas.png" />
+    <None Remove="Imagens\btn_config.png" />
     <None Remove="Imagens\btn_ficar_disponivel.png" />
     <None Remove="Imagens\btn_ficar_indisponivel.png" />
     <None Remove="Imagens\btn_historico.png" />
     <None Remove="Imagens\btn_indisponivel.png" />
     <None Remove="Imagens\btn_mensagens.png" />
     <None Remove="Imagens\btn_ocupado.png" />
+    <None Remove="Imagens\btn_pendencia.png" />
+    <None Remove="Imagens\livre.png" />
     <None Remove="Imagens\logo_novo.png" />
+    <None Remove="Imagens\ocupado.png" />
     <None Remove="Imagens\send_button.png" />
     <None Remove="Imagens\usuario.png" />
     <None Remove="Imagens\vazio.png" />
@@ -25,12 +29,16 @@
     <EmbeddedResource Include="Imagens\botao_historico.png" />
     <EmbeddedResource Include="Imagens\btn_areas.png" />
     <EmbeddedResource Include="Imagens\btn_chamadas.png" />
+    <EmbeddedResource Include="Imagens\btn_config.png" />
     <EmbeddedResource Include="Imagens\btn_ficar_disponivel.png" />
     <EmbeddedResource Include="Imagens\btn_historico.png" />
     <EmbeddedResource Include="Imagens\btn_ficar_indisponivel.png" />
     <EmbeddedResource Include="Imagens\btn_mensagens.png" />
     <EmbeddedResource Include="Imagens\btn_ocupado.png" />
+    <EmbeddedResource Include="Imagens\btn_pendencia.png" />
+    <EmbeddedResource Include="Imagens\livre.png" />
     <EmbeddedResource Include="Imagens\logo_novo.png" />
+    <EmbeddedResource Include="Imagens\ocupado.png" />
     <EmbeddedResource Include="Imagens\send_button.png" />
   </ItemGroup>
 
@@ -60,6 +68,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Chamada.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\Configuracao.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Home.xaml">

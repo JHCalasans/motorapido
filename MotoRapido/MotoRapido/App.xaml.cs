@@ -117,6 +117,7 @@ namespace MotoRapido
             Container.RegisterTypeForNavigation<Chamada>();
             Container.RegisterTypeForNavigation<Mensagem>();
             Container.RegisterTypeForNavigation<Views.NavigationPage>();
+            Container.RegisterTypeForNavigation<Configuracao>();
         }
 
         

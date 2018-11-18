@@ -23,6 +23,8 @@ namespace MotoRapido.ViewModels
     {
         public DelegateCommand DisponibilidadeCommand => new DelegateCommand(AlterarDisponibilidade);
 
+        public DelegateCommand ConfigCommand => new DelegateCommand(IrParaConfig);
+
         public DelegateCommand MensagemCommand => new DelegateCommand(IrParaMensagem);
 
         private ImageSource _imgDisponibilidade;
@@ -31,6 +33,14 @@ namespace MotoRapido.ViewModels
         {
             get { return _imgDisponibilidade; }
             set { SetProperty(ref _imgDisponibilidade, value); }
+        }
+
+        private ImageSource _imgStatus;
+
+        public ImageSource ImgStatus
+        {
+            get { return _imgStatus; }
+            set { SetProperty(ref _imgStatus, value); }
         }
 
         private Boolean _estaLivre;
@@ -102,6 +112,7 @@ namespace MotoRapido.ViewModels
                 EstaLivre = true;
                 CorDeFundoStatus = Color.Green;
                 TextoStatus = "LIVRE";
+                ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.livre.png");
             }
             else
             {
@@ -109,6 +120,7 @@ namespace MotoRapido.ViewModels
                 EstaLivre = false;
                 CorDeFundoStatus = Color.Red;
                 TextoStatus = "OCUPADO";
+                ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.ocupado.png");
             }
             
         }
@@ -161,6 +173,11 @@ namespace MotoRapido.ViewModels
             await NavigationService.NavigateAsync("Mensagem");
         }
 
+        private async void IrParaConfig()
+        {          
+            await NavigationService.NavigateAsync("Configuracao");
+        }
+
         private async void AlterarDisponibilidade()
         {
             try
@@ -180,7 +197,7 @@ namespace MotoRapido.ViewModels
                         EstaLivre = false;
                         CorDeFundoStatus = Color.Red;
                         TextoStatus = "OCUPADO";
-
+                        ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.ocupado.png");
                         await StopListening();
                     }
                     else
@@ -190,6 +207,7 @@ namespace MotoRapido.ViewModels
                         EstaLivre = true;
                         CorDeFundoStatus = Color.Green;
                         TextoStatus = "LIVRE";
+                        ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.livre.png");
                         CrossSettings.Current.Set("isTimerOn", true);
                         iniciarTimerPosicao();
                     }

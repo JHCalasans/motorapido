@@ -12,62 +12,74 @@
     <StackLayout >
       
 
-            <StackLayout  BackgroundColor="{Binding CorDeFundoStatus}" Margin="0,5,0,0" HeightRequest="30">
+            <!--<StackLayout  BackgroundColor="{Binding CorDeFundoStatus}" Margin="0,5,0,0" HeightRequest="30">
                 <Label Text="{Binding TextoStatus}" HorizontalOptions="Center" TextColor="White" FontAttributes="Bold"
                        VerticalOptions="Center"></Label>
-            </StackLayout>
-           
+            </StackLayout>-->
+
+        <StackLayout Orientation="Horizontal">
+            <StackLayout WidthRequest="500">
             <Label Text="{Binding MotoristaLogado.nome}"  FontSize="20"  VerticalOptions="Center" VerticalTextAlignment="Center"
                     FontAttributes="Bold" Grid.ColumnSpan="2" HorizontalOptions="Center"></Label>
         
             <Label Text="{Binding AreaPosicao.informacaoPosicao}"  HorizontalOptions="Center" HorizontalTextAlignment="Center"
                     FontSize="20"  VerticalOptions="Center" VerticalTextAlignment="Center"
                     FontAttributes="Bold" ></Label>
-      
-        
+            </StackLayout>
+
+            <Image Source="{Binding  ImgStatus}"  WidthRequest="100" HeightRequest="100" Margin="5,10,5,10"></Image>
+
+
+        </StackLayout>
+
+
         <BoxView HeightRequest="2" BackgroundColor="Blue"></BoxView>
 
-        <Grid ColumnSpacing="10" Margin="30,20,30,10" RowSpacing="20">
+        <Grid ColumnSpacing="4" Margin="30,20,30,10" RowSpacing="20">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
+               
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Image Source="{Binding ImgDisponibilidade}" Grid.Row="0" Grid.Column="0" WidthRequest="130" HeightRequest="130">
+            <Image Source="{Binding ImgDisponibilidade}" Grid.Row="0" Grid.Column="0" WidthRequest="160" HeightRequest="160">
                 <Image.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding DisponibilidadeCommand}" NumberOfTapsRequired="1"></TapGestureRecognizer>
                 </Image.GestureRecognizers>
             </Image>
 
-            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_chamadas.png}" Grid.Row="0" Grid.Column="1" WidthRequest="130" HeightRequest="130"></Image>
+            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_chamadas.png}" Grid.Row="0" Grid.Column="1" WidthRequest="160" HeightRequest="160"></Image>
 
 
-            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_mensagens.png}" Grid.Row="1" Grid.Column="0" WidthRequest="130" HeightRequest="130">
+            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_mensagens.png}" Grid.Row="1" Grid.Column="0" WidthRequest="160" HeightRequest="160">
                 <Image.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding MensagemCommand}" NumberOfTapsRequired="1"></TapGestureRecognizer>
                 </Image.GestureRecognizers>
             </Image>
 
-            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_areas.png}" Grid.Row="1" Grid.Column="1" WidthRequest="130" HeightRequest="130"></Image>
+            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_pendencia.png}" Grid.Row="1" Grid.Column="1" WidthRequest="160" HeightRequest="160"></Image>
 
            
-            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_historico.png}" Grid.Row="2" Grid.Column="0" WidthRequest="130" HeightRequest="130">
+            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_historico.png}" Grid.Row="2" Grid.Column="0" WidthRequest="160" HeightRequest="160">
                 <Image.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding DisponibilidadeCommand}" NumberOfTapsRequired="1"></TapGestureRecognizer>
                 </Image.GestureRecognizers>
             </Image>
             
-            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.vazio.png}" Grid.Row="2" Grid.Column="1" WidthRequest="130" HeightRequest="130"></Image>
+            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_config.png}" Grid.Row="2" Grid.Column="1" WidthRequest="160" HeightRequest="160">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ConfigCommand}" NumberOfTapsRequired="1"></TapGestureRecognizer>
+                </Image.GestureRecognizers>
+            </Image>
 
-            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.vazio.png}" Grid.Row="3" Grid.Column="0" WidthRequest="130" HeightRequest="130"></Image>
+            <!--<Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.vazio.png}" Grid.Row="3" Grid.Column="0" WidthRequest="130" HeightRequest="130"></Image>
 
-            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.vazio.png}" Grid.Row="3" Grid.Column="1" WidthRequest="130" HeightRequest="130"></Image>
+            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.vazio.png}" Grid.Row="3" Grid.Column="1" WidthRequest="130" HeightRequest="130"></Image>-->
         </Grid>
         
 
