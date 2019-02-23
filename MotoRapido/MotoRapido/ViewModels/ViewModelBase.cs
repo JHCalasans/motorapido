@@ -99,8 +99,8 @@
                 VerificaPosicaoParam param = new VerificaPosicaoParam
                 {
                     codMotorista = MotoristaLogado.codigo,
-                    latitude = posicao.Latitude.ToString(),
-                    longitude = posicao.Longitude.ToString()
+                    latitude = posicao.Latitude.ToString().Replace(",", "."),
+                    longitude = posicao.Longitude.ToString().Replace(",",".")
                 };
 
                 var json = JsonConvert.SerializeObject(param);
@@ -182,18 +182,20 @@
         /// <returns>The <see cref="HttpClient"/></returns>
         protected HttpClient IniciarCliente(bool comChave)
         {
-            var client = new HttpClient();
-            client.Timeout = TimeSpan.FromMilliseconds(35000);
-            client.BaseAddress = new Uri(_urlBase);
+            var client = new HttpClient
+            {
+                Timeout = TimeSpan.FromMilliseconds(35000),
+                BaseAddress = new Uri(_urlBase)
+            };
             if (comChave) client.DefaultRequestHeaders.Add("Authentication", MotoristaLogado.chaveServicos);
             return client;
         }
 
 
 
-        private String _urlBase = "http://192.168.0.10:8080/motorapido/ws/";
+        private String _urlBase = "http://192.168.0.9:8080/motorapido/ws/";
 
-       // private String _urlBase = "http://104.236.95.238:8080/motorapido/ws/";
+       // private String _urlBase = "http://104.248.186.97:8080/motorapido/ws/";
 
         /// <summary>
         /// The GetCurrentPosition

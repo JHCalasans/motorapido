@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             xmlns:behaviors1="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="MotoRapido.Views.Historico">
+
+    <ListView ItemsSource="{Binding Historico}" HasUnevenRows="True" 
+                            ItemSelected="ListaHistorico_ItemSelected"  x:Name="ListaHistorico">
+        <!--<ListView.Behaviors>
+            <behaviors1:EventToCommandBehavior EventName="ItemTapped" Command="{Binding DetalhesCertidaoCommand}"  
+                                                            EventArgsParameterPath="Item" EventArgsConverter="{StaticResource ItemTappedConverter}" ></behaviors1:EventToCommandBehavior>
+        </ListView.Behaviors>-->
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <ViewCell>
+                    <StackLayout Margin="10,10,5,0">
+                        <StackLayout Orientation="Horizontal">
+                            <StackLayout>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="Data: " TextColor="Black" VerticalOptions="Center" WidthRequest="80" ></Label>
+                                    <Label Text="{Binding dataChamada, StringFormat='{0:dd/MM/yyyy HH:mm}'}" TextColor="Gray"></Label>
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="Placa: " TextColor="Black" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="80"></Label>
+                                    <Label Text="{Binding placa}" TextColor="Gray"></Label>
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="Situação: " TextColor="Black" VerticalOptions="Center" WidthRequest="80"></Label>
+                                    <Label Text="{Binding situacao}" TextColor="Gray"></Label>
+                                </StackLayout>
+                            </StackLayout>
+                        </StackLayout>
+                        <BoxView BackgroundColor="#9d2704" HeightRequest="1"></BoxView>
+                    </StackLayout>
+                </ViewCell>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
+</ContentPage>

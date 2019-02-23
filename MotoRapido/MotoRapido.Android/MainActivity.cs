@@ -24,7 +24,10 @@ namespace MotoRapido.Droid
             UserDialogs.Init(this);
             global::Xamarin.Forms.Forms.Init(this, bundle);
 
-           // CrossCurrentActivity.Current.Init(this, bundle);
+            // CrossCurrentActivity.Current.Init(this, bundle);
+
+            LocationManager mlocManager = (LocationManager)GetSystemService(LocationService); ;
+            App.IsGPSEnable = mlocManager.IsProviderEnabled(LocationManager.GpsProvider);
 
             LoadApplication(new App(new AndroidInitializer()));
 

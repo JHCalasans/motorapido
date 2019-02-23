@@ -23,6 +23,8 @@ namespace MotoRapido
          */
         public App() : this(null) { }
 
+        public static bool IsGPSEnable = false; 
+
         public App(IPlatformInitializer initializer) : base(initializer) { }
 
         public static INavigationService AppNavigationService => (Current as App)?.CreateNavigationService();
@@ -118,6 +120,8 @@ namespace MotoRapido
             Container.RegisterTypeForNavigation<Mensagem>();
             Container.RegisterTypeForNavigation<Views.NavigationPage>();
             Container.RegisterTypeForNavigation<Configuracao>();
+            Container.RegisterTypeForNavigation<Pendencias>();
+            Container.RegisterTypeForNavigation<Historico>();
         }
 
         

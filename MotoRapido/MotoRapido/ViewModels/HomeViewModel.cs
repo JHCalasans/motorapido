@@ -11,21 +11,28 @@ using Acr.UserDialogs;
 using MotoRapido.Models;
 using MotoRapido.Views;
 using Newtonsoft.Json;
+using Plugin.Connectivity;
+using Plugin.Geolocator;
 using Prism.Navigation;
 using Prism.Services;
 using Xamarin.Forms;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
+using System.Collections.ObjectModel;
 
 namespace MotoRapido.ViewModels
 {
-	public class HomeViewModel : ViewModelBase
+    public class HomeViewModel : ViewModelBase
     {
         public DelegateCommand DisponibilidadeCommand => new DelegateCommand(AlterarDisponibilidade);
 
         public DelegateCommand ConfigCommand => new DelegateCommand(IrParaConfig);
 
         public DelegateCommand MensagemCommand => new DelegateCommand(IrParaMensagem);
+
+        public DelegateCommand PendenciasCommand => new DelegateCommand(IrParaPendencias);
+
+        public DelegateCommand HistoricoCommand => new DelegateCommand(IrParaHistorico);
 
         private ImageSource _imgDisponibilidade;
 
@@ -51,16 +58,18 @@ namespace MotoRapido.ViewModels
             set { SetProperty(ref _estaLivre, value); }
         }
 
-        
+
         private Color _corDeFundoStatus;
+
         public Color CorDeFundoStatus
         {
             get => _corDeFundoStatus;
             set => SetProperty(ref _corDeFundoStatus, value);
         }
-       
+
 
         private String _textoStatus;
+
         public string TextoStatus
         {
             get => _textoStatus;
@@ -72,13 +81,12 @@ namespace MotoRapido.ViewModels
         public HomeViewModel(INavigationService navigationService, IPageDialogService dialogService)
             : base(navigationService, dialogService)
         {
-             VerificaPermissaoLocalizacao();
-           
+            VerificaPermissaoLocalizacao();
         }
 
         private async void VerificaPermissaoLocalizacao()
         {
-             status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
+            status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
             if (status != PermissionStatus.Granted)
             {
                 if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Location))
@@ -91,17 +99,32 @@ namespace MotoRapido.ViewModels
                 if (results.ContainsKey(Permission.Location))
                     status = results[Permission.Location];
             }
+
             if (status == PermissionStatus.Granted)
             {
-                if (MotoristaLogado.disponivel.Equals("S"))
+                if (CrossConnectivity.Current.IsConnected)
                 {
-                    iniciarTimerPosicao();
+                    if (App.IsGPSEnable)
+                    {
+                        if (MotoristaLogado.disponivel.Equals("S"))
+                        {
+                            // iniciarTimerPosicao();
+                        }
+                    }
+                    else
+                    {
+                        await DialogService.DisplayAlertAsync("Aviso", "Favor ativar gps no celular.", "OK");
+                    }
                 }
-            }else if (status == PermissionStatus.Unknown || status == PermissionStatus.Denied)
-             {
-                await DialogService.DisplayAlertAsync("Aviso", "Permissão apra acessar localização negada.", "OK");
-             }
-
+                else
+                {
+                    await DialogService.DisplayAlertAsync("Aviso", "Sem conexão com a internet no momento.", "OK");
+                }
+            }
+            else if (status == PermissionStatus.Unknown || status == PermissionStatus.Denied)
+            {
+                await DialogService.DisplayAlertAsync("Aviso", "Permissão para acessar localização negada.", "OK");
+            }
         }
 
         public override void OnNavigatingTo(NavigationParameters parameters)
@@ -122,18 +145,16 @@ namespace MotoRapido.ViewModels
                 TextoStatus = "OCUPADO";
                 ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.ocupado.png");
             }
-            
         }
 
         private void BuscarInformacoesBase()
         {
-
         }
-        
+
         private async void IrParaMensagem()
         {
-
-            if (!CrossSettings.Current.Contains("mensagens") || CrossSettings.Current.Get<List<MensagemMotoristaFuncionario>>("mensagens").Count < 1)
+            if (!CrossSettings.Current.Contains("mensagens") ||
+                CrossSettings.Current.Get<List<MensagemMotoristaFuncionario>>("mensagens").Count < 1)
             {
                 try
                 {
@@ -151,14 +172,13 @@ namespace MotoRapido.ViewModels
                     if (response.IsSuccessStatusCode)
                     {
                         var respStr = await response.Content.ReadAsStringAsync();
-                        CrossSettings.Current.Set("mensagens", JsonConvert.DeserializeObject<List<Message>>(respStr));
-                       
+                       // CrossSettings.Current.Set("mensagens", JsonConvert.DeserializeObject<List<Message>>(respStr));
                     }
                     else
                     {
-                        await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
+                        await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result,
+                            "OK");
                     }
-
                 }
                 catch (Exception e)
                 {
@@ -168,14 +188,85 @@ namespace MotoRapido.ViewModels
                 {
                     UserDialogs.Instance.HideLoading();
                 }
-
             }
+
             await NavigationService.NavigateAsync("Mensagem");
         }
 
         private async void IrParaConfig()
-        {          
+        {
             await NavigationService.NavigateAsync("Configuracao");
+        }
+
+        private async void IrParaHistorico()
+        {
+
+            try
+            {
+                UserDialogs.Instance.ShowLoading("Carregando...");
+
+
+                var json = JsonConvert.SerializeObject(MotoristaLogado.codigo);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await IniciarCliente(true).PostAsync("motorista/buscarHistorico", content);
+                if (response.IsSuccessStatusCode)
+                {
+                    var respStr = await response.Content.ReadAsStringAsync();
+                    var navParam = new NavigationParameters();
+                    navParam.Add("historico", JsonConvert.DeserializeObject<ObservableCollection<RetornoHistoricoMotorista>>(respStr));
+
+                    await NavigationService.NavigateAsync("Historico", navParam);
+                }
+                else
+                {
+                    await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
+                }
+            }
+            catch (Exception e)
+            {
+                await DialogService.DisplayAlertAsync("Aviso", "Falha ao buscar histórico do motorista", "OK");
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
+            
+        }
+
+        private async void IrParaPendencias()
+        {
+           
+            try
+            {
+                UserDialogs.Instance.ShowLoading("Carregando...");
+
+              
+
+                var response = await IniciarCliente(true).GetAsync("motorista/buscarChamadasPendentes");
+                if (response.IsSuccessStatusCode)
+                {
+                    var respStr = await response.Content.ReadAsStringAsync();
+                    var navParam = new NavigationParameters();
+                    navParam.Add("chamadasPendentes", JsonConvert.DeserializeObject<ObservableCollection<Models.Chamada>>(respStr));
+                    await NavigationService.NavigateAsync("Pendencias", navParam);
+                }
+                else
+                {
+                    await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
+                }
+            }
+            catch (Exception e)
+            {
+                await DialogService.DisplayAlertAsync("Aviso", "Falha ao buscar chamadas pendentes", "OK");
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
+
+
+          
         }
 
         private async void AlterarDisponibilidade()
@@ -184,7 +275,8 @@ namespace MotoRapido.ViewModels
             {
                 UserDialogs.Instance.ShowLoading("Carregando...");
 
-                var response = await IniciarCliente(true).GetAsync("motorista/alterarDisponivel?codMotorista="+ MotoristaLogado.codigo);
+                var response = await IniciarCliente(true)
+                    .GetAsync("motorista/alterarDisponivel?codMotorista=" + MotoristaLogado.codigo);
 
                 Motorista motoTemp = new Motorista();
                 motoTemp = MotoristaLogado;
@@ -209,7 +301,7 @@ namespace MotoRapido.ViewModels
                         TextoStatus = "LIVRE";
                         ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.livre.png");
                         CrossSettings.Current.Set("isTimerOn", true);
-                        iniciarTimerPosicao();
+                         iniciarTimerPosicao();
                     }
 
                     CrossSettings.Current.Set("MotoristaLogado", motoTemp);
@@ -219,7 +311,6 @@ namespace MotoRapido.ViewModels
                 {
                     await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
                 }
-
             }
             catch (Exception e)
             {

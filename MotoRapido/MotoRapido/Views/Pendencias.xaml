@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="MotoRapido.Views.Pendencias"
+             Title="Chamadas Pendentes">
+
+    <ListView ItemsSource="{Binding ChamadasPendentes}" HasUnevenRows="True" 
+                            ItemSelected="ListaChamadas_ItemSelected"  x:Name="ListaChamadas">
+        <!--<ListView.Behaviors>
+            <behaviors1:EventToCommandBehavior EventName="ItemTapped" Command="{Binding DetalhesCertidaoCommand}"  
+                                                            EventArgsParameterPath="Item" EventArgsConverter="{StaticResource ItemTappedConverter}" ></behaviors1:EventToCommandBehavior>
+        </ListView.Behaviors>-->
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <ViewCell>
+                    <StackLayout Margin="10,10,5,0">
+                        <StackLayout Orientation="Horizontal">
+                            <StackLayout>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="Horário: " TextColor="Black" VerticalOptions="Center" WidthRequest="80" ></Label>
+                                    <Label Text="{Binding dataInicioCorrida, StringFormat='{0:dd/MM/yyyy HH:mm}'}" TextColor="Gray"></Label>
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="Destino: " TextColor="Black" VerticalOptions="Center" WidthRequest="80"></Label>
+                                    <Label Text="{Binding destinoFormatado}" TextColor="Gray"></Label>
+                                </StackLayout>
+                               
+                            </StackLayout>
+                        </StackLayout>
+                        <BoxView BackgroundColor="#9d2704" HeightRequest="1"></BoxView>
+                    </StackLayout>
+                </ViewCell>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
+
+</ContentPage>

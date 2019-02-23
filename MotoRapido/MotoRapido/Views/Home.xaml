@@ -62,12 +62,17 @@
                 </Image.GestureRecognizers>
             </Image>
 
-            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_pendencia.png}" Grid.Row="1" Grid.Column="1" WidthRequest="160" HeightRequest="160"></Image>
+            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_pendencia.png}" Grid.Row="1" Grid.Column="1" WidthRequest="160" HeightRequest="160">
+
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding PendenciasCommand}" NumberOfTapsRequired="1"></TapGestureRecognizer>
+                </Image.GestureRecognizers>
+            </Image>
 
            
             <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_historico.png}" Grid.Row="2" Grid.Column="0" WidthRequest="160" HeightRequest="160">
                 <Image.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding DisponibilidadeCommand}" NumberOfTapsRequired="1"></TapGestureRecognizer>
+                    <TapGestureRecognizer Command="{Binding HistoricoCommand}" NumberOfTapsRequired="1"></TapGestureRecognizer>
                 </Image.GestureRecognizers>
             </Image>
             
