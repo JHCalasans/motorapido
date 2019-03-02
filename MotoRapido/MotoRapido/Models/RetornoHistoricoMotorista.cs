@@ -13,5 +13,12 @@ namespace MotoRapido.Models
         public String placa { get; set; }
 
         public String situacao { get; set; }
+
+        public String destino { get; set; }
+
+        public bool showDestino
+        {
+            get { return situacao.Equals("FINALIZADA"); }
+        }
     }
 }

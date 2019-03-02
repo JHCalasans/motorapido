@@ -4,36 +4,44 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MotoRapido.Views.Pendencias"
+             xmlns:local="clr-namespace:MotoRapido.Customs"
              Title="Chamadas Pendentes">
 
-    <ListView ItemsSource="{Binding ChamadasPendentes}" HasUnevenRows="True" 
+    <StackLayout >
+        <Label Text="Chamadas" HorizontalOptions="Center" FontSize="Large" FontAttributes="Bold"></Label>
+
+        <BoxView BackgroundColor="#9d2704" HeightRequest="2"></BoxView>
+        
+        <ListView ItemsSource="{Binding ChamadasPendentes}" HasUnevenRows="True" 
                             ItemSelected="ListaChamadas_ItemSelected"  x:Name="ListaChamadas">
-        <!--<ListView.Behaviors>
+            <!--<ListView.Behaviors>
             <behaviors1:EventToCommandBehavior EventName="ItemTapped" Command="{Binding DetalhesCertidaoCommand}"  
                                                             EventArgsParameterPath="Item" EventArgsConverter="{StaticResource ItemTappedConverter}" ></behaviors1:EventToCommandBehavior>
         </ListView.Behaviors>-->
-        <ListView.ItemTemplate>
-            <DataTemplate>
-                <ViewCell>
-                    <StackLayout Margin="10,10,5,0">
-                        <StackLayout Orientation="Horizontal">
-                            <StackLayout>
-                                <StackLayout Orientation="Horizontal">
-                                    <Label Text="Horário: " TextColor="Black" VerticalOptions="Center" WidthRequest="80" ></Label>
-                                    <Label Text="{Binding dataInicioCorrida, StringFormat='{0:dd/MM/yyyy HH:mm}'}" TextColor="Gray"></Label>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Margin="10,0,5,0">
+                            <StackLayout Orientation="Horizontal">
+                                <Image Source="{local:EmbeddedImage  Source=pegar_chamada.png}" ></Image>
+                                <StackLayout>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="Horário: " TextColor="Black" VerticalOptions="Center" WidthRequest="80" ></Label>
+                                        <Label Text="{Binding dataInicioCorrida, StringFormat='{0:dd/MM/yyyy HH:mm}'}" TextColor="Gray"></Label>
+                                    </StackLayout>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="Destino: " TextColor="Black" VerticalOptions="Center" WidthRequest="80"></Label>
+                                        <Label Text="{Binding destinoFormatado}" TextColor="Gray"></Label>
+                                    </StackLayout>
+
                                 </StackLayout>
-                                <StackLayout Orientation="Horizontal">
-                                    <Label Text="Destino: " TextColor="Black" VerticalOptions="Center" WidthRequest="80"></Label>
-                                    <Label Text="{Binding destinoFormatado}" TextColor="Gray"></Label>
-                                </StackLayout>
-                               
                             </StackLayout>
+                            <BoxView BackgroundColor="#9d2704" HeightRequest="1"></BoxView>
                         </StackLayout>
-                        <BoxView BackgroundColor="#9d2704" HeightRequest="1"></BoxView>
-                    </StackLayout>
-                </ViewCell>
-            </DataTemplate>
-        </ListView.ItemTemplate>
-    </ListView>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
 
 </ContentPage>

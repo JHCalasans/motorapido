@@ -19,6 +19,7 @@
     <None Remove="Imagens\livre.png" />
     <None Remove="Imagens\logo_novo.png" />
     <None Remove="Imagens\ocupado.png" />
+    <None Remove="Imagens\pegar_chamada.png" />
     <None Remove="Imagens\send_button.png" />
     <None Remove="Imagens\usuario.png" />
     <None Remove="Imagens\vazio.png" />
@@ -39,6 +40,7 @@
     <EmbeddedResource Include="Imagens\livre.png" />
     <EmbeddedResource Include="Imagens\logo_novo.png" />
     <EmbeddedResource Include="Imagens\ocupado.png" />
+    <EmbeddedResource Include="Imagens\pegar_chamada.png" />
     <EmbeddedResource Include="Imagens\send_button.png" />
   </ItemGroup>
 
@@ -51,14 +53,16 @@
     <PackageReference Include="Acr.Settings" Version="9.0.0" />
     <PackageReference Include="Acr.UserDialogs" Version="7.0.1" />
     <PackageReference Include="Com.OneSignal" Version="3.1.1" />
+    <PackageReference Include="LiveXAML" Version="2.1.68" />
     <PackageReference Include="Microsoft.Net.Http" Version="2.2.29" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Plugin.Permissions" Version="2.2.1" />
     <PackageReference Include="Xam.Plugin.Connectivity" Version="3.2.0" />
     <PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.0.0.13" />
     <PackageReference Include="Xam.Plugin.Geolocator" Version="4.2.0" />
-    <PackageReference Include="Xamarin.Forms" Version="3.5.0.129452" />
+    <PackageReference Include="Xamarin.Forms" Version="3.5.0.169047" />
     <PackageReference Include="Prism.Unity.Forms" Version="7.0.0.269-pre" />
+    <PackageReference Include="Xamarin.Forms.GoogleMaps" Version="3.0.4" />
   </ItemGroup>
 
   <ItemGroup>

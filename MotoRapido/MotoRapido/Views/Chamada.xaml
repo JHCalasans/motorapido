@@ -3,9 +3,31 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
+             xmlns:renderers="clr-namespace:MotoRapido.Renderers"
+             xmlns:custom="clr-namespace:MotoRapido.Customs"
+             xmlns:maps="clr-namespace:Xamarin.Forms.GoogleMaps;assembly=Xamarin.Forms.GoogleMaps"
              x:Class="MotoRapido.Views.Chamada">
 
-    <Grid>
+    <StackLayout>
+        <maps:Map VerticalOptions="FillAndExpand" x:Name="map" MyLocationEnabled="True" >
+            
+        </maps:Map>
+              
+    </StackLayout>
+
+    <!--<ContentPage.Content>
+        --><!--<StackLayout Padding="30">  
+            <Entry Placeholder="Origem" Text="{Binding Origem}"/>
+            <Entry Placeholder="Destino" Text="{Binding Destino}"/>
+            <Button Text="Pesquisar Rota" Command="{Binding PesquisarCommand}"/>
+            <renderers:MapCustomRender x:Name="MyMap" WidthRequest="320" HeightRequest="300" IsShowingUser="True" />
+           
+        </StackLayout>--><!--
+        <ContentView Content="{Binding MyMap}"> </ContentView>
+    </ContentPage.Content>-->
+
+   
+    <!--<Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
@@ -18,6 +40,8 @@
 
         <Button Text="Teste" Grid.Column="0" Grid.Row="1"></Button>
 
-    </Grid>
+    </Grid>-->
+    
+    
 
 </ContentPage>

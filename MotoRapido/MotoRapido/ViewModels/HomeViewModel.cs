@@ -34,6 +34,8 @@ namespace MotoRapido.ViewModels
 
         public DelegateCommand HistoricoCommand => new DelegateCommand(IrParaHistorico);
 
+        public DelegateCommand ChamadaCommand => new DelegateCommand(IrParaChamada);
+
         private ImageSource _imgDisponibilidade;
 
         public ImageSource ImgDisponibilidade
@@ -196,6 +198,11 @@ namespace MotoRapido.ViewModels
         private async void IrParaConfig()
         {
             await NavigationService.NavigateAsync("Configuracao");
+        }
+
+        private async void IrParaChamada()
+        {
+            await NavigationService.NavigateAsync("Chamada");
         }
 
         private async void IrParaHistorico()

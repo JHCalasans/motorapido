@@ -13,7 +13,7 @@ namespace MotoRapido.Views
         protected override void OnDisappearing()
         {
             var tes = BindingContext as LoginViewModel;
-            tes.Dispose();
+            //tes.Dispose();
             base.OnDisappearing();
             BindingContext = null;
             Content = null;

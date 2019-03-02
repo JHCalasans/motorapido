@@ -53,7 +53,11 @@
                 </Image.GestureRecognizers>
             </Image>
 
-            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_chamadas.png}" Grid.Row="0" Grid.Column="1" WidthRequest="160" HeightRequest="160"></Image>
+            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_chamadas.png}" Grid.Row="0" Grid.Column="1" WidthRequest="160" HeightRequest="160">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ChamadaCommand}" NumberOfTapsRequired="1"></TapGestureRecognizer>
+                </Image.GestureRecognizers>
+            </Image>
 
 
             <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_mensagens.png}" Grid.Row="1" Grid.Column="0" WidthRequest="160" HeightRequest="160">

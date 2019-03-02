@@ -4,38 +4,49 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              xmlns:behaviors1="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="MotoRapido.Views.Historico">
+             x:Class="MotoRapido.Views.Historico"
+             Title="Histórico">
 
-    <ListView ItemsSource="{Binding Historico}" HasUnevenRows="True" 
+    <StackLayout>
+        <Label Text="Chamadas" HorizontalOptions="Center" FontSize="Large" FontAttributes="Bold"> </Label>
+
+        <BoxView BackgroundColor="#9d2704" HeightRequest="1"></BoxView>
+        
+        <ListView ItemsSource="{Binding Historico}" HasUnevenRows="True" 
                             ItemSelected="ListaHistorico_ItemSelected"  x:Name="ListaHistorico">
-        <!--<ListView.Behaviors>
+            <!--<ListView.Behaviors>
             <behaviors1:EventToCommandBehavior EventName="ItemTapped" Command="{Binding DetalhesCertidaoCommand}"  
                                                             EventArgsParameterPath="Item" EventArgsConverter="{StaticResource ItemTappedConverter}" ></behaviors1:EventToCommandBehavior>
         </ListView.Behaviors>-->
-        <ListView.ItemTemplate>
-            <DataTemplate>
-                <ViewCell>
-                    <StackLayout Margin="10,10,5,0">
-                        <StackLayout Orientation="Horizontal">
-                            <StackLayout>
-                                <StackLayout Orientation="Horizontal">
-                                    <Label Text="Data: " TextColor="Black" VerticalOptions="Center" WidthRequest="80" ></Label>
-                                    <Label Text="{Binding dataChamada, StringFormat='{0:dd/MM/yyyy HH:mm}'}" TextColor="Gray"></Label>
-                                </StackLayout>
-                                <StackLayout Orientation="Horizontal">
-                                    <Label Text="Placa: " TextColor="Black" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="80"></Label>
-                                    <Label Text="{Binding placa}" TextColor="Gray"></Label>
-                                </StackLayout>
-                                <StackLayout Orientation="Horizontal">
-                                    <Label Text="Situação: " TextColor="Black" VerticalOptions="Center" WidthRequest="80"></Label>
-                                    <Label Text="{Binding situacao}" TextColor="Gray"></Label>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Margin="10,0,5,0">
+                            <StackLayout Orientation="Horizontal">
+                                <StackLayout>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="Data: " TextColor="Black" VerticalOptions="Center" WidthRequest="80" ></Label>
+                                        <Label Text="{Binding dataChamada, StringFormat='{0:dd/MM/yyyy HH:mm}'}" TextColor="Gray"></Label>
+                                    </StackLayout>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="Placa: " TextColor="Black" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="80"></Label>
+                                        <Label Text="{Binding placa}" TextColor="Gray"></Label>
+                                    </StackLayout>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="Situação: " TextColor="Black" VerticalOptions="Center" WidthRequest="80"></Label>
+                                        <Label Text="{Binding situacao}" TextColor="Gray"></Label>
+                                    </StackLayout>
+                                    <StackLayout Orientation="Horizontal" IsVisible="{Binding showDestino}">
+                                        <Label Text="Destino: " TextColor="Black" VerticalOptions="Center" WidthRequest="80"></Label>
+                                        <Label Text="{Binding destino}" TextColor="Gray"></Label>
+                                    </StackLayout>
                                 </StackLayout>
                             </StackLayout>
+                            <BoxView BackgroundColor="#9d2704" HeightRequest="1"></BoxView>
                         </StackLayout>
-                        <BoxView BackgroundColor="#9d2704" HeightRequest="1"></BoxView>
-                    </StackLayout>
-                </ViewCell>
-            </DataTemplate>
-        </ListView.ItemTemplate>
-    </ListView>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
 </ContentPage>

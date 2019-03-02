@@ -63,6 +63,8 @@ namespace MotoRapido.Models
         public String chaveServicos { get; set; }
 
         public String idPush { get; set; }
-        
+
+        public String chaveGoogle { get; set; }
+
     }
 }

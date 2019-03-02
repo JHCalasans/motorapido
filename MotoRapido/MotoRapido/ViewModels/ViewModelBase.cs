@@ -193,7 +193,7 @@
 
 
 
-        private String _urlBase = "http://192.168.0.9:8080/motorapido/ws/";
+        private String _urlBase = "http://10.0.3.2:8080/motorapido/ws/";
 
        // private String _urlBase = "http://104.248.186.97:8080/motorapido/ws/";
 
@@ -311,5 +311,18 @@
 
             CrossSettings.Current.Set("isTimerOn", false);
         }
+
+
+
+        public enum SituacaoChamadaEnum : int
+        {
+            CANCELADA = 1,
+            PENDENTE = 2,
+            ACEITA = 3,
+            EXPIRADA = 4,
+            PENDENTE_GERAL = 5,
+            FINALIZADA = 6
+        };
+
     }
 }

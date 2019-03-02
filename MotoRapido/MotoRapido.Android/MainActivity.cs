@@ -8,6 +8,7 @@ using Plugin.CurrentActivity;
 using Plugin.Permissions;
 using Prism.Unity;
 using Unity;
+using Xamarin.Forms.GoogleMaps.Android;
 
 namespace MotoRapido.Droid
 {
@@ -21,9 +22,17 @@ namespace MotoRapido.Droid
 
             base.OnCreate(bundle);
 
-            UserDialogs.Init(this);
             global::Xamarin.Forms.Forms.Init(this, bundle);
+            UserDialogs.Init(this);
+            // Xamarin.FormsMaps.Init(this, bundle);
+            //  Xamarin.FormsGoogleMaps.Init(this, bundle);
 
+            var platformConfig = new PlatformConfig
+            {
+                BitmapDescriptorFactory = new CachingNativeBitmapDescriptorFactory()
+            };
+
+            Xamarin.FormsGoogleMaps.Init(this, bundle, platformConfig); // initialize for Xamarin.Forms.GoogleMaps
             // CrossCurrentActivity.Current.Init(this, bundle);
 
             LocationManager mlocManager = (LocationManager)GetSystemService(LocationService); ;
