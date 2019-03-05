@@ -174,7 +174,7 @@ namespace MotoRapido.ViewModels
                     if (response.IsSuccessStatusCode)
                     {
                         var respStr = await response.Content.ReadAsStringAsync();
-                       // CrossSettings.Current.Set("mensagens", JsonConvert.DeserializeObject<List<Message>>(respStr));
+                        // CrossSettings.Current.Set("mensagens", JsonConvert.DeserializeObject<List<Message>>(respStr));
                     }
                     else
                     {
@@ -202,7 +202,40 @@ namespace MotoRapido.ViewModels
 
         private async void IrParaChamada()
         {
-            await NavigationService.NavigateAsync("Chamada");
+
+            try
+            {
+                UserDialogs.Instance.ShowLoading("Carregando...");
+
+                var response = await new HttpClient()
+                {
+                    Timeout = TimeSpan.FromMilliseconds(35000)
+                }.GetAsync("https://maps.googleapis.com/maps/api/directions/json?origin=-" +
+                "10.903183,-37.077807&destination=-10.965213,-37.079690&alternatives=false&" +
+                "key=" + MotoristaLogado.chaveGoogle);
+                if (response.IsSuccessStatusCode)
+                {
+                    var respStr = await response.Content.ReadAsStringAsync();
+                    GoogleDirection googleDirection = JsonConvert.DeserializeObject<GoogleDirection>(respStr);
+                    var navParam = new NavigationParameters();
+                    navParam.Add("polylines_encoded", googleDirection.routes[0].overview_polyline.points);
+                    await NavigationService.NavigateAsync("Chamada", navParam);
+                }
+                else
+                {
+                    await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
+                }
+
+
+            }
+            catch (Exception e)
+            {
+                await DialogService.DisplayAlertAsync("Aviso", "Falha ao buscar histórico do motorista", "OK");
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
         }
 
         private async void IrParaHistorico()
@@ -238,17 +271,17 @@ namespace MotoRapido.ViewModels
             {
                 UserDialogs.Instance.HideLoading();
             }
-            
+
         }
 
         private async void IrParaPendencias()
         {
-           
+
             try
             {
                 UserDialogs.Instance.ShowLoading("Carregando...");
 
-              
+
 
                 var response = await IniciarCliente(true).GetAsync("motorista/buscarChamadasPendentes");
                 if (response.IsSuccessStatusCode)
@@ -273,7 +306,7 @@ namespace MotoRapido.ViewModels
             }
 
 
-          
+
         }
 
         private async void AlterarDisponibilidade()
@@ -308,7 +341,7 @@ namespace MotoRapido.ViewModels
                         TextoStatus = "LIVRE";
                         ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.livre.png");
                         CrossSettings.Current.Set("isTimerOn", true);
-                         iniciarTimerPosicao();
+                        iniciarTimerPosicao();
                     }
 
                     CrossSettings.Current.Set("MotoristaLogado", motoTemp);

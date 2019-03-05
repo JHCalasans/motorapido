@@ -23,7 +23,7 @@ namespace MotoRapido
          */
         public App() : this(null) { }
 
-        public static bool IsGPSEnable = false; 
+        public static bool IsGPSEnable = false;
 
         public App(IPlatformInitializer initializer) : base(initializer) { }
 

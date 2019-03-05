@@ -71,7 +71,7 @@ namespace MotoRapido.ViewModels
                     var respStr = await response.Content.ReadAsStringAsync();
                     CrossSettings.Current.Set("MotoristaLogado", JsonConvert.DeserializeObject<Motorista>(respStr));
                     CrossSettings.Current.Set("IsTimerOn", MotoristaLogado.disponivel.Equals("S"));
-                    CrossSettings.Current.Set("ChaveGoogle", MotoristaLogado.chaveGoogle);
+                    // CrossSettings.Current.Set("ChaveGoogle", MotoristaLogado.chaveGoogle);
 
                     await NavigationService.NavigateAsync("//NavigationPage/Home");
                 }

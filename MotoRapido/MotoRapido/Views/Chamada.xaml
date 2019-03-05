@@ -3,14 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
-             xmlns:renderers="clr-namespace:MotoRapido.Renderers"
+             xmlns:bindings="clr-namespace:Xamarin.Forms.GoogleMaps.Bindings;assembly=Xamarin.Forms.GoogleMaps.Bindings"
              xmlns:custom="clr-namespace:MotoRapido.Customs"
              xmlns:maps="clr-namespace:Xamarin.Forms.GoogleMaps;assembly=Xamarin.Forms.GoogleMaps"
              x:Class="MotoRapido.Views.Chamada">
 
     <StackLayout>
         <maps:Map VerticalOptions="FillAndExpand" x:Name="map" MyLocationEnabled="True" >
-            
+            <maps:Map.Behaviors>
+                <bindings:BindingPinsBehavior Value="{Binding Pins}" ></bindings:BindingPinsBehavior>
+                <bindings:BindingPolylinesBehavior Value="{Binding Polylines}"></bindings:BindingPolylinesBehavior>
+                <bindings:MoveToRegionBehavior Request="{Binding MoveToRegionReq}"></bindings:MoveToRegionBehavior>
+            </maps:Map.Behaviors>
         </maps:Map>
               
     </StackLayout>
