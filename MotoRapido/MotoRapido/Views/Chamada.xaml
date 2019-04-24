@@ -6,7 +6,8 @@
              xmlns:bindings="clr-namespace:Xamarin.Forms.GoogleMaps.Bindings;assembly=Xamarin.Forms.GoogleMaps.Bindings"
              xmlns:custom="clr-namespace:MotoRapido.Customs"
              xmlns:maps="clr-namespace:Xamarin.Forms.GoogleMaps;assembly=Xamarin.Forms.GoogleMaps"
-             x:Class="MotoRapido.Views.Chamada">
+             x:Class="MotoRapido.Views.Chamada"
+             Title="Rota">
 
     <StackLayout>
         <maps:Map VerticalOptions="FillAndExpand" x:Name="map" MyLocationEnabled="True" >

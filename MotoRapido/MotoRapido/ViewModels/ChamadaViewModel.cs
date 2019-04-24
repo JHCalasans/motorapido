@@ -56,37 +56,65 @@ namespace MotoRapido.ViewModels
         {
             // Pins = new ObservableCollection<Pin>();
 
-            //Pin pin = new Pin()
-            //{
-            //    Type = PinType.Place,
-            //    Label = "Central Park NYC",
-            //    Address = "New York City, NY 10022",
-            //    Position = new Position(40.78d, -73.96d),
-            //    IsDraggable = true,
-            //    Icon = BitmapDescriptorFactory.FromBundle("ic_map.png")
-            //};
-            // Pins.Add(pin);
+            
 
             String polylines = null;
             if (parameters.ContainsKey("polylines_encoded"))
                 polylines = (String)parameters["polylines_encoded"];
 
+            if (MotoristaLogado.verDestino.Equals("S"))
+            {
+                List<Position> lista = DecodePolylinePoints(polylines);
 
-            List<Position> lista = DecodePolylinePoints(polylines);
+                Pin inicioPin = new Pin()
+                {
+                    Type = PinType.Place,
+                    Label = "Início",
+                    Position = lista[0],
+                    IsDraggable = true,
+                    Icon = BitmapDescriptorFactory.DefaultMarker(Color.Green)
+                };
+                Pins.Add(inicioPin);
 
-            var polyline = new Polyline();
-            foreach (Position posi in lista){
-                polyline.Positions.Add(posi);
+                Pin finalPin = new Pin()
+                {
+                    Type = PinType.Place,
+                    Label = "Final",
+                    Position = lista[lista.Count - 1],
+                    IsDraggable = true,
+                    Icon = BitmapDescriptorFactory.FromBundle("chegada.png")
+
+                };
+                Pins.Add(finalPin);
+
+                var polyline = new Polyline();
+                foreach (Position posi in lista)
+                {
+                    polyline.Positions.Add(posi);
+                }
+                //polyline.Positions.Add(new Position(40.77d, -73.93d));
+                //polyline.Positions.Add(new Position(40.81d, -73.91d));
+                //polyline.Positions.Add(new Position(40.83d, -73.87d));
+                polyline.IsClickable = true;
+                polyline.StrokeColor = Color.Blue;
+                polyline.StrokeWidth = 2f;
+                Polylines.Add(polyline);
+
+                MoveToRegionReq.MoveToRegion(MapSpan.FromCenterAndRadius(lista[0], Distance.FromKilometers(6.0)));
             }
-            //polyline.Positions.Add(new Position(40.77d, -73.93d));
-            //polyline.Positions.Add(new Position(40.81d, -73.91d));
-            //polyline.Positions.Add(new Position(40.83d, -73.87d));
-            polyline.IsClickable = true;
-            polyline.StrokeColor = Color.Blue;
-            polyline.StrokeWidth = 3f;
-            Polylines.Add(polyline);
-
-            MoveToRegionReq.MoveToRegion(MapSpan.FromCenterAndRadius(lista[0], Distance.FromKilometers(6.0)));
+            else
+            {
+                Pin inicioPin = new Pin()
+                {
+                    Type = PinType.Place,
+                    Label = "Início",
+                    Position = new Position(-10.903183, -37.077807),
+                    IsDraggable = true,
+                    Icon = BitmapDescriptorFactory.DefaultMarker(Color.Green)
+                };
+                Pins.Add(inicioPin);
+                MoveToRegionReq.MoveToRegion(MapSpan.FromCenterAndRadius(inicioPin.Position, Distance.FromKilometers(6.0)));
+            }
         }
 
 

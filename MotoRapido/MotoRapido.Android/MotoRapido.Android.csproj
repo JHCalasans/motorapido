@@ -212,5 +212,8 @@
   <ItemGroup>
     <AndroidAsset Include="Assets\ic_map.png" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\chegada.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

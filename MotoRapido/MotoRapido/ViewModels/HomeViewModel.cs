@@ -202,40 +202,43 @@ namespace MotoRapido.ViewModels
 
         private async void IrParaChamada()
         {
-
-            try
+            if (MotoristaLogado.verDestino.Equals("S"))
             {
-                UserDialogs.Instance.ShowLoading("Carregando...");
+                try
+                {
+                    UserDialogs.Instance.ShowLoading("Carregando...");
 
-                var response = await new HttpClient()
-                {
-                    Timeout = TimeSpan.FromMilliseconds(35000)
-                }.GetAsync("https://maps.googleapis.com/maps/api/directions/json?origin=-" +
-                "10.903183,-37.077807&destination=-10.965213,-37.079690&alternatives=false&" +
-                "key=" + MotoristaLogado.chaveGoogle);
-                if (response.IsSuccessStatusCode)
-                {
-                    var respStr = await response.Content.ReadAsStringAsync();
-                    GoogleDirection googleDirection = JsonConvert.DeserializeObject<GoogleDirection>(respStr);
-                    var navParam = new NavigationParameters();
-                    navParam.Add("polylines_encoded", googleDirection.routes[0].overview_polyline.points);
-                    await NavigationService.NavigateAsync("Chamada", navParam);
+                    var response = await new HttpClient()
+                    {
+                        Timeout = TimeSpan.FromMilliseconds(35000)
+                    }.GetAsync("https://maps.googleapis.com/maps/api/directions/json?origin=-" +
+                    "10.903183,-37.077807&destination=-10.965213,-37.079690&alternatives=false&" +
+                    "key=" + MotoristaLogado.chaveGoogle);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var respStr = await response.Content.ReadAsStringAsync();
+                        GoogleDirection googleDirection = JsonConvert.DeserializeObject<GoogleDirection>(respStr);
+                        var navParam = new NavigationParameters();
+                        navParam.Add("polylines_encoded", googleDirection.routes[0].overview_polyline.points);
+                        await NavigationService.NavigateAsync("Chamada", navParam);
+                    }
+                    else
+                    {
+                        await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
+                    }
+
+
                 }
-                else
+                catch (Exception e)
                 {
-                    await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
+                    await DialogService.DisplayAlertAsync("Aviso", "Falha ao buscar histórico do motorista", "OK");
                 }
-
-
-            }
-            catch (Exception e)
-            {
-                await DialogService.DisplayAlertAsync("Aviso", "Falha ao buscar histórico do motorista", "OK");
-            }
-            finally
-            {
-                UserDialogs.Instance.HideLoading();
-            }
+                finally
+                {
+                    UserDialogs.Instance.HideLoading();
+                }
+            }else
+                await NavigationService.NavigateAsync("Chamada");
         }
 
         private async void IrParaHistorico()

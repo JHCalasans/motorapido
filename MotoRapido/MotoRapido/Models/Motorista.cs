@@ -46,7 +46,7 @@ namespace MotoRapido.Models
 
         public String email{ get; set; }
 
-        public byte[] foto{ get; set; }
+       // public byte[] foto{ get; set; }
 
         public DateTime dataNascimento{ get; set; }
 
@@ -65,6 +65,8 @@ namespace MotoRapido.Models
         public String idPush { get; set; }
 
         public String chaveGoogle { get; set; }
+
+        public String verDestino { get; set; }
 
     }
 }

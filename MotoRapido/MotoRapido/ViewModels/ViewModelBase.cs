@@ -195,7 +195,9 @@
 
         private String _urlBase = "http://10.0.3.2:8080/motorapido/ws/";
 
-       // private String _urlBase = "http://104.248.186.97:8080/motorapido/ws/";
+       // private String _urlBase = "http://192.168.0.6:8080/motorapido/ws/";
+
+        // private String _urlBase = "http://104.248.186.97:8080/motorapido/ws/";
 
         /// <summary>
         /// The GetCurrentPosition
