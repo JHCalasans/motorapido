@@ -7,7 +7,8 @@
              xmlns:custom="clr-namespace:MotoRapido.Customs"
              xmlns:maps="clr-namespace:Xamarin.Forms.GoogleMaps;assembly=Xamarin.Forms.GoogleMaps"
              x:Class="MotoRapido.Views.Chamada"
-             Title="Rota">
+             Title="Rota"
+             NavigationPage.HasNavigationBar="False">
 
     <StackLayout>
         <maps:Map VerticalOptions="FillAndExpand" x:Name="map" MyLocationEnabled="True" >
@@ -17,7 +18,11 @@
                 <bindings:MoveToRegionBehavior Request="{Binding MoveToRegionReq}"></bindings:MoveToRegionBehavior>
             </maps:Map.Behaviors>
         </maps:Map>
-              
+        <StackLayout Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="Center" >
+            <Button Text="Iniciar" BackgroundColor="Green" Padding="0,0,10,0" IsVisible="{Binding ShowBotaoInicio}"
+                    Command="{Binding IniciarCorridaCommand}"></Button>
+            <Button Text="{Binding TextoBotaoFinal}" BackgroundColor="Red" Command="{Binding BotaoFinalCommand}"></Button>
+        </StackLayout>
     </StackLayout>
 
     <!--<ContentPage.Content>

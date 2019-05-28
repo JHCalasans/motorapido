@@ -5,6 +5,7 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MotoRapido.Views.Pendencias"
              xmlns:local="clr-namespace:MotoRapido.Customs"
+             xmlns:behaviors1="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
              Title="Chamadas Pendentes">
 
     <StackLayout >
@@ -14,20 +15,20 @@
         
         <ListView ItemsSource="{Binding ChamadasPendentes}" HasUnevenRows="True" 
                             ItemSelected="ListaChamadas_ItemSelected"  x:Name="ListaChamadas">
-            <!--<ListView.Behaviors>
-            <behaviors1:EventToCommandBehavior EventName="ItemTapped" Command="{Binding DetalhesCertidaoCommand}"  
-                                                            EventArgsParameterPath="Item" EventArgsConverter="{StaticResource ItemTappedConverter}" ></behaviors1:EventToCommandBehavior>
-        </ListView.Behaviors>-->
+           <ListView.Behaviors>
+            <behaviors1:EventToCommandBehavior EventName="ItemTapped" Command="{Binding SelecionarChamadaCommand}"  
+                             EventArgsParameterPath="Item" EventArgsConverter="{StaticResource ItemTappedConverter}" ></behaviors1:EventToCommandBehavior>
+        </ListView.Behaviors>
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
                         <StackLayout Margin="10,0,5,0">
                             <StackLayout Orientation="Horizontal">
-                                <Image Source="{local:EmbeddedImage  Source=pegar_chamada.png}" ></Image>
+                                <Image Source="{local:EmbeddedImage  MotoRapido.Imagens.pegar_chamada.png}" ></Image>
                                 <StackLayout>
                                     <StackLayout Orientation="Horizontal">
                                         <Label Text="Horário: " TextColor="Black" VerticalOptions="Center" WidthRequest="80" ></Label>
-                                        <Label Text="{Binding dataInicioCorrida, StringFormat='{0:dd/MM/yyyy HH:mm}'}" TextColor="Gray"></Label>
+                                        <Label Text="{Binding dataInicioEspera, StringFormat='{0:dd/MM/yyyy HH:mm}'}" TextColor="Gray"></Label>
                                     </StackLayout>
                                     <StackLayout Orientation="Horizontal">
                                         <Label Text="Destino: " TextColor="Black" VerticalOptions="Center" WidthRequest="80"></Label>

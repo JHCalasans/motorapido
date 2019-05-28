@@ -1,17 +1,23 @@
-﻿using Prism.Commands;
-using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿
 using Prism.Navigation;
 using Prism.Services;
 using System.Collections.ObjectModel;
 using MotoRapido.Models;
+using Prism.Commands;
+using Acr.UserDialogs;
+using System;
+using Newtonsoft.Json;
+using System.Net.Http;
+using System.Text;
+using Acr.Settings;
 
 namespace MotoRapido.ViewModels
 {
     public class PendenciasViewModel : ViewModelBase
     {
+
+        public DelegateCommand<Chamada> SelecionarChamadaCommand =>
+            new DelegateCommand<Chamada>(SelecionarChamada);
 
         private ObservableCollection<Chamada> _chamadasPendentes;
         public ObservableCollection<Chamada> ChamadasPendentes
@@ -30,6 +36,47 @@ namespace MotoRapido.ViewModels
         {
             if (parameters.ContainsKey("chamadasPendentes"))
                 ChamadasPendentes =(ObservableCollection<Chamada>) parameters["chamadasPendentes"];
+        }
+
+        public async void SelecionarChamada(Chamada chamada)
+        {
+            try
+            {
+                UserDialogs.Instance.ShowLoading("Carregando...");
+
+                SelecaoChamadaParam param = new SelecaoChamadaParam();
+                param.chamada = chamada;
+                param.dataDecisao = DateTime.Now;
+                param.codVeiculo = CrossSettings.Current.Get<RetornoVeiculosMotorista>("VeiculoSelecionado").codVeiculo;
+
+                var json = JsonConvert.SerializeObject(param);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await IniciarCliente(true).PostAsync("motorista/selecionarChamada", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var respStr = await response.Content.ReadAsStringAsync();
+                    chamada = JsonConvert.DeserializeObject<Chamada>(respStr);
+                    CrossSettings.Current.Remove("chamadaAceita");
+                    CrossSettings.Current.Set("ChamadaAceita", chamada);
+                   // var navParam = new NavigationParameters();
+                   // navParam.Add("chamadaAceita", chamada);
+                    await NavigationService.NavigateAsync("Chamada", null,true);
+                }
+                else
+                {
+                    await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
+                }
+            }
+            catch (Exception e)
+            {
+                await DialogService.DisplayAlertAsync("Aviso", "Falha ao selecionar chamada", "OK");
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
         }
 
 

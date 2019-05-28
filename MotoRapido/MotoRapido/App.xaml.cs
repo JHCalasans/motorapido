@@ -1,6 +1,8 @@
 ﻿using Acr.Settings;
 using Com.OneSignal;
 using Com.OneSignal.Abstractions;
+using Matcha.BackgroundService;
+using MotoRapido.Customs;
 using MotoRapido.ViewModels;
 using MotoRapido.Views;
 using Prism.Navigation;
@@ -36,7 +38,9 @@ namespace MotoRapido
 
             OneSignal.Current.StartInit("a1a45079-6c44-4353-9588-47d8fbc306bb").HandleNotificationReceived(HandleNotificationReceived)
                 .HandleNotificationOpened(HandleNotificationOpened).EndInit();
-          
+
+
+            BackgroundAggregatorService.Add(() => new ChecagemInicioCorrida());
 
             InitializeComponent();
 
@@ -45,10 +49,19 @@ namespace MotoRapido
 
             if (CrossSettings.Current.Contains("MotoristaLogado"))
             {
-                if (CrossSettings.Current.Contains("ExisteChamada"))
-                    await NavigationService.NavigateAsync("NavigationPage/Home/Chamada");
+                if (CrossSettings.Current.Contains("VeiculoSelecionado"))
+                {
+                    //if (CrossSettings.Current.Contains("ChamadaEmCorrida") || CrossSettings.Current.Contains("ExisteChamada"))
+                    //    await NavigationService.NavigateAsync("NavigationPage/Home/Chamada");
+                    //else
+                        await NavigationService.NavigateAsync("NavigationPage/Home");
+                }
                 else
-                    await NavigationService.NavigateAsync("NavigationPage/Home");
+                {
+                    NavigationParameters param = new NavigationParameters();
+                    param.Add("pesquisar", true);
+                    await NavigationService.NavigateAsync("NavigationPage/Veiculos",param);
+                }
             }
             else
                 await NavigationService.NavigateAsync("NavigationPage/Login");
@@ -122,6 +135,7 @@ namespace MotoRapido
             Container.RegisterTypeForNavigation<Configuracao>();
             Container.RegisterTypeForNavigation<Pendencias>();
             Container.RegisterTypeForNavigation<Historico>();
+            Container.RegisterTypeForNavigation<Veiculos>();
         }
 
         

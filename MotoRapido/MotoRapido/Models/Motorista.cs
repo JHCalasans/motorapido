@@ -68,5 +68,7 @@ namespace MotoRapido.Models
 
         public String verDestino { get; set; }
 
+        public List<RetornoVeiculosMotorista> veiculos { get; set; }
+
     }
 }

@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             xmlns:behaviors1="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
+             xmlns:local="clr-namespace:MotoRapido.Customs"
+             x:Class="MotoRapido.Views.Veiculos"
+             NavigationPage.HasNavigationBar="False">
+
+
+    <StackLayout >
+        <StackLayout IsVisible="{Binding MostrarLista}">
+            <Label Text="Selecione um veículo" HorizontalOptions="Center" FontSize="Large" FontAttributes="Bold"></Label>
+
+            <BoxView BackgroundColor="#9d2704" HeightRequest="2"></BoxView>
+
+            <ListView ItemsSource="{Binding Veiculos}" HasUnevenRows="True" 
+                            ItemSelected="ListaVeiculos_ItemSelected"  x:Name="ListaVeiculos">
+                <ListView.Behaviors>
+                    <behaviors1:EventToCommandBehavior EventName="ItemTapped" Command="{Binding SelecionarVeiculoCommand}"  
+                             EventArgsParameterPath="Item" EventArgsConverter="{StaticResource ItemTappedConverter}" ></behaviors1:EventToCommandBehavior>
+                </ListView.Behaviors>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Margin="10,0,5,0">
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="Tipo: " TextColor="Black" VerticalOptions="Center" WidthRequest="80" ></Label>
+                                    <Label Text="{Binding tipoVeiculo}" TextColor="Gray"></Label>
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="Modelo: " TextColor="Black" VerticalOptions="Center" WidthRequest="80"></Label>
+                                    <Label Text="{Binding modelo}" TextColor="Gray"></Label>
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="Placa: " TextColor="Black" VerticalOptions="Center" WidthRequest="80"></Label>
+                                    <Label Text="{Binding placa}" TextColor="Gray"></Label>
+                                </StackLayout>
+
+                                <BoxView BackgroundColor="#9d2704" HeightRequest="1"></BoxView>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+
+        <StackLayout IsVisible="{Binding MostrarLista, Converter={StaticResource BooleanConverter}}" 
+                     VerticalOptions="Center" Margin="10,150,10,0" HorizontalOptions="Center">
+            <Label Text="Nenhum veículo cadastrado, favor solicitar o cadastro de um veículo na matriz." 
+                   HorizontalOptions="Center" FontSize="Small" FontAttributes="Bold" Margin="30,150,10,0">
+            </Label>
+            <Image Source="{local:EmbeddedImage  MotoRapido.Imagens.atencao.png}" HorizontalOptions="Center" WidthRequest="100" HeightRequest="100"></Image>
+
+        </StackLayout>
+    </StackLayout>
+
+
+</ContentPage>

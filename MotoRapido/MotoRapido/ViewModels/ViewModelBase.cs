@@ -1,6 +1,7 @@
 ﻿namespace MotoRapido.ViewModels
 {
     using Acr.Settings;
+    using Acr.UserDialogs;
     using MotoRapido.Customs;
     using MotoRapido.Models;
     using Newtonsoft.Json;
@@ -15,6 +16,7 @@
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
+    using Xamarin.Forms;
 
     /// <summary>
     /// Defines the <see cref="ViewModelBase" />
@@ -95,7 +97,7 @@
         {
             try
             {
-
+                
                 VerificaPosicaoParam param = new VerificaPosicaoParam
                 {
                     codMotorista = MotoristaLogado.codigo,
@@ -110,13 +112,25 @@
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result,
-                        "OK");
+
+                    if (response.StatusCode == System.Net.HttpStatusCode.NotAcceptable)
+                    {
+                        AreaPosicao = new RetornoVerificaPosicao();
+                        AreaPosicao.msgErro = response.Content.ReadAsStringAsync().Result;
+                    }
+
+                    //await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result,
+                    //    "OK");
                 }
                 else
-                {
+                {                   
                     var respStr = await response.Content.ReadAsStringAsync();
                     AreaPosicao = JsonConvert.DeserializeObject<RetornoVerificaPosicao>(respStr);
+                    if (AreaPosicao.areaAtual == null)
+                        AreaPosicao = null;
+                    if (CrossSettings.Current.Contains("ChamadaEmCorrida"))
+                        AreaPosicao.msgErro = "Chamada Em Andamento!";
+                    
                 }
 
 
@@ -135,7 +149,8 @@
             //   if (StoppableTimer == null) StoppableTimer = new StoppableTimer(TimeSpan.FromSeconds(2), Localizar);
 
             if (CrossSettings.Current.Get<bool>("IsTimerOn"))
-                await StartListening();
+               await  StartListening();
+           
         }
 
         /// <summary>
@@ -154,6 +169,7 @@
         public Motorista MotoristaLogado
         {
             get { return CrossSettings.Current.Get<Motorista>("MotoristaLogado"); }
+            set { ; }
         }
 
         /// <summary>
@@ -173,7 +189,13 @@
         /// <summary>
         /// Gets or sets the ultimaLocalizacaoValida
         /// </summary>
-        private Position ultimaLocalizacaoValida { get; set; }
+        private Position _ultimaLocalizacaoValida;
+
+        public Position UltimaLocalizacaoValida
+        {
+            get { return _ultimaLocalizacaoValida; }
+            set { SetProperty(ref _ultimaLocalizacaoValida, value); }
+        }
 
         /// <summary>
         /// The IniciarCliente
@@ -193,9 +215,9 @@
 
 
 
-        private String _urlBase = "http://10.0.3.2:8080/motorapido/ws/";
+       // private String _urlBase = "http://10.0.3.2:8080/motorapido/ws/";
 
-       // private String _urlBase = "http://192.168.0.6:8080/motorapido/ws/";
+        private String _urlBase = "http://192.168.0.4:8080/motorapido/ws/";
 
         // private String _urlBase = "http://104.248.186.97:8080/motorapido/ws/";
 
@@ -246,14 +268,18 @@
                 if (CrossGeolocator.Current.IsListening)
                     return;
 
+
+                await CrossGeolocator.Current.StartListeningAsync(TimeSpan.FromSeconds(5), 10, true);
+
+
                 CrossGeolocator.Current.PositionChanged += PositionChanged;
                 CrossGeolocator.Current.PositionError += PositionError;
 
-                await CrossGeolocator.Current.StartListeningAsync(TimeSpan.FromSeconds(5), 10, false, new ListenerSettings
-                {
-                    AllowBackgroundUpdates = true,
-                    PauseLocationUpdatesAutomatically = false
-                });
+                //await CrossGeolocator.Current.StartListeningAsync(TimeSpan.FromSeconds(5), 10, false, new ListenerSettings
+                //{
+                //    AllowBackgroundUpdates = true,
+                //    PauseLocationUpdatesAutomatically = false
+                //});
 
 
             }
@@ -269,10 +295,16 @@
 
             //If updating the UI, ensure you invoke on main thread
             var position = e.Position;
-            if (ultimaLocalizacaoValida == null || isLocalizacaoDiferente(position, ultimaLocalizacaoValida))
-            {
+            if (UltimaLocalizacaoValida == null || isLocalizacaoDiferente(position, UltimaLocalizacaoValida))
+            {               
                 Localizar(position);
-                ultimaLocalizacaoValida = position;
+                UltimaLocalizacaoValida = position;
+                if (CrossSettings.Current.Contains("ChamadaEmCorrida"))
+                {
+                    MessagingCenter.Send(this, "MudancaPin", position);
+                    AreaPosicao.msgErro = "Chamada Em Andamento!";
+                }
+                
             }
         }
 

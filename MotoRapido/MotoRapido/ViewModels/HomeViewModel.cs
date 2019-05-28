@@ -19,6 +19,7 @@ using Xamarin.Forms;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace MotoRapido.ViewModels
 {
@@ -78,15 +79,25 @@ namespace MotoRapido.ViewModels
             set => SetProperty(ref _textoStatus, value);
         }
 
+
+        public String VeiculoSelecionado
+        {
+            get { return CrossSettings.Current.Get<RetornoVeiculosMotorista>("VeiculoSelecionado").veiculoFormatado; }
+            
+        }
+
+
         PermissionStatus status;
 
         public HomeViewModel(INavigationService navigationService, IPageDialogService dialogService)
             : base(navigationService, dialogService)
         {
-            VerificaPermissaoLocalizacao();
+
+            //VerificaPermissaoLocalizacao();
+
         }
 
-        private async void VerificaPermissaoLocalizacao()
+        private async Task VerificaPermissaoLocalizacao()
         {
             status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
             if (status != PermissionStatus.Granted)
@@ -110,7 +121,9 @@ namespace MotoRapido.ViewModels
                     {
                         if (MotoristaLogado.disponivel.Equals("S"))
                         {
-                            // iniciarTimerPosicao();
+                           
+                           iniciarTimerPosicao();
+
                         }
                     }
                     else
@@ -126,11 +139,17 @@ namespace MotoRapido.ViewModels
             else if (status == PermissionStatus.Unknown || status == PermissionStatus.Denied)
             {
                 await DialogService.DisplayAlertAsync("Aviso", "Permissão para acessar localização negada.", "OK");
+
             }
+           
         }
 
-        public override void OnNavigatingTo(NavigationParameters parameters)
+       
+
+        public override  void OnNavigatingTo(NavigationParameters parameters)
         {
+            AreaPosicao = new RetornoVerificaPosicao();
+            AreaPosicao.msgErro = "Buscando...";
             if (MotoristaLogado.disponivel.Equals("S"))
             {
                 ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_indisponivel.png");
@@ -147,6 +166,10 @@ namespace MotoRapido.ViewModels
                 TextoStatus = "OCUPADO";
                 ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.ocupado.png");
             }
+
+            //UserDialogs.Instance.ShowLoading("Processando...", MaskType.Gradient);
+            Task.Run(async () => await VerificaPermissaoLocalizacao());
+           
         }
 
         private void BuscarInformacoesBase()
@@ -202,43 +225,14 @@ namespace MotoRapido.ViewModels
 
         private async void IrParaChamada()
         {
-            if (MotoristaLogado.verDestino.Equals("S"))
-            {
-                try
-                {
-                    UserDialogs.Instance.ShowLoading("Carregando...");
-
-                    var response = await new HttpClient()
-                    {
-                        Timeout = TimeSpan.FromMilliseconds(35000)
-                    }.GetAsync("https://maps.googleapis.com/maps/api/directions/json?origin=-" +
-                    "10.903183,-37.077807&destination=-10.965213,-37.079690&alternatives=false&" +
-                    "key=" + MotoristaLogado.chaveGoogle);
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var respStr = await response.Content.ReadAsStringAsync();
-                        GoogleDirection googleDirection = JsonConvert.DeserializeObject<GoogleDirection>(respStr);
-                        var navParam = new NavigationParameters();
-                        navParam.Add("polylines_encoded", googleDirection.routes[0].overview_polyline.points);
-                        await NavigationService.NavigateAsync("Chamada", navParam);
-                    }
-                    else
-                    {
-                        await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
-                    }
-
-
-                }
-                catch (Exception e)
-                {
-                    await DialogService.DisplayAlertAsync("Aviso", "Falha ao buscar histórico do motorista", "OK");
-                }
-                finally
-                {
-                    UserDialogs.Instance.HideLoading();
-                }
-            }else
+            if (!CrossSettings.Current.Contains("ChamadaAceita") && !CrossSettings.Current.Contains("ChamadaEmCorrida"))
+                await DialogService.DisplayAlertAsync("Aviso", "Nenhuma chamada está em andamento", "OK");
+            else
                 await NavigationService.NavigateAsync("Chamada");
+
+
+
+
         }
 
         private async void IrParaHistorico()

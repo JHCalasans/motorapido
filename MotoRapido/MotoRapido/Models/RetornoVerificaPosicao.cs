@@ -13,7 +13,10 @@ namespace MotoRapido.Models
 
         public String informacaoPosicao
         {
-            get => "Pos: " + posicaoNaArea + "  -  Área:" + areaAtual.descricao;
+            get => msgErro != null ? msgErro : "Pos: " + posicaoNaArea + "  -  Área:" + areaAtual.descricao;
+            
         }
+
+        public String msgErro { get; set; }
     }
 }

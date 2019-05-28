@@ -64,22 +64,25 @@ namespace MotoRapido.ViewModels
 
                 var json = JsonConvert.SerializeObject(motorista);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
-                var response = await IniciarCliente(false).PostAsync("motorista/login", content);
-
-                if (response.IsSuccessStatusCode)
+                using (var response = await IniciarCliente(false).PostAsync("motorista/login", content))
                 {
-                    var respStr = await response.Content.ReadAsStringAsync();
-                    CrossSettings.Current.Set("MotoristaLogado", JsonConvert.DeserializeObject<Motorista>(respStr));
-                    CrossSettings.Current.Set("IsTimerOn", MotoristaLogado.disponivel.Equals("S"));
-                    // CrossSettings.Current.Set("ChaveGoogle", MotoristaLogado.chaveGoogle);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var respStr = await response.Content.ReadAsStringAsync();
+                        CrossSettings.Current.Set("MotoristaLogado", JsonConvert.DeserializeObject<Motorista>(respStr));
+                        CrossSettings.Current.Set("IsTimerOn", MotoristaLogado.disponivel.Equals("S"));
+                        // CrossSettings.Current.Set("ChaveGoogle", MotoristaLogado.chaveGoogle);
 
-                    await NavigationService.NavigateAsync("//NavigationPage/Home");
-                }
-                else
-                {
-                    await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
-                }
 
+                        await NavigationService.NavigateAsync("//NavigationPage/Veiculos", null, true);
+
+                        //await NavigationService.NavigateAsync("//NavigationPage/Home");
+                    }
+                    else
+                    {
+                        await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
+                    }
+                }
             }
             catch (Exception e)
             {

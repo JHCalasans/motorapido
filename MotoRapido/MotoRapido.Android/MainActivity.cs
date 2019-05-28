@@ -5,6 +5,7 @@ using Android.Content.PM;
 using Android.Locations;
 using Android.OS;
 using Android.Runtime;
+using Matcha.BackgroundService.Droid;
 using Plugin.CurrentActivity;
 using Plugin.Permissions;
 using Prism.Unity;
@@ -23,6 +24,8 @@ namespace MotoRapido.Droid
         {
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
+
+            BackgroundAggregator.Init(this);
 
             base.OnCreate(bundle);
 
