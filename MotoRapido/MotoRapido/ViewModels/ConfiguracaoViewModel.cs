@@ -18,6 +18,8 @@ namespace MotoRapido.ViewModels
     {
         public DelegateCommand AlterarSenhaCommand => new DelegateCommand(AlterarSenha);
 
+        public DelegateCommand AlterarVeiculoCommand => new DelegateCommand(AlterarVeiculo);
+
         public DelegateCommand LogOffCommand => new DelegateCommand(LogOff);
 
         public ConfiguracaoViewModel(INavigationService navigationService, IPageDialogService dialogService)
@@ -100,6 +102,14 @@ namespace MotoRapido.ViewModels
                 UserDialogs.Instance.HideLoading();
                 await DialogService.DisplayAlertAsync("Aviso", "Falha ao tentar alterar senha", "Ok");
             }
+
+        }
+
+        public async void AlterarVeiculo()
+        {
+            NavigationParameters param = new NavigationParameters();
+            param.Add("pesquisar", true);
+            await NavigationService.NavigateAsync("Veiculos", param);
 
         }
 

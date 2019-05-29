@@ -40,42 +40,48 @@ namespace MotoRapido.ViewModels
 
         public async void SelecionarChamada(Chamada chamada)
         {
-            try
+
+            var resposta = await UserDialogs.Instance.ConfirmAsync("Aceitar Chamada?", "Confirmação", "Aceitar", "Não");
+            if (resposta)
             {
-                UserDialogs.Instance.ShowLoading("Carregando...");
 
-                SelecaoChamadaParam param = new SelecaoChamadaParam();
-                param.chamada = chamada;
-                param.dataDecisao = DateTime.Now;
-                param.codVeiculo = CrossSettings.Current.Get<RetornoVeiculosMotorista>("VeiculoSelecionado").codVeiculo;
-
-                var json = JsonConvert.SerializeObject(param);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                var response = await IniciarCliente(true).PostAsync("motorista/selecionarChamada", content);
-
-                if (response.IsSuccessStatusCode)
+                try
                 {
-                    var respStr = await response.Content.ReadAsStringAsync();
-                    chamada = JsonConvert.DeserializeObject<Chamada>(respStr);
-                    CrossSettings.Current.Remove("chamadaAceita");
-                    CrossSettings.Current.Set("ChamadaAceita", chamada);
-                   // var navParam = new NavigationParameters();
-                   // navParam.Add("chamadaAceita", chamada);
-                    await NavigationService.NavigateAsync("Chamada", null,true);
+                    UserDialogs.Instance.ShowLoading("Carregando...");
+
+                    SelecaoChamadaParam param = new SelecaoChamadaParam();
+                    param.chamada = chamada;
+                    param.dataDecisao = DateTime.Now;
+                    param.codVeiculo = CrossSettings.Current.Get<RetornoVeiculosMotorista>("VeiculoSelecionado").codVeiculo;
+
+                    var json = JsonConvert.SerializeObject(param);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                    var response = await IniciarCliente(true).PostAsync("motorista/selecionarChamada", content);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var respStr = await response.Content.ReadAsStringAsync();
+                        chamada = JsonConvert.DeserializeObject<Chamada>(respStr);
+                        CrossSettings.Current.Remove("ChamadaAceita");
+                        CrossSettings.Current.Set("ChamadaAceita", chamada);
+                        // var navParam = new NavigationParameters();
+                        // navParam.Add("chamadaAceita", chamada);
+                        await NavigationService.NavigateAsync("Chamada", null, true);
+                    }
+                    else
+                    {
+                        await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
+                    }
                 }
-                else
+                catch (Exception e)
                 {
-                    await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
+                    await DialogService.DisplayAlertAsync("Aviso", "Falha ao selecionar chamada", "OK");
                 }
-            }
-            catch (Exception e)
-            {
-                await DialogService.DisplayAlertAsync("Aviso", "Falha ao selecionar chamada", "OK");
-            }
-            finally
-            {
-                UserDialogs.Instance.HideLoading();
+                finally
+                {
+                    UserDialogs.Instance.HideLoading();
+                }
             }
         }
 

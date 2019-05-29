@@ -11,7 +11,7 @@
              NavigationPage.HasNavigationBar="False">
 
     <StackLayout>
-        <maps:Map VerticalOptions="FillAndExpand" x:Name="map" MyLocationEnabled="True" >
+        <maps:Map VerticalOptions="FillAndExpand" x:Name="map"  MyLocationEnabled="True" >
             <maps:Map.Behaviors>
                 <bindings:BindingPinsBehavior Value="{Binding Pins}" ></bindings:BindingPinsBehavior>
                 <bindings:BindingPolylinesBehavior Value="{Binding Polylines}"></bindings:BindingPolylinesBehavior>

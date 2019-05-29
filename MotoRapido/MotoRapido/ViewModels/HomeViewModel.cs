@@ -150,6 +150,12 @@ namespace MotoRapido.ViewModels
         {
             AreaPosicao = new RetornoVerificaPosicao();
             AreaPosicao.msgErro = "Buscando...";
+            if (UltimaLocalizacaoValida != null)
+            {
+               
+                Localizar(UltimaLocalizacaoValida);
+            }
+
             if (MotoristaLogado.disponivel.Equals("S"))
             {
                 ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_indisponivel.png");
@@ -165,6 +171,7 @@ namespace MotoRapido.ViewModels
                 CorDeFundoStatus = Color.Red;
                 TextoStatus = "OCUPADO";
                 ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.ocupado.png");
+                AreaPosicao.msgErro = "MOTORISTA INDISPONÍVEL";
             }
 
             //UserDialogs.Instance.ShowLoading("Processando...", MaskType.Gradient);
@@ -230,9 +237,6 @@ namespace MotoRapido.ViewModels
             else
                 await NavigationService.NavigateAsync("Chamada");
 
-
-
-
         }
 
         private async void IrParaHistorico()
@@ -273,36 +277,38 @@ namespace MotoRapido.ViewModels
 
         private async void IrParaPendencias()
         {
-
-            try
+            if (CrossSettings.Current.Contains("ChamadaAceita") || CrossSettings.Current.Contains("ChamadaEmCorrida"))
+                await DialogService.DisplayAlertAsync("Aviso", "Um chamada já está em andamento", "OK");
+            else
             {
-                UserDialogs.Instance.ShowLoading("Carregando...");
 
-
-
-                var response = await IniciarCliente(true).GetAsync("motorista/buscarChamadasPendentes");
-                if (response.IsSuccessStatusCode)
+                try
                 {
-                    var respStr = await response.Content.ReadAsStringAsync();
-                    var navParam = new NavigationParameters();
-                    navParam.Add("chamadasPendentes", JsonConvert.DeserializeObject<ObservableCollection<Models.Chamada>>(respStr));
-                    await NavigationService.NavigateAsync("Pendencias", navParam);
+                    UserDialogs.Instance.ShowLoading("Carregando...");
+
+                    var response = await IniciarCliente(true).GetAsync("motorista/buscarChamadasPendentes");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var respStr = await response.Content.ReadAsStringAsync();
+                        var navParam = new NavigationParameters();
+                        navParam.Add("chamadasPendentes", JsonConvert.DeserializeObject<ObservableCollection<Models.Chamada>>(respStr));
+                        await NavigationService.NavigateAsync("Pendencias", navParam);
+                    }
+                    else
+                    {
+                        await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
+                    }
                 }
-                else
+                catch (Exception e)
                 {
-                    await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
+                    await DialogService.DisplayAlertAsync("Aviso", "Falha ao buscar chamadas pendentes", "OK");
                 }
-            }
-            catch (Exception e)
-            {
-                await DialogService.DisplayAlertAsync("Aviso", "Falha ao buscar chamadas pendentes", "OK");
-            }
-            finally
-            {
-                UserDialogs.Instance.HideLoading();
-            }
+                finally
+                {
+                    UserDialogs.Instance.HideLoading();
+                }
 
-
+            }
 
         }
 
@@ -317,10 +323,13 @@ namespace MotoRapido.ViewModels
 
                 Motorista motoTemp = new Motorista();
                 motoTemp = MotoristaLogado;
+                AreaPosicao = new RetornoVerificaPosicao();
                 if (response.IsSuccessStatusCode)
                 {
                     if (motoTemp.disponivel.Equals("S"))
                     {
+                       
+                        AreaPosicao.msgErro = "MOTORISTA INDISPONÍVEL";
                         motoTemp.disponivel = "N";
                         ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_disponivel.png");
                         EstaLivre = false;
@@ -331,13 +340,15 @@ namespace MotoRapido.ViewModels
                     }
                     else
                     {
+                        AreaPosicao.msgErro = "Buscando...";
                         motoTemp.disponivel = "S";
                         ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_indisponivel.png");
                         EstaLivre = true;
                         CorDeFundoStatus = Color.Green;
                         TextoStatus = "LIVRE";
                         ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.livre.png");
-                        CrossSettings.Current.Set("isTimerOn", true);
+                        CrossSettings.Current.Set("IsTimerOn", true);
+                        CrossSettings.Current.Remove("UltimaLocalizacaoValida");
                         iniciarTimerPosicao();
                     }
 

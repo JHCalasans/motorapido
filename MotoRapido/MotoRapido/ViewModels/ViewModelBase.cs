@@ -128,15 +128,17 @@
                     AreaPosicao = JsonConvert.DeserializeObject<RetornoVerificaPosicao>(respStr);
                     if (AreaPosicao.areaAtual == null)
                         AreaPosicao = null;
-                    if (CrossSettings.Current.Contains("ChamadaEmCorrida"))
-                        AreaPosicao.msgErro = "Chamada Em Andamento!";
+                   
                     
                 }
-
+                if (CrossSettings.Current.Contains("ChamadaEmCorrida") || CrossSettings.Current.Contains("ChamadaAceita"))
+                    AreaPosicao.msgErro = "Chamada Em Andamento!";
 
             }
             catch (Exception e)
             {
+                if (CrossSettings.Current.Contains("ChamadaEmCorrida") || CrossSettings.Current.Contains("ChamadaAceita"))
+                    AreaPosicao.msgErro = "Chamada Em Andamento!";
                 await DialogService.DisplayAlertAsync("Aviso", "Falha ao verificar posição", "OK");
             }
         }
@@ -189,12 +191,12 @@
         /// <summary>
         /// Gets or sets the ultimaLocalizacaoValida
         /// </summary>
-        private Position _ultimaLocalizacaoValida;
+       // private Position _ultimaLocalizacaoValida;
 
         public Position UltimaLocalizacaoValida
         {
-            get { return _ultimaLocalizacaoValida; }
-            set { SetProperty(ref _ultimaLocalizacaoValida, value); }
+            get { return CrossSettings.Current.Get<Position>("UltimaLocalizacaoValida"); }
+          
         }
 
         /// <summary>
@@ -298,10 +300,10 @@
             if (UltimaLocalizacaoValida == null || isLocalizacaoDiferente(position, UltimaLocalizacaoValida))
             {               
                 Localizar(position);
-                UltimaLocalizacaoValida = position;
-                if (CrossSettings.Current.Contains("ChamadaEmCorrida"))
+                CrossSettings.Current.Set("UltimaLocalizacaoValida", position);
+                if (CrossSettings.Current.Contains("ChamadaEmCorrida") || CrossSettings.Current.Contains("ChamadaAceita"))
                 {
-                    MessagingCenter.Send(this, "MudancaPin", position);
+                   // MessagingCenter.Send(this, "MudancaPin", position);
                     AreaPosicao.msgErro = "Chamada Em Andamento!";
                 }
                 
@@ -343,7 +345,7 @@
             CrossGeolocator.Current.PositionChanged -= PositionChanged;
             CrossGeolocator.Current.PositionError -= PositionError;
 
-            CrossSettings.Current.Set("isTimerOn", false);
+            CrossSettings.Current.Set("IsTimerOn", false);
         }
 
 

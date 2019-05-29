@@ -27,6 +27,9 @@ namespace MotoRapido.ViewModels
         public DelegateCommand IniciarCorridaCommand =>
            new DelegateCommand(IniciarCorrida);
 
+        public DelegateCommand BotaoFinalCommand =>
+           new DelegateCommand(CancelarFinalizarCorrida);
+
 
         public MoveToRegionRequest MoveToRegionReq { get; } = new MoveToRegionRequest();
 
@@ -77,7 +80,7 @@ namespace MotoRapido.ViewModels
             }
             else
             {
-                CrossSettings.Current.Set("isTimerOn", true);
+                CrossSettings.Current.Set("IsTimerOn", true);
                 iniciarTimerPosicao();
                 TextoBotaoFinal = "Finalizar";
                 ShowBotaoInicio = false;
@@ -120,7 +123,7 @@ namespace MotoRapido.ViewModels
                         Icon = BitmapDescriptorFactory.DefaultMarker(Color.Gray)
                     };
                    // Pins.Add(localAtualPin);
-                    MoveToRegionReq.MoveToRegion(MapSpan.FromCenterAndRadius(localAtualPin.Position, Distance.FromKilometers(6.0)));
+                    MoveToRegionReq.MoveToRegion(MapSpan.FromCenterAndRadius(localAtualPin.Position, Distance.FromKilometers(0.3)));
                 }
                 else
                 {
@@ -157,7 +160,7 @@ namespace MotoRapido.ViewModels
                     polyline.StrokeColor = Color.Blue;
                     polyline.StrokeWidth = 2f;
                     Polylines.Add(polyline);
-                    MoveToRegionReq.MoveToRegion(MapSpan.FromCenterAndRadius(lista[0], Distance.FromKilometers(6.0)));
+                    MoveToRegionReq.MoveToRegion(MapSpan.FromCenterAndRadius(lista[0], Distance.FromKilometers(2.0)));
                 }
 
 
@@ -196,12 +199,12 @@ namespace MotoRapido.ViewModels
                     //polyline.Positions.Add(new Position(40.81d, -73.91d));
                     //polyline.Positions.Add(new Position(40.83d, -73.87d));
                     polyline.IsClickable = true;
-                    polyline.StrokeColor = Color.Blue;
+                    polyline.StrokeColor = Color.Green;
                     polyline.StrokeWidth = 2f;
                     Polylines.Add(polyline);
 
                     // Pins.Add(localAtualPin);
-                    MoveToRegionReq.MoveToRegion(MapSpan.FromCenterAndRadius(localAtualPin.Position, Distance.FromKilometers(1.0)));
+                    MoveToRegionReq.MoveToRegion(MapSpan.FromCenterAndRadius(localAtualPin.Position, Distance.FromKilometers(2.0)));
                 }
                 else
                 {
@@ -215,7 +218,7 @@ namespace MotoRapido.ViewModels
 
                     };
                     Pins.Add(inicioPin);
-                    MoveToRegionReq.MoveToRegion(MapSpan.FromCenterAndRadius(inicioPin.Position, Distance.FromKilometers(1.0)));
+                    MoveToRegionReq.MoveToRegion(MapSpan.FromCenterAndRadius(inicioPin.Position, Distance.FromKilometers(4.0)));
                 }
 
             }
@@ -282,11 +285,62 @@ namespace MotoRapido.ViewModels
         }
 
 
+        private async void CancelarFinalizarCorrida()
+        {
+            if (TextoBotaoFinal.Equals("Cancelar"))
+            {
+                var resposta = await UserDialogs.Instance.ConfirmAsync("Cancelar Chamada?","Cancelamento","Sim","Não");
+                if (resposta)
+                {
+                    try
+                    {
+                        UserDialogs.Instance.ShowLoading("Processando...");
+
+                        CancelarChamadaParam param = new CancelarChamadaParam();
+                        param.chamada = Chamada;
+                        param.codChamadaVeiculo = Chamada.codChamadaVeiculo;
+                        param.dataCancelamento = DateTime.Now;
+                        param.codVeiculo = CrossSettings.Current.Get<RetornoVeiculosMotorista>("VeiculoSelecionado").codVeiculo;
+
+                        var json = JsonConvert.SerializeObject(param);
+                        var content = new StringContent(json, Encoding.UTF8, "application/json");
+                             
+
+                        var response = await IniciarCliente(true).PostAsync("motorista/cancelarChamada", content);
+
+                        if (response.IsSuccessStatusCode)
+                        {
+                            CrossSettings.Current.Remove("ChamadaAceita");
+                            await DialogService.DisplayAlertAsync("Aviso", "Corrida cancelada.", "OK");
+                            await NavigationService.NavigateAsync("/NavigationPage/Home", useModalNavigation: true);
+                        }
+                        else
+                        {
+                            await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        await DialogService.DisplayAlertAsync("Aviso", "Falha ao cancelar corrida", "OK");
+                    }
+                    finally
+                    {
+                        UserDialogs.Instance.HideLoading();
+                    }
+                }
+            }
+        }
+
         private async void IniciarCorrida()
         {
             try
             {
                 UserDialogs.Instance.ShowLoading("Carregando...");
+
+
+                Plugin.Geolocator.Abstractions.Position pos = await GetCurrentPosition();
+                Chamada.latitudeInicioCorrida = pos.Latitude.ToString();
+                Chamada.longitudeInicioCorrida = pos.Longitude.ToString();
 
                 SelecaoChamadaParam param = new SelecaoChamadaParam();
                 param.chamada = Chamada;
@@ -300,19 +354,19 @@ namespace MotoRapido.ViewModels
                 //Insiro uma chamada em corrida na memória e retio a chamada aceita
                 CrossSettings.Current.Set("ChamadaEmCorrida", CrossSettings.Current.Get<Chamada>("ChamadaAceita"));
                 CrossSettings.Current.Remove("ChamadaAceita");
-                MessagingCenter.Subscribe<ViewModelBase, Plugin.Geolocator.Abstractions.Position>(this, "MudancaPin",
-                    (sender, arg) =>
-                    {
-                        Pins.RemoveAt(0);
-                        Pins.Add(new Pin()
-                        {
-                            Type = PinType.Place,
-                            Label = "Início",
-                            Position = new Position(Double.Parse(Chamada.latitudeOrigem), Double.Parse(Chamada.longitudeOrigem)),
-                            IsDraggable = true,
-                            Icon = BitmapDescriptorFactory.DefaultMarker(Color.Gray)
-                        });
-                    });
+                //MessagingCenter.Subscribe<ViewModelBase, Plugin.Geolocator.Abstractions.Position>(this, "MudancaPin",
+                //    (sender, arg) =>
+                //    {
+                //        Pins.RemoveAt(0);
+                //        Pins.Add(new Pin()
+                //        {
+                //            Type = PinType.Place,
+                //            Label = "Início",
+                //            Position = new Position(Double.Parse(Chamada.latitudeOrigem), Double.Parse(Chamada.longitudeOrigem)),
+                //            IsDraggable = true,
+                //            Icon = BitmapDescriptorFactory.DefaultMarker(Color.Gray)
+                //        });
+                //    });
 
                 var response = await IniciarCliente(true).PostAsync("motorista/iniciarCorrida", content);
 
@@ -321,15 +375,9 @@ namespace MotoRapido.ViewModels
                     var respStr = await response.Content.ReadAsStringAsync();
 
 
-
-                    // var navParam = new NavigationParameters();
-                    // navParam.Add("chamadaAceita", chamada);
-
                 }
                 else
                 {
-                    //CrossSettings.Current.Set("ChecagemChamada", param);
-                    // BackgroundAggregatorService.StartBackgroundService();
                     await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
                 }
             }

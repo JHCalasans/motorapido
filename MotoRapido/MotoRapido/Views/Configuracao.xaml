@@ -8,18 +8,27 @@
     <StackLayout>
         <TableView Intent="Menu" >
             <TableRoot>
+                <TableSection  >
+                    <ViewCell >
+                        <StackLayout VerticalOptions="Center" Orientation="Vertical">
+                            <Label Text="Alterar Senha" FontSize="Large" VerticalOptions="Center" VerticalTextAlignment="Center"></Label>
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding AlterarSenhaCommand}" NumberOfTapsRequired="1"></TapGestureRecognizer>
+                                </StackLayout.GestureRecognizers>
+                               
+                        </StackLayout>
+                    </ViewCell>
+                </TableSection>
                 <TableSection >
                     <ViewCell >
-                        <StackLayout VerticalOptions="Center">
-                            <Label Text="Alterar Senha" FontSize="Large" VerticalOptions="Center" VerticalTextAlignment="Center"></Label>
+                        <StackLayout VerticalOptions="Center" Orientation="Vertical">
+                            <Label Text="Alterar Veículo" FontSize="Large" VerticalOptions="Center" VerticalTextAlignment="Center"></Label>
                             <StackLayout.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding AlterarSenhaCommand}" NumberOfTapsRequired="1"></TapGestureRecognizer>
+                                <TapGestureRecognizer Command="{Binding AlterarVeiculoCommand}" NumberOfTapsRequired="1"></TapGestureRecognizer>
                             </StackLayout.GestureRecognizers>
+
                         </StackLayout>
-
-
                     </ViewCell>
-
                 </TableSection>
 
 

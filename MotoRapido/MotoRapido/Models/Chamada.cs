@@ -88,5 +88,15 @@ namespace MotoRapido.Models
         public String polylines { get; set; }
 
         public Area area { get; set; }
+
+        public String latitudeInicioCorrida { get; set; }
+
+        public String longitudeInicioCorrida { get; set; }
+
+        public String latitudeFinalCorrida { get; set; }
+
+        public String longitudeFinalCorrida { get; set; }
+
+        public Int32 codChamadaVeiculo { get; set; }
     }
 }
