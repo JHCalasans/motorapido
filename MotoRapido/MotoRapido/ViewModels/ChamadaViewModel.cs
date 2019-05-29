@@ -11,6 +11,7 @@ using Prism.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -54,6 +55,42 @@ namespace MotoRapido.ViewModels
             set { SetProperty(ref _chamada, value); }
         }
 
+        private String _textoValor;
+        public String TextoValor
+        {
+            get { return _textoValor; }
+            set { SetProperty(ref _textoValor, value); }
+        }
+
+
+        public String Valor
+        {
+            get
+            {
+                if (CrossSettings.Current.Contains("ChamadaAceita"))
+                {
+                    Chamada = CrossSettings.Current.Get<Chamada>("ChamadaAceita");
+
+                }
+                else if (CrossSettings.Current.Contains("ChamadaEmCorrida"))
+                {
+                    Chamada = CrossSettings.Current.Get<Chamada>("ChamadaEmCorrida");
+
+                }
+                return Chamada.valorFinal.ToString();
+            }
+        }
+
+        private float _valorFinalView;
+
+        public float ValorFinalView
+        {
+            get
+            {
+                return _valorFinalView;
+            }
+            set { SetProperty(ref _valorFinalView, value); }
+        }
 
         private String _textoBotaoFinal;
         public String TextoBotaoFinal
@@ -73,18 +110,19 @@ namespace MotoRapido.ViewModels
         public ChamadaViewModel(INavigationService navigationService, IPageDialogService dialogService)
                    : base(navigationService, dialogService)
         {
-            if (!CrossSettings.Current.Contains("ChamadaEmCorrida"))
-            {
-                TextoBotaoFinal = "Cancelar";
-                ShowBotaoInicio = true;
-            }
-            else
-            {
-                CrossSettings.Current.Set("IsTimerOn", true);
-                iniciarTimerPosicao();
-                TextoBotaoFinal = "Finalizar";
-                ShowBotaoInicio = false;
-            }
+            //if (!CrossSettings.Current.Contains("ChamadaEmCorrida"))
+            //{
+            //    TextoBotaoFinal = "Cancelar";
+            //    ShowBotaoInicio = true;
+
+            //}
+            //else
+            //{
+            //    CrossSettings.Current.Set("IsTimerOn", true);
+            //    iniciarTimerPosicao();
+            //    TextoBotaoFinal = "Finalizar";
+            //    ShowBotaoInicio = false;
+            //}
         }
 
         public override void OnNavigatedTo(NavigationParameters parameters)
@@ -92,9 +130,29 @@ namespace MotoRapido.ViewModels
             // Pins = new ObservableCollection<Pin>();
             //String polylines = null;
             if (CrossSettings.Current.Contains("ChamadaAceita"))
+            {
                 Chamada = CrossSettings.Current.Get<Chamada>("ChamadaAceita");
+                TextoValor = "Previsão R$" + Chamada.valorPrevisto;
+                TextoBotaoFinal = "Cancelar";
+                ShowBotaoInicio = true;
+            }
             else if (CrossSettings.Current.Contains("ChamadaEmCorrida"))
+            {
                 Chamada = CrossSettings.Current.Get<Chamada>("ChamadaEmCorrida");
+                CrossSettings.Current.Set("IsTimerOn", true);
+                iniciarTimerPosicao();
+                TextoBotaoFinal = "Finalizar";
+                ShowBotaoInicio = false;
+                TextoValor = Chamada.valorFinal.ToString("C2", new CultureInfo("pt-BR"));
+                MessagingCenter.Subscribe<ViewModelBase, float>(this, "MudancaValor",
+                   (sender, arg) =>
+                   {
+                       ValorFinalView = arg;
+                       TextoValor = arg.ToString("C2", new CultureInfo("pt-BR"));
+                       TextoValor.Replace(".", ",");
+                   });
+
+            }
             else
                 return;
 
@@ -108,9 +166,10 @@ namespace MotoRapido.ViewModels
         private async void AjustePosicaoMapa()
         {
             List<Position> lista = DecodePolylinePoints(Chamada.polylines);
+            Pins.Clear();
             if (MotoristaLogado.verDestino.Equals("S"))
             {
-               
+
                 if (CrossSettings.Current.Contains("ChamadaEmCorrida"))
                 {
                     Plugin.Geolocator.Abstractions.Position pos = await GetCurrentPosition();
@@ -122,7 +181,7 @@ namespace MotoRapido.ViewModels
                         IsDraggable = true,
                         Icon = BitmapDescriptorFactory.DefaultMarker(Color.Gray)
                     };
-                   // Pins.Add(localAtualPin);
+                    // Pins.Add(localAtualPin);
                     MoveToRegionReq.MoveToRegion(MapSpan.FromCenterAndRadius(localAtualPin.Position, Distance.FromKilometers(0.3)));
                 }
                 else
@@ -289,7 +348,7 @@ namespace MotoRapido.ViewModels
         {
             if (TextoBotaoFinal.Equals("Cancelar"))
             {
-                var resposta = await UserDialogs.Instance.ConfirmAsync("Cancelar Chamada?","Cancelamento","Sim","Não");
+                var resposta = await UserDialogs.Instance.ConfirmAsync("Cancelar Chamada?", "Cancelamento", "Sim", "Não");
                 if (resposta)
                 {
                     try
@@ -304,7 +363,7 @@ namespace MotoRapido.ViewModels
 
                         var json = JsonConvert.SerializeObject(param);
                         var content = new StringContent(json, Encoding.UTF8, "application/json");
-                             
+
 
                         var response = await IniciarCliente(true).PostAsync("motorista/cancelarChamada", content);
 
@@ -329,6 +388,53 @@ namespace MotoRapido.ViewModels
                     }
                 }
             }
+            else
+            {
+                try
+                {
+                    UserDialogs.Instance.ShowLoading("Processando...");
+                    Chamada chamadaFinal = CrossSettings.Current.Get<Chamada>("ChamadaEmCorrida");
+
+                    Plugin.Geolocator.Abstractions.Position pos = await GetCurrentPosition();
+                    chamadaFinal.latitudeFinalCorrida = pos.Latitude.ToString();
+                    chamadaFinal.longitudeFinalCorrida = pos.Longitude.ToString();
+
+                    chamadaFinal.dataFimCorrida = DateTime.Now;
+
+                    CancelarChamadaParam param = new CancelarChamadaParam();
+                    param.chamada = chamadaFinal;
+                    param.codChamadaVeiculo = chamadaFinal.codChamadaVeiculo;
+                    param.codVeiculo = CrossSettings.Current.Get<RetornoVeiculosMotorista>("VeiculoSelecionado").codVeiculo;
+
+                    CrossSettings.Current.Remove("ChamadaEmCorrida");
+
+                    var json = JsonConvert.SerializeObject(param);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+
+                    var response = await IniciarCliente(true).PostAsync("motorista/finalizarCorrida", content);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                       
+                        await DialogService.DisplayAlertAsync("Aviso", "Corrida finalizada.", "OK");
+                        await NavigationService.NavigateAsync("/NavigationPage/Home", useModalNavigation: true);
+                    }
+                    else
+                    {
+                        await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
+                    }
+                }
+                catch (Exception e)
+                {
+                    await DialogService.DisplayAlertAsync("Aviso", "Falha ao finalizar corrida", "OK");
+                }
+                finally
+                {
+                    UserDialogs.Instance.HideLoading();
+                }
+
+            }
         }
 
         private async void IniciarCorrida()
@@ -336,7 +442,6 @@ namespace MotoRapido.ViewModels
             try
             {
                 UserDialogs.Instance.ShowLoading("Carregando...");
-
 
                 Plugin.Geolocator.Abstractions.Position pos = await GetCurrentPosition();
                 Chamada.latitudeInicioCorrida = pos.Latitude.ToString();
@@ -352,28 +457,25 @@ namespace MotoRapido.ViewModels
                 TextoBotaoFinal = "Finalizar";
                 ShowBotaoInicio = false;
                 //Insiro uma chamada em corrida na memória e retio a chamada aceita
-                CrossSettings.Current.Set("ChamadaEmCorrida", CrossSettings.Current.Get<Chamada>("ChamadaAceita"));
+                //CrossSettings.Current.Set("ChamadaEmCorrida", Chamada);
                 CrossSettings.Current.Remove("ChamadaAceita");
-                //MessagingCenter.Subscribe<ViewModelBase, Plugin.Geolocator.Abstractions.Position>(this, "MudancaPin",
-                //    (sender, arg) =>
-                //    {
-                //        Pins.RemoveAt(0);
-                //        Pins.Add(new Pin()
-                //        {
-                //            Type = PinType.Place,
-                //            Label = "Início",
-                //            Position = new Position(Double.Parse(Chamada.latitudeOrigem), Double.Parse(Chamada.longitudeOrigem)),
-                //            IsDraggable = true,
-                //            Icon = BitmapDescriptorFactory.DefaultMarker(Color.Gray)
-                //        });
-                //    });
+                Chamada.valorFinal = 2;
+                CrossSettings.Current.Set("ChamadaEmCorrida", Chamada);
+                MessagingCenter.Subscribe<ViewModelBase, float>(this, "MudancaValor",
+                 (sender, arg) =>
+                 {
+                     ValorFinalView = arg;
+                     TextoValor = arg.ToString("C2", new CultureInfo("pt-BR"));
+                     TextoValor.Replace(".", ",");
+                 });
 
+
+                AjustePosicaoMapa();
                 var response = await IniciarCliente(true).PostAsync("motorista/iniciarCorrida", content);
 
                 if (response.IsSuccessStatusCode)
                 {
                     var respStr = await response.Content.ReadAsStringAsync();
-
 
                 }
                 else

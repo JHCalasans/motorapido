@@ -16,6 +16,7 @@
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
+    using Xamarin.Essentials;
     using Xamarin.Forms;
 
     /// <summary>
@@ -97,12 +98,12 @@
         {
             try
             {
-                
+
                 VerificaPosicaoParam param = new VerificaPosicaoParam
                 {
                     codMotorista = MotoristaLogado.codigo,
                     latitude = posicao.Latitude.ToString().Replace(",", "."),
-                    longitude = posicao.Longitude.ToString().Replace(",",".")
+                    longitude = posicao.Longitude.ToString().Replace(",", ".")
                 };
 
                 var json = JsonConvert.SerializeObject(param);
@@ -123,13 +124,13 @@
                     //    "OK");
                 }
                 else
-                {                   
+                {
                     var respStr = await response.Content.ReadAsStringAsync();
                     AreaPosicao = JsonConvert.DeserializeObject<RetornoVerificaPosicao>(respStr);
                     if (AreaPosicao.areaAtual == null)
                         AreaPosicao = null;
-                   
-                    
+
+
                 }
                 if (CrossSettings.Current.Contains("ChamadaEmCorrida") || CrossSettings.Current.Contains("ChamadaAceita"))
                     AreaPosicao.msgErro = "Chamada Em Andamento!";
@@ -151,8 +152,8 @@
             //   if (StoppableTimer == null) StoppableTimer = new StoppableTimer(TimeSpan.FromSeconds(2), Localizar);
 
             if (CrossSettings.Current.Get<bool>("IsTimerOn"))
-               await  StartListening();
-           
+                await StartListening();
+
         }
 
         /// <summary>
@@ -162,7 +163,7 @@
         {
             //StoppableTimer = new StoppableTimer(TimeSpan.FromSeconds(2), teste);
             //StoppableTimer.Stop();
-           
+
         }
 
         /// <summary>
@@ -171,7 +172,7 @@
         public Motorista MotoristaLogado
         {
             get { return CrossSettings.Current.Get<Motorista>("MotoristaLogado"); }
-            set { ; }
+            set {; }
         }
 
         /// <summary>
@@ -188,15 +189,16 @@
             set { SetProperty(ref _areaPosicao, value); }
         }
 
+
         /// <summary>
         /// Gets or sets the ultimaLocalizacaoValida
         /// </summary>
-       // private Position _ultimaLocalizacaoValida;
+        // private Position _ultimaLocalizacaoValida;
 
         public Position UltimaLocalizacaoValida
         {
             get { return CrossSettings.Current.Get<Position>("UltimaLocalizacaoValida"); }
-          
+
         }
 
         /// <summary>
@@ -217,7 +219,7 @@
 
 
 
-       // private String _urlBase = "http://10.0.3.2:8080/motorapido/ws/";
+        // private String _urlBase = "http://10.0.3.2:8080/motorapido/ws/";
 
         private String _urlBase = "http://192.168.0.4:8080/motorapido/ws/";
 
@@ -287,6 +289,25 @@
             }
         }
 
+        double GetDistanceFromLatLonInKm(double lat1, double lon1, double lat2, double lon2)
+        {
+            var R = 6371d; // Radius of the earth in km
+            var dLat = Deg2Rad(lat2 - lat1);  // deg2rad below
+            var dLon = Deg2Rad(lon2 - lon1);
+            var a =
+              Math.Sin(dLat / 2d) * Math.Sin(dLat / 2d) +
+              Math.Cos(Deg2Rad(lat1)) * Math.Cos(Deg2Rad(lat2)) *
+              Math.Sin(dLon / 2d) * Math.Sin(dLon / 2d);
+            var c = 2d * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1d - a));
+            var d = R * c; // Distance in km
+            return d;
+        }
+
+        double Deg2Rad(double deg)
+        {
+            return deg * (Math.PI / 180d);
+        }
+
         /// <summary>
         /// The PositionChanged
         /// </summary>
@@ -298,15 +319,42 @@
             //If updating the UI, ensure you invoke on main thread
             var position = e.Position;
             if (UltimaLocalizacaoValida == null || isLocalizacaoDiferente(position, UltimaLocalizacaoValida))
-            {               
+            {
                 Localizar(position);
-                CrossSettings.Current.Set("UltimaLocalizacaoValida", position);
-                if (CrossSettings.Current.Contains("ChamadaEmCorrida") || CrossSettings.Current.Contains("ChamadaAceita"))
+                Chamada chamadatemp = new Chamada();
+                chamadatemp = CrossSettings.Current.Get<Chamada>("ChamadaEmCorrida");
+                if (CrossSettings.Current.Contains("ChamadaEmCorrida"))
                 {
-                   // MessagingCenter.Send(this, "MudancaPin", position);
+                    // MessagingCenter.Send(this, "MudancaPin", position);
+                    AreaPosicao.msgErro = "Chamada Em Andamento!";
+                    double distancia = Location.CalculateDistance(new Location(UltimaLocalizacaoValida.Latitude, UltimaLocalizacaoValida.Longitude),
+                        new Location(position.Latitude, position.Longitude), DistanceUnits.Kilometers);
+
+                    //GetDistanceFromLatLonInKm(UltimaLocalizacaoValida.Latitude,
+                    //UltimaLocalizacaoValida.Longitude, position.Latitude, position.Longitude);
+                    chamadatemp.distanciaPercorrida = chamadatemp.distanciaPercorrida + (float)distancia;
+                    //double distancia2 = Location.CalculateDistance(new Location(Double.Parse(chamadatemp.latitudeInicioCorrida),
+                    //   Double.Parse(chamadatemp.longitudeInicioCorrida)),
+                    //    new Location(position.Latitude, position.Longitude), DistanceUnits.Kilometers);
+
+                    //GetDistanceFromLatLonInKm(Double.Parse(chamadatemp.latitudeInicioCorrida),
+                    //   Double.Parse(chamadatemp.longitudeInicioCorrida), position.Latitude, position.Longitude);
+                    // 
+                    if (distancia > 0 && chamadatemp.distanciaPercorrida > chamadatemp.distanciaInicial)
+                    {
+                        chamadatemp.valorFinal = chamadatemp.valorFinal + (chamadatemp.valorPorDistancia * (float)distancia);
+                        CrossSettings.Current.Set("ChamadaEmCorrida", chamadatemp);
+                        MessagingCenter.Send(this, "MudancaValor", chamadatemp.valorFinal);
+                        //;
+                    }else
+                        CrossSettings.Current.Set("ChamadaEmCorrida", chamadatemp);
+                }
+                else if (CrossSettings.Current.Contains("ChamadaAceita"))
+                {
                     AreaPosicao.msgErro = "Chamada Em Andamento!";
                 }
-                
+                CrossSettings.Current.Set("UltimaLocalizacaoValida", position);
+
             }
         }
 

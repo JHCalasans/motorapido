@@ -98,5 +98,15 @@ namespace MotoRapido.Models
         public String longitudeFinalCorrida { get; set; }
 
         public Int32 codChamadaVeiculo { get; set; }
+
+        public Decimal valorPrevisto { get; set; }
+
+        public float valorFinal { get; set; }
+
+        public float valorPorDistancia { get; set; }
+
+        public float distanciaInicial { get; set; }
+
+        public float distanciaPercorrida { get; set; }
     }
 }

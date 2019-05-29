@@ -40,7 +40,7 @@ namespace MotoRapido
                 .HandleNotificationOpened(HandleNotificationOpened).EndInit();
 
 
-            BackgroundAggregatorService.Add(() => new ChecagemInicioCorrida());
+           // BackgroundAggregatorService.Add(() => new ChecagemInicioCorrida());
 
             InitializeComponent();
 

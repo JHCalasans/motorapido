@@ -43,6 +43,7 @@ namespace MotoRapido.Droid
 
             Xamarin.FormsGoogleMaps.Init(this, bundle, platformConfig); // initialize for Xamarin.Forms.GoogleMaps
             Xamarin.FormsGoogleMapsBindings.Init();
+            Xamarin.Essentials.Platform.Init(this, bundle);
             // CrossCurrentActivity.Current.Init(this, bundle);
 
             LocationManager mlocManager = (LocationManager)GetSystemService(LocationService); ;
@@ -55,6 +56,7 @@ namespace MotoRapido.Droid
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
             PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
         
