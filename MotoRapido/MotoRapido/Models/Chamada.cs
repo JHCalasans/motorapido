@@ -101,12 +101,16 @@ namespace MotoRapido.Models
 
         public Decimal valorPrevisto { get; set; }
 
-        public float valorFinal { get; set; }
+        public String valorFinal { get; set; }
 
         public float valorPorDistancia { get; set; }
 
         public float distanciaInicial { get; set; }
 
         public float distanciaPercorrida { get; set; }
+
+        public String polylinesParaOrigem { get; set; }
+
+        public String valorFinalAjustado { get; set; }
     }
 }

@@ -88,7 +88,7 @@ namespace MotoRapido.ViewModels
             }
             catch (Exception e)
             {
-                await DialogService.DisplayAlertAsync("Aviso", "Falha ao efetuar login", "OK");
+                await DialogService.DisplayAlertAsync("Aviso", "Falha ao buscar veículos", "OK");
             }
             finally
             {
@@ -99,7 +99,31 @@ namespace MotoRapido.ViewModels
         private async void SelecionarVeiculo(RetornoVeiculosMotorista veiculo)
         {
             CrossSettings.Current.Set("VeiculoSelecionado", veiculo);
-            await NavigationService.NavigateAsync("//NavigationPage/Home");
+            try
+            {
+                UserDialogs.Instance.ShowLoading("Carregando...");
+                using (var response = await IniciarCliente(true).PostAsync("motorista/selecionarVeiculo/"+ MotoristaLogado.codigo+"/"+veiculo.codVeiculo,null))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        await NavigationService.NavigateAsync("//NavigationPage/Home");
+                    }
+                    else
+                    {
+                        await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                await DialogService.DisplayAlertAsync("Aviso", "Falha ao selecionar veículo", "OK");
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
+           
+          
         }
 
         

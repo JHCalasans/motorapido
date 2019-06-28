@@ -14,5 +14,9 @@ namespace MotoRapido.Models
         public Int32 codChamadaVeiculo { get; set; }
 
         public int codVeiculo { get; set; }
+
+        public String latitudeAtual { get; set; }
+
+        public String longitudeAtual { get; set; }
     }
 }

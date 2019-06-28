@@ -10,8 +10,13 @@ using Prism.Unity;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
+using MotoRapido.Interfaces;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace MotoRapido
@@ -33,6 +38,20 @@ namespace MotoRapido
 
         private Boolean _desviarParaChamada { get; set; }
 
+        protected override void OnStart()
+        {
+            base.OnStart();
+            AppCenter.Start("android=3da30223-d2af-4457-80c8-d55fbe32880d;",
+                      typeof(Analytics), typeof(Crashes));
+
+      
+            BackgroundAggregatorService.Add(() => new ChecarUltimaLocalidade());
+            BackgroundAggregatorService.StartBackgroundService();
+
+        }
+
+        
+
         protected override async void OnInitialized()
         {
 
@@ -40,7 +59,7 @@ namespace MotoRapido
                 .HandleNotificationOpened(HandleNotificationOpened).EndInit();
 
 
-           // BackgroundAggregatorService.Add(() => new ChecagemInicioCorrida());
+           
 
             InitializeComponent();
 
@@ -51,10 +70,10 @@ namespace MotoRapido
             {
                 if (CrossSettings.Current.Contains("VeiculoSelecionado"))
                 {
-                    //if (CrossSettings.Current.Contains("ChamadaEmCorrida") || CrossSettings.Current.Contains("ExisteChamada"))
-                    //    await NavigationService.NavigateAsync("NavigationPage/Home/Chamada");
-                    //else
+                    if (!CrossSettings.Current.Contains("ChamadaParaResposta") )
                         await NavigationService.NavigateAsync("NavigationPage/Home");
+                    else
+                        await NavigationService.NavigateAsync("//NavigationPage/ResponderChamada", null, true);
                 }
                 else
                 {
@@ -71,6 +90,11 @@ namespace MotoRapido
         protected override void OnResume()
         {
             base.OnResume();
+            Boolean tes = Plugin.Geolocator.CrossGeolocator.Current.IsGeolocationEnabled;
+            if (tes && CrossSettings.Current.Contains("GPSDesabilitado"))
+            {              
+                 MessagingCenter.Send(this, "GPSHabilitou");
+            }
         }
 
         // Called when your app is in focus and a notificaiton is recieved.
@@ -88,6 +112,12 @@ namespace MotoRapido
                 {
                     CrossSettings.Current.Set("atualizarDados", true);
                 }
+                if (additionalData.ContainsKey("logout"))
+                {
+                    CrossSettings.Current.Clear();
+                    AppNavigationService.NavigateAsync("NavigationPage/Login");
+
+                }
             }
 
         }
@@ -104,10 +134,15 @@ namespace MotoRapido
 
             if (additionalData != null)
             {
-                if (additionalData.ContainsKey("chamada"))
+                if (additionalData.ContainsKey("id_chamada"))
                 {
-                    CrossSettings.Current.Set("ExisteChamada", true);
-                    AppNavigationService.NavigateAsync("Home/Chamada");
+                    var value = additionalData["id_chamada"];
+                    CrossSettings.Current.Set("ChamadaParaResposta", value.ToString());
+                    //NavigationParameters param = new NavigationParameters();
+                  //  param.Add("codChamada", value);  
+                 // if(actionID != null)
+                    AppNavigationService.NavigateAsync("//NavigationPage/ResponderChamada", null, true);
+                
                 }
             }
             
@@ -136,6 +171,7 @@ namespace MotoRapido
             Container.RegisterTypeForNavigation<Pendencias>();
             Container.RegisterTypeForNavigation<Historico>();
             Container.RegisterTypeForNavigation<Veiculos>();
+            Container.RegisterTypeForNavigation<ResponderChamada>();
         }
 
         

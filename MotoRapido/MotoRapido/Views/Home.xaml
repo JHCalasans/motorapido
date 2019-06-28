@@ -27,8 +27,8 @@
                     FontAttributes="Bold" ></Label>
 
                     <Label Text="{Binding VeiculoSelecionado}"  HorizontalOptions="Center" HorizontalTextAlignment="Center"
-                    FontSize="16"  VerticalOptions="Center" VerticalTextAlignment="Center"
-                    TextColor="Black"></Label>
+                    FontSize="12"  VerticalOptions="Center" VerticalTextAlignment="Center"
+                    TextColor="OrangeRed"></Label>
 
             </StackLayout>
 

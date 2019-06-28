@@ -59,6 +59,8 @@
             DialogService = dialogService;
         }
 
+        public ViewModelBase() { }
+
         /// <summary>
         /// The OnNavigatedFrom
         /// </summary>
@@ -90,57 +92,90 @@
         {
         }
 
+        
+
         /// <summary>
         /// The Localizar
         /// </summary>
         /// <param name="posicao">The posicao<see cref="Position"/></param>
-        public async void Localizar(Position posicao)
+        public  async void Localizar(Position posicao)
         {
-            try
+
+            if (MotoristaLogado.disponivel.Equals("S"))
             {
-
-                VerificaPosicaoParam param = new VerificaPosicaoParam
-                {
-                    codMotorista = MotoristaLogado.codigo,
-                    latitude = posicao.Latitude.ToString().Replace(",", "."),
-                    longitude = posicao.Longitude.ToString().Replace(",", ".")
-                };
-
-                var json = JsonConvert.SerializeObject(param);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                var response = await IniciarCliente(true).PostAsync("motorista/verificarPosicao", content);
-
-                if (!response.IsSuccessStatusCode)
-                {
-
-                    if (response.StatusCode == System.Net.HttpStatusCode.NotAcceptable)
+                if (CrossGeolocator.Current.IsGeolocationEnabled)//App.IsGPSEnable)
+                 {
+                    CrossSettings.Current.Remove("GPSDesabilitado");
+                    try
                     {
-                        AreaPosicao = new RetornoVerificaPosicao();
-                        AreaPosicao.msgErro = response.Content.ReadAsStringAsync().Result;
-                    }
+                        if (CrossSettings.Current.Contains("ChamadaEmCorrida") || CrossSettings.Current.Contains("ChamadaAceita"))
+                            AreaPosicao.msgErro = "Chamada Em Andamento!";
+                        else
+                        {
 
-                    //await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result,
-                    //    "OK");
+                            VerificaPosicaoParam param = new VerificaPosicaoParam
+                            {
+                                codMotorista = MotoristaLogado.codigo,
+                                latitude = posicao.Latitude.ToString().Replace(",", "."),
+                                longitude = posicao.Longitude.ToString().Replace(",", ".")
+                            };
+
+                            var json = JsonConvert.SerializeObject(param);
+                            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                            CrossSettings.Current.Set("UltimaAtualizacaoLocalidade", new DateTime());
+
+                            var response = await IniciarCliente(true).PostAsync("motorista/verificarPosicao", content);
+
+                            if (!response.IsSuccessStatusCode)
+                            {
+
+                                if (response.StatusCode == System.Net.HttpStatusCode.NotAcceptable)
+                                {
+                                    AreaPosicao = new RetornoVerificaPosicao();
+                                    AreaPosicao.msgErro = response.Content.ReadAsStringAsync().Result;
+                                }
+
+                                //await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result,
+                                //    "OK");
+                            }
+                            else
+                            {
+                                var respStr = await response.Content.ReadAsStringAsync();
+                                AreaPosicao = JsonConvert.DeserializeObject<RetornoVerificaPosicao>(respStr);
+                                if (AreaPosicao.areaAtual == null)
+                                    AreaPosicao = null;
+
+
+                            }
+                        }
+
+
+                    }
+                    catch (Exception e)
+                    {
+                        if (CrossSettings.Current.Contains("ChamadaEmCorrida") || CrossSettings.Current.Contains("ChamadaAceita"))
+                            AreaPosicao.msgErro = "Chamada Em Andamento!";
+                        await DialogService.DisplayAlertAsync("Aviso", "Falha ao verificar posição", "OK");
+                    }
                 }
                 else
                 {
-                    var respStr = await response.Content.ReadAsStringAsync();
-                    AreaPosicao = JsonConvert.DeserializeObject<RetornoVerificaPosicao>(respStr);
-                    if (AreaPosicao.areaAtual == null)
-                        AreaPosicao = null;
+                    AreaPosicao = new RetornoVerificaPosicao();
+                    AreaPosicao.msgErro = "Favor ativar gps no celular.";
+                    CrossSettings.Current.Set("GPSDesabilitado", true);
+                    MessagingCenter.Subscribe<App>(this, "GPSHabilitou", (sender) =>
+                    {
+
+                        if (MotoristaLogado.disponivel.Equals("S"))
+                        {
+                            CrossSettings.Current.Set("UltimaLocalizacaoValida", Task.Run(async () =>  GetCurrentPosition()));
+                            Localizar(UltimaLocalizacaoValida);
+                        }
 
 
+                    });
                 }
-                if (CrossSettings.Current.Contains("ChamadaEmCorrida") || CrossSettings.Current.Contains("ChamadaAceita"))
-                    AreaPosicao.msgErro = "Chamada Em Andamento!";
-
-            }
-            catch (Exception e)
-            {
-                if (CrossSettings.Current.Contains("ChamadaEmCorrida") || CrossSettings.Current.Contains("ChamadaAceita"))
-                    AreaPosicao.msgErro = "Chamada Em Andamento!";
-                await DialogService.DisplayAlertAsync("Aviso", "Falha ao verificar posição", "OK");
             }
         }
 
@@ -151,8 +186,46 @@
         {
             //   if (StoppableTimer == null) StoppableTimer = new StoppableTimer(TimeSpan.FromSeconds(2), Localizar);
 
-            if (CrossSettings.Current.Get<bool>("IsTimerOn"))
-                await StartListening();
+            if (CrossGeolocator.Current.IsGeolocationEnabled)//App.IsGPSEnable)
+            {
+                CrossSettings.Current.Remove("GPSDesabilitado");
+                if (CrossSettings.Current.Get<bool>("IsTimerOn"))
+                    await StartListening();
+            }
+            else
+            {
+                AreaPosicao = new RetornoVerificaPosicao();
+                AreaPosicao.msgErro = "Favor ativar gps no celular.";
+                CrossSettings.Current.Set("GPSDesabilitado", true);
+                MessagingCenter.Subscribe<App>(this, "GPSHabilitou", (sender) =>
+                    {
+
+                        if (MotoristaLogado.disponivel.Equals("S") )
+                        {
+                            Thread.Sleep(TimeSpan.FromSeconds(3));
+                            CrossSettings.Current.Set("UltimaLocalizacaoValida", Task.Run(async () => GetCurrentPosition()));
+                            Localizar(UltimaLocalizacaoValida);
+                        }
+                       
+
+                    });
+                //if (!CrossSettings.Current.Contains("GPSDesabilitado"))
+                //{
+                //    CrossSettings.Current.Set("GPSDesabilitado", true);
+                //    MessagingCenter.Subscribe<App, Boolean>(this, "GPSHabilitou", (sender, args) =>
+                //    {
+
+                //        if (MotoristaLogado.disponivel.Equals("S") && args)
+                //        {
+                //            CrossSettings.Current.Set("UltimaLocalizacaoValida", GetCurrentPosition());
+                //            Localizar(UltimaLocalizacaoValida);
+                //        }
+                //        else if (MotoristaLogado.disponivel.Equals("S") && !args)
+                //            AreaPosicao.msgErro = "Favor ativar gps no celular.";
+
+                //    });
+                //}
+            }
 
         }
 
@@ -219,11 +292,13 @@
 
 
 
-        // private String _urlBase = "http://10.0.3.2:8080/motorapido/ws/";
+        // private readonly String _urlBase = "http://10.0.3.2:8080/motorapido/ws/";
 
-        private String _urlBase = "http://192.168.0.4:8080/motorapido/ws/";
+        private readonly String _urlBase = "http://192.168.0.4:8080/motorapido/ws/";
 
-        // private String _urlBase = "http://104.248.186.97:8080/motorapido/ws/";
+        //  private readonly String _urlBase = "http://104.248.186.97:8080/motorapido/ws/";
+
+        private static Position _posicaoTeste;
 
         /// <summary>
         /// The GetCurrentPosition
@@ -242,7 +317,7 @@
                 //    //got a cahched position, so let's use it.
                 //    return position;
                 //}
-
+                var tes = CrossGeolocator.IsSupported;
                 if (!locator.IsGeolocationAvailable ||
                     !locator.IsGeolocationEnabled)
                 {
@@ -250,16 +325,26 @@
                     return null;
                 }
 
-                position = await locator.GetPositionAsync(null, new CancellationToken(false), true);
+             //   position = await locator.GetPositionAsync();
+
+              //  _posicaoTeste = new Position(position.Latitude, position.Longitude);
+              
+                position = await locator.GetPositionAsync(TimeSpan.FromSeconds(3), new CancellationToken(false), true);
             }
             catch (Exception ex)
             {
                 Debug.WriteLine("falha ao pegar localização: " + ex);
             }
+            finally
+            {
+                var x = position;
+            }
 
 
             return position;
         }
+
+     
 
         /// <summary>
         /// The StartListening
@@ -275,16 +360,27 @@
 
                 await CrossGeolocator.Current.StartListeningAsync(TimeSpan.FromSeconds(5), 10, true);
 
+                if (UltimaLocalizacaoValida == null)
+                {
+                    Position pos;
+                    //while (_posicaoTeste == new Position(0, 0) || _posicaoTeste == null)
+                    //   await  GetCurrentPosition();
+
+                    //  PositionEventArgs args = new PositionEventArgs(pos);
+                    // CrossSettings.Current.Set("UltimaLocalizacaoValida", await GetCurrentPosition());
+                    // PositionChanged(null, args);
+                    //pos = await GetCurrentPosition();
+                    //CrossSettings.Current.Set("UltimaLocalizacaoValida", pos);
+                    //Localizar(pos);
+                }
 
                 CrossGeolocator.Current.PositionChanged += PositionChanged;
                 CrossGeolocator.Current.PositionError += PositionError;
 
-                //await CrossGeolocator.Current.StartListeningAsync(TimeSpan.FromSeconds(5), 10, false, new ListenerSettings
-                //{
-                //    AllowBackgroundUpdates = true,
-                //    PauseLocationUpdatesAutomatically = false
-                //});
+               
+               
 
+             
 
             }
         }
@@ -323,6 +419,7 @@
                 Localizar(position);
                 Chamada chamadatemp = new Chamada();
                 chamadatemp = CrossSettings.Current.Get<Chamada>("ChamadaEmCorrida");
+                MessagingCenter.Send(this, "MudancaPosicao", position);
                 if (CrossSettings.Current.Contains("ChamadaEmCorrida"))
                 {
                     // MessagingCenter.Send(this, "MudancaPin", position);
@@ -340,11 +437,11 @@
                     //GetDistanceFromLatLonInKm(Double.Parse(chamadatemp.latitudeInicioCorrida),
                     //   Double.Parse(chamadatemp.longitudeInicioCorrida), position.Latitude, position.Longitude);
                     // 
-                    if (distancia > 0 && chamadatemp.distanciaPercorrida > chamadatemp.distanciaInicial)
+                    if (distancia > 0 )
                     {
-                        chamadatemp.valorFinal = chamadatemp.valorFinal + (chamadatemp.valorPorDistancia * (float)distancia);
+                        chamadatemp.valorFinal = (float.Parse(chamadatemp.valorFinal) + (chamadatemp.valorPorDistancia * (float)distancia)).ToString("N2");
                         CrossSettings.Current.Set("ChamadaEmCorrida", chamadatemp);
-                        MessagingCenter.Send(this, "MudancaValor", chamadatemp.valorFinal);
+                        //MessagingCenter.Send(this, "MudancaValor", chamadatemp.valorFinal);
                         //;
                     }else
                         CrossSettings.Current.Set("ChamadaEmCorrida", chamadatemp);
@@ -352,11 +449,14 @@
                 else if (CrossSettings.Current.Contains("ChamadaAceita"))
                 {
                     AreaPosicao.msgErro = "Chamada Em Andamento!";
+                  
                 }
                 CrossSettings.Current.Set("UltimaLocalizacaoValida", position);
 
             }
         }
+
+
 
         /// <summary>
         /// The isLocalizacaoDiferente
@@ -366,7 +466,17 @@
         /// <returns>The <see cref="bool"/></returns>
         private bool isLocalizacaoDiferente(Position localizacao1, Position localizacao2)
         {
-            return localizacao1.Latitude != localizacao2.Latitude || localizacao1.Altitude != localizacao2.Altitude;
+            //var lat1 = (Math.Truncate(localizacao1.Latitude * 100000) / 100000);
+            //var lat2 = (Math.Truncate(localizacao2.Latitude * 100000) / 100000);
+            //var long1 = (Math.Truncate(localizacao1.Longitude * 100000) / 100000);
+            //var long2 = (Math.Truncate(localizacao2.Longitude * 100000) / 100000);
+
+            double distancia = Location.CalculateDistance(new Location(localizacao1.Latitude, localizacao1.Longitude),
+                       new Location(localizacao2.Latitude, localizacao2.Longitude), DistanceUnits.Kilometers);
+
+           // return lat1 != lat2 || long1 != long2;
+
+            return distancia > 0.02;
         }
 
         /// <summary>

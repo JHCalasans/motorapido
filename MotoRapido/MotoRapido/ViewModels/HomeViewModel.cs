@@ -20,6 +20,9 @@ using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Threading;
+using Microsoft.AppCenter.Crashes;
+using Microsoft.AppCenter.Analytics;
 
 namespace MotoRapido.ViewModels
 {
@@ -71,6 +74,8 @@ namespace MotoRapido.ViewModels
         }
 
 
+
+
         private String _textoStatus;
 
         public string TextoStatus
@@ -83,7 +88,7 @@ namespace MotoRapido.ViewModels
         public String VeiculoSelecionado
         {
             get { return CrossSettings.Current.Get<RetornoVeiculosMotorista>("VeiculoSelecionado").veiculoFormatado; }
-            
+
         }
 
 
@@ -97,7 +102,7 @@ namespace MotoRapido.ViewModels
 
         }
 
-        private async Task VerificaPermissaoLocalizacao()
+        private async void VerificaPermissaoLocalizacao()
         {
             status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
             if (status != PermissionStatus.Granted)
@@ -117,18 +122,31 @@ namespace MotoRapido.ViewModels
             {
                 if (CrossConnectivity.Current.IsConnected)
                 {
-                    if (App.IsGPSEnable)
+                    if (MotoristaLogado.disponivel.Equals("S"))
                     {
-                        if (MotoristaLogado.disponivel.Equals("S"))
+                        if (CrossGeolocator.Current.IsGeolocationEnabled)//App.IsGPSEnable)
                         {
-                           
-                           iniciarTimerPosicao();
-
+                            iniciarTimerPosicao();
                         }
-                    }
-                    else
-                    {
-                        await DialogService.DisplayAlertAsync("Aviso", "Favor ativar gps no celular.", "OK");
+                        //else
+                        //{
+                        //    //CrossSettings.Current.Set("GPSDesabilitado", true);
+                        //    MessagingCenter.Subscribe<App, Boolean>(this, "GPSHabilitou", (sender, args) =>
+                        //    {
+                        //        if (MotoristaLogado.disponivel.Equals("S") && args)
+                        //            BuscarLocalizacao();
+
+                        //        else if (MotoristaLogado.disponivel.Equals("S") && !args)
+                        //            AreaPosicao.msgErro = "Favor ativar gps no celular.";
+                        //    });
+                        //    AreaPosicao.msgErro = "Favor ativar gps no celular.";
+                        //    // await DialogService.DisplayAlertAsync("Aviso", "Favor ativar gps no celular.", "OK");
+                        //}
+                        if (UltimaLocalizacaoValida == null)
+                        {
+                            // Thread.Sleep(TimeSpan.FromSeconds(5));
+                            BuscarLocalizacao();
+                        }
                     }
                 }
                 else
@@ -141,88 +159,117 @@ namespace MotoRapido.ViewModels
                 await DialogService.DisplayAlertAsync("Aviso", "Permissão para acessar localização negada.", "OK");
 
             }
-           
+
         }
 
-       
 
-        public override  void OnNavigatingTo(NavigationParameters parameters)
+        public override void OnNavigatedTo(NavigationParameters parameters)
         {
-            AreaPosicao = new RetornoVerificaPosicao();
-            AreaPosicao.msgErro = "Buscando...";
-            if (UltimaLocalizacaoValida != null)
-            {
-               
-                Localizar(UltimaLocalizacaoValida);
-            }
 
-            if (MotoristaLogado.disponivel.Equals("S"))
+
+        }
+
+        public override async void OnNavigatingTo(NavigationParameters parameters)
+        {
+            if (CrossSettings.Current.Contains("ChamadaParaResposta"))
             {
-                ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_indisponivel.png");
-                EstaLivre = true;
-                CorDeFundoStatus = Color.Green;
-                TextoStatus = "LIVRE";
-                ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.livre.png");
+                await NavigationService.NavigateAsync("//NavigationPage/ResponderChamada");
             }
             else
             {
-                ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_disponivel.png");
-                EstaLivre = false;
-                CorDeFundoStatus = Color.Red;
-                TextoStatus = "OCUPADO";
-                ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.ocupado.png");
-                AreaPosicao.msgErro = "MOTORISTA INDISPONÍVEL";
-            }
 
-            //UserDialogs.Instance.ShowLoading("Processando...", MaskType.Gradient);
-            Task.Run(async () => await VerificaPermissaoLocalizacao());
-           
+                AreaPosicao = new RetornoVerificaPosicao();
+                AreaPosicao.msgErro = "Buscando...";
+                if (UltimaLocalizacaoValida != null)
+                {
+                    Localizar(UltimaLocalizacaoValida);
+                }
+
+
+                if (MotoristaLogado.disponivel.Equals("S"))
+                {
+                    ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_indisponivel.png");
+                    EstaLivre = true;
+                    CorDeFundoStatus = Color.Green;
+                    TextoStatus = "LIVRE";
+                    ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.livre.png");
+                }
+                else
+                {
+                    ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_disponivel.png");
+                    EstaLivre = false;
+                    CorDeFundoStatus = Color.Red;
+                    TextoStatus = "OCUPADO";
+                    ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.ocupado.png");
+                    AreaPosicao.msgErro = "MOTORISTA INDISPONÍVEL";
+                }
+
+                //UserDialogs.Instance.ShowLoading("Processando...", MaskType.Gradient);
+                // Task.Run(async () => await VerificaPermissaoLocalizacao());
+
+                await Task.Run(async () => VerificaPermissaoLocalizacao());
+                //if (UltimaLocalizacaoValida == null)
+                //{
+                //    while(status != PermissionStatus.Granted){
+
+                //    }
+                //   // Thread.Sleep(TimeSpan.FromSeconds(5));
+                //    BuscarLocalizacao();
+                //}
+            }
         }
 
-        private void BuscarInformacoesBase()
+        private async void BuscarLocalizacao()
         {
+
+            Plugin.Geolocator.Abstractions.Position pos = await GetCurrentPosition();
+            CrossSettings.Current.Set("UltimaLocalizacaoValida", pos);
+            Localizar(pos);
+
         }
 
         private async void IrParaMensagem()
         {
-            if (!CrossSettings.Current.Contains("mensagens") ||
-                CrossSettings.Current.Get<List<MensagemMotoristaFuncionario>>("mensagens").Count < 1)
-            {
-                try
-                {
-                    UserDialogs.Instance.ShowLoading("Carregando...");
 
-                    MensagemParam param = new MensagemParam
-                    {
-                        codMotorista = MotoristaLogado.codigo
-                    };
+            await DialogService.DisplayAlertAsync("Aviso", "Funcionalidade em consstrução", "OK");
+            //if (!CrossSettings.Current.Contains("mensagens") ||
+            //    CrossSettings.Current.Get<List<MensagemMotoristaFuncionario>>("mensagens").Count < 1)
+            //{
+            //    try
+            //    {
+            //        UserDialogs.Instance.ShowLoading("Carregando...");
 
-                    var json = JsonConvert.SerializeObject(param);
-                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+            //        MensagemParam param = new MensagemParam
+            //        {
+            //            codMotorista = MotoristaLogado.codigo
+            //        };
 
-                    var response = await IniciarCliente(true).PostAsync("motorista/atualizarMensagens", content);
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var respStr = await response.Content.ReadAsStringAsync();
-                        // CrossSettings.Current.Set("mensagens", JsonConvert.DeserializeObject<List<Message>>(respStr));
-                    }
-                    else
-                    {
-                        await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result,
-                            "OK");
-                    }
-                }
-                catch (Exception e)
-                {
-                    await DialogService.DisplayAlertAsync("Aviso", "Falha ao buscar mensagens", "OK");
-                }
-                finally
-                {
-                    UserDialogs.Instance.HideLoading();
-                }
-            }
+            //        var json = JsonConvert.SerializeObject(param);
+            //        var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            await NavigationService.NavigateAsync("Mensagem");
+            //        var response = await IniciarCliente(true).PostAsync("motorista/atualizarMensagens", content);
+            //        if (response.IsSuccessStatusCode)
+            //        {
+            //            var respStr = await response.Content.ReadAsStringAsync();
+            //            // CrossSettings.Current.Set("mensagens", JsonConvert.DeserializeObject<List<Message>>(respStr));
+            //        }
+            //        else
+            //        {
+            //            await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result,
+            //                "OK");
+            //        }
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        await DialogService.DisplayAlertAsync("Aviso", "Falha ao buscar mensagens", "OK");
+            //    }
+            //    finally
+            //    {
+            //        UserDialogs.Instance.HideLoading();
+            //    }
+            //}
+
+            //await NavigationService.NavigateAsync("Mensagem");
         }
 
         private async void IrParaConfig()
@@ -279,6 +326,8 @@ namespace MotoRapido.ViewModels
         {
             if (CrossSettings.Current.Contains("ChamadaAceita") || CrossSettings.Current.Contains("ChamadaEmCorrida"))
                 await DialogService.DisplayAlertAsync("Aviso", "Um chamada já está em andamento", "OK");
+            else if (!MotoristaLogado.disponivel.Equals("S"))
+                await DialogService.DisplayAlertAsync("Aviso", "Motorista precisa estar diponível", "OK");
             else
             {
 
@@ -296,11 +345,17 @@ namespace MotoRapido.ViewModels
                     }
                     else
                     {
+                        //Analytics.TrackEvent("Excecao Pendencias", new Dictionary<string, string>{
+                        //                   { "Excecao", response.Content.ReadAsStringAsync().Result }});
+
+                        Crashes.TrackError(new Exception(response.Content.ReadAsStringAsync().Result));
+
                         await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
                     }
                 }
                 catch (Exception e)
                 {
+                    Crashes.TrackError(e);
                     await DialogService.DisplayAlertAsync("Aviso", "Falha ao buscar chamadas pendentes", "OK");
                 }
                 finally
@@ -328,7 +383,7 @@ namespace MotoRapido.ViewModels
                 {
                     if (motoTemp.disponivel.Equals("S"))
                     {
-                       
+
                         AreaPosicao.msgErro = "MOTORISTA INDISPONÍVEL";
                         motoTemp.disponivel = "N";
                         ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_disponivel.png");

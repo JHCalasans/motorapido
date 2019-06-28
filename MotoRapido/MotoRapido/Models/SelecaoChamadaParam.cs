@@ -18,5 +18,9 @@ namespace MotoRapido.Models
 
         public int codVeiculo { get; set; }
 
+        public String latitudeAtual { get; set; }
+
+        public String longitudeAtual { get; set; }
+
     }
 }

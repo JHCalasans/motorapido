@@ -4,6 +4,7 @@ using MotoRapido.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,14 +17,16 @@ namespace MotoRapido.Customs
 
         public TimeSpan Interval => TimeSpan.FromSeconds(30);
 
-        public Task<bool> StartJob()
+        public async Task<bool> StartJob()
         {
             ChecarInicioCorridaAsync();
-            return null;
+            
+            return true;
         }
 
         private async void ChecarInicioCorridaAsync()
         {
+
             var json = JsonConvert.SerializeObject(CrossSettings.Current.Get<SelecaoChamadaParam>("ChecagemChamada"));
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 

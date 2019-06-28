@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="MotoRapido.Views.ResponderChamada"
+             Title="Chamada">
+
+
+
+    <StackLayout HorizontalOptions="Center">
+        <Label Text="Chamada"  HorizontalOptions="Center" FontSize="Small" 
+               FontAttributes="Bold" Margin="30,150,10,0">
+        </Label>
+        <Label Text="Aqui estarão alguns detalhes da chamada"/>
+        <StackLayout Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="Center" >
+            <Button Text="Aceitar" BackgroundColor="Green" Padding="0,0,10,0" 
+                    Command="{Binding IrParaChamadaCommand}"></Button>
+            <Button Text="Recusar" BackgroundColor="Red" Command="{Binding RecusarCommand}"></Button>
+          
+        </StackLayout>
+
+    </StackLayout>
+  
+</ContentPage>

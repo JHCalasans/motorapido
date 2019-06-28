@@ -129,12 +129,19 @@ namespace MotoRapido.ViewModels
         {
             // Pins = new ObservableCollection<Pin>();
             //String polylines = null;
+
+            MessagingCenter.Subscribe<ViewModelBase, Plugin.Geolocator.Abstractions.Position>(this, "MudancaPosicao",
+                  (sender, arg) =>
+                  {
+                      MoveToRegionReq.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(arg.Latitude, arg.Longitude), Distance.FromKilometers(0.3)));
+                  });
             if (CrossSettings.Current.Contains("ChamadaAceita"))
             {
                 Chamada = CrossSettings.Current.Get<Chamada>("ChamadaAceita");
                 TextoValor = "Previsão R$" + Chamada.valorPrevisto;
                 TextoBotaoFinal = "Cancelar";
                 ShowBotaoInicio = true;
+               
             }
             else if (CrossSettings.Current.Contains("ChamadaEmCorrida"))
             {
@@ -143,14 +150,14 @@ namespace MotoRapido.ViewModels
                 iniciarTimerPosicao();
                 TextoBotaoFinal = "Finalizar";
                 ShowBotaoInicio = false;
-                TextoValor = Chamada.valorFinal.ToString("C2", new CultureInfo("pt-BR"));
-                MessagingCenter.Subscribe<ViewModelBase, float>(this, "MudancaValor",
-                   (sender, arg) =>
-                   {
-                       ValorFinalView = arg;
-                       TextoValor = arg.ToString("C2", new CultureInfo("pt-BR"));
-                       TextoValor.Replace(".", ",");
-                   });
+               // TextoValor = Chamada.valorFinal.ToString("C2", new CultureInfo("pt-BR"));
+                //MessagingCenter.Subscribe<ViewModelBase, float>(this, "MudancaValor",
+                //   (sender, arg) =>
+                //   {
+                //       ValorFinalView = arg;
+                //       TextoValor = arg.ToString("C2", new CultureInfo("pt-BR"));
+                //       TextoValor.Replace(".", ",");
+                //   });
 
             }
             else
@@ -167,12 +174,13 @@ namespace MotoRapido.ViewModels
         {
             List<Position> lista = DecodePolylinePoints(Chamada.polylines);
             Pins.Clear();
+            Plugin.Geolocator.Abstractions.Position pos = await GetCurrentPosition();
             if (MotoristaLogado.verDestino.Equals("S"))
             {
 
                 if (CrossSettings.Current.Contains("ChamadaEmCorrida"))
                 {
-                    Plugin.Geolocator.Abstractions.Position pos = await GetCurrentPosition();
+                    
                     Pin localAtualPin = new Pin()
                     {
                         Type = PinType.Place,
@@ -206,20 +214,20 @@ namespace MotoRapido.ViewModels
 
                     };
                     Pins.Add(finalPin);
-
-                    var polyline = new Polyline();
-                    foreach (Position posi in lista)
-                    {
-                        polyline.Positions.Add(posi);
-                    }
-                    //polyline.Positions.Add(new Position(40.77d, -73.93d));
-                    //polyline.Positions.Add(new Position(40.81d, -73.91d));
-                    //polyline.Positions.Add(new Position(40.83d, -73.87d));
-                    polyline.IsClickable = true;
-                    polyline.StrokeColor = Color.Blue;
-                    polyline.StrokeWidth = 2f;
-                    Polylines.Add(polyline);
-                    MoveToRegionReq.MoveToRegion(MapSpan.FromCenterAndRadius(lista[0], Distance.FromKilometers(2.0)));
+                    DesenharRota(lista);
+                    //var polyline = new Polyline();
+                    //foreach (Position posi in lista)
+                    //{
+                    //    polyline.Positions.Add(posi);
+                    //}
+                    ////polyline.Positions.Add(new Position(40.77d, -73.93d));
+                    ////polyline.Positions.Add(new Position(40.81d, -73.91d));
+                    ////polyline.Positions.Add(new Position(40.83d, -73.87d));
+                    //polyline.IsClickable = true;
+                    //polyline.StrokeColor = Color.Blue;
+                    //polyline.StrokeWidth = 2f;
+                    //Polylines.Add(polyline);
+                    MoveToRegionReq.MoveToRegion(MapSpan.FromCenterAndRadius(lista[0], Distance.FromKilometers(0.6)));
                 }
 
 
@@ -228,7 +236,7 @@ namespace MotoRapido.ViewModels
             {
                 if (CrossSettings.Current.Contains("ChamadaEmCorrida"))
                 {
-                    Plugin.Geolocator.Abstractions.Position pos = await GetCurrentPosition();
+                    
                     Pin localAtualPin = new Pin()
                     {
                         Type = PinType.Place,
@@ -249,21 +257,22 @@ namespace MotoRapido.ViewModels
                     };
                     Pins.Add(finalPin);
 
-                    var polyline = new Polyline();
-                    foreach (Position posi in lista)
-                    {
-                        polyline.Positions.Add(posi);
-                    }
-                    //polyline.Positions.Add(new Position(40.77d, -73.93d));
-                    //polyline.Positions.Add(new Position(40.81d, -73.91d));
-                    //polyline.Positions.Add(new Position(40.83d, -73.87d));
-                    polyline.IsClickable = true;
-                    polyline.StrokeColor = Color.Green;
-                    polyline.StrokeWidth = 2f;
-                    Polylines.Add(polyline);
+                    DesenharRota(lista);
+                    //var polyline = new Polyline();
+                    //foreach (Position posi in lista)
+                    //{
+                    //    polyline.Positions.Add(posi);
+                    //}
+                    ////polyline.Positions.Add(new Position(40.77d, -73.93d));
+                    ////polyline.Positions.Add(new Position(40.81d, -73.91d));
+                    ////polyline.Positions.Add(new Position(40.83d, -73.87d));
+                    //polyline.IsClickable = true;
+                    //polyline.StrokeColor = Color.Green;
+                    //polyline.StrokeWidth = 2f;
+                    //Polylines.Add(polyline);
 
                     // Pins.Add(localAtualPin);
-                    MoveToRegionReq.MoveToRegion(MapSpan.FromCenterAndRadius(localAtualPin.Position, Distance.FromKilometers(2.0)));
+                    MoveToRegionReq.MoveToRegion(MapSpan.FromCenterAndRadius(localAtualPin.Position, Distance.FromKilometers(0.6)));
                 }
                 else
                 {
@@ -277,10 +286,32 @@ namespace MotoRapido.ViewModels
 
                     };
                     Pins.Add(inicioPin);
-                    MoveToRegionReq.MoveToRegion(MapSpan.FromCenterAndRadius(inicioPin.Position, Distance.FromKilometers(4.0)));
+
+                    DesenharRota(DecodePolylinePoints(Chamada.polylinesParaOrigem));
+                    MoveToRegionReq.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(pos.Latitude, pos.Longitude), Distance.FromKilometers(1.0)));
                 }
 
             }
+        }
+
+        private void DesenharRota(List<Position> lista)
+        {
+            if (lista.Count > 1)
+            {
+                var polyline = new Polyline();
+                foreach (Position posi in lista)
+                    polyline.Positions.Add(posi);
+
+                polyline.IsClickable = true;
+                polyline.StrokeColor = Color.Blue;
+                polyline.StrokeWidth = 2f;
+                Polylines.Add(polyline);
+            }
+        }
+
+        private void LimparRota()
+        {
+            Polylines.Clear();
         }
 
 
@@ -346,6 +377,9 @@ namespace MotoRapido.ViewModels
 
         private async void CancelarFinalizarCorrida()
         {
+
+            Plugin.Geolocator.Abstractions.Position pos = await GetCurrentPosition();
+            CrossSettings.Current.Set("UltimaLocalizacaoValida", pos);
             if (TextoBotaoFinal.Equals("Cancelar"))
             {
                 var resposta = await UserDialogs.Instance.ConfirmAsync("Cancelar Chamada?", "Cancelamento", "Sim", "Não");
@@ -357,6 +391,8 @@ namespace MotoRapido.ViewModels
 
                         CancelarChamadaParam param = new CancelarChamadaParam();
                         param.chamada = Chamada;
+                        param.latitudeAtual = pos.Latitude.ToString();
+                        param.longitudeAtual = pos.Longitude.ToString();
                         param.codChamadaVeiculo = Chamada.codChamadaVeiculo;
                         param.dataCancelamento = DateTime.Now;
                         param.codVeiculo = CrossSettings.Current.Get<RetornoVeiculosMotorista>("VeiculoSelecionado").codVeiculo;
@@ -395,14 +431,22 @@ namespace MotoRapido.ViewModels
                     UserDialogs.Instance.ShowLoading("Processando...");
                     Chamada chamadaFinal = CrossSettings.Current.Get<Chamada>("ChamadaEmCorrida");
 
-                    Plugin.Geolocator.Abstractions.Position pos = await GetCurrentPosition();
+                    MessagingCenter.Unsubscribe<ViewModelBase>(this,"MudancaValor");
+
+                    MessagingCenter.Unsubscribe<ViewModelBase>(this, "MudancaPosicao");
+
+                   // Plugin.Geolocator.Abstractions.Position pos = await GetCurrentPosition();
                     chamadaFinal.latitudeFinalCorrida = pos.Latitude.ToString();
                     chamadaFinal.longitudeFinalCorrida = pos.Longitude.ToString();
 
                     chamadaFinal.dataFimCorrida = DateTime.Now;
 
                     CancelarChamadaParam param = new CancelarChamadaParam();
+                    
+                    chamadaFinal.valorFinalAjustado = float.Parse(chamadaFinal.valorFinal).ToString("N2");
                     param.chamada = chamadaFinal;
+                    param.latitudeAtual = pos.Latitude.ToString();
+                    param.longitudeAtual = pos.Longitude.ToString();
                     param.codChamadaVeiculo = chamadaFinal.codChamadaVeiculo;
                     param.codVeiculo = CrossSettings.Current.Get<RetornoVeiculosMotorista>("VeiculoSelecionado").codVeiculo;
 
@@ -417,7 +461,7 @@ namespace MotoRapido.ViewModels
                     if (response.IsSuccessStatusCode)
                     {
                        
-                        await DialogService.DisplayAlertAsync("Aviso", "Corrida finalizada.", "OK");
+                        await DialogService.DisplayAlertAsync("Aviso", "Corrida finalizada.\nValor Final : R$" + param.chamada.valorFinalAjustado, "OK");
                         await NavigationService.NavigateAsync("/NavigationPage/Home", useModalNavigation: true);
                     }
                     else
@@ -459,17 +503,16 @@ namespace MotoRapido.ViewModels
                 //Insiro uma chamada em corrida na memória e retio a chamada aceita
                 //CrossSettings.Current.Set("ChamadaEmCorrida", Chamada);
                 CrossSettings.Current.Remove("ChamadaAceita");
-                Chamada.valorFinal = 2;
                 CrossSettings.Current.Set("ChamadaEmCorrida", Chamada);
-                MessagingCenter.Subscribe<ViewModelBase, float>(this, "MudancaValor",
-                 (sender, arg) =>
-                 {
-                     ValorFinalView = arg;
-                     TextoValor = arg.ToString("C2", new CultureInfo("pt-BR"));
-                     TextoValor.Replace(".", ",");
-                 });
+                //MessagingCenter.Subscribe<ViewModelBase, float>(this, "MudancaValor",
+                // (sender, arg) =>
+                // {
+                //     ValorFinalView = arg;
+                //     TextoValor = arg.ToString("C2", new CultureInfo("pt-BR"));
+                //     TextoValor.Replace(".", ",");
+                // });
 
-
+                LimparRota();
                 AjustePosicaoMapa();
                 var response = await IniciarCliente(true).PostAsync("motorista/iniciarCorrida", content);
 

@@ -22,7 +22,7 @@
             <Button Text="Iniciar" BackgroundColor="Green" Padding="0,0,10,0" IsVisible="{Binding ShowBotaoInicio}"
                     Command="{Binding IniciarCorridaCommand}"></Button>
             <Button Text="{Binding TextoBotaoFinal}" BackgroundColor="Red" Command="{Binding BotaoFinalCommand}"></Button>
-            <Label Text="{Binding TextoValor}" Margin="30,0,0,0" FontSize="Medium" TextColor="Black"></Label>
+            <!--<Label Text="{Binding TextoValor}" Margin="30,0,0,0" FontSize="Medium" TextColor="Black"></Label>-->
         </StackLayout>
     </StackLayout>
 
