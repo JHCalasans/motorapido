@@ -17,6 +17,7 @@ using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using MotoRapido.Interfaces;
+using Prism.Services;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace MotoRapido
@@ -36,6 +37,9 @@ namespace MotoRapido
 
         public static INavigationService AppNavigationService => (Current as App)?.CreateNavigationService();
 
+
+
+
         private Boolean _desviarParaChamada { get; set; }
 
         protected override void OnStart()
@@ -44,13 +48,13 @@ namespace MotoRapido
             AppCenter.Start("android=3da30223-d2af-4457-80c8-d55fbe32880d;",
                       typeof(Analytics), typeof(Crashes));
 
-      
+
             BackgroundAggregatorService.Add(() => new ChecarUltimaLocalidade());
             BackgroundAggregatorService.StartBackgroundService();
 
         }
 
-        
+
 
         protected override async void OnInitialized()
         {
@@ -59,9 +63,13 @@ namespace MotoRapido
                 .HandleNotificationOpened(HandleNotificationOpened).EndInit();
 
 
-           
+
 
             InitializeComponent();
+#if DEBUG
+            HotReloader.Current.Run(this);
+#endif
+
 
 
 
@@ -70,7 +78,7 @@ namespace MotoRapido
             {
                 if (CrossSettings.Current.Contains("VeiculoSelecionado"))
                 {
-                    if (!CrossSettings.Current.Contains("ChamadaParaResposta") )
+                    if (!CrossSettings.Current.Contains("ChamadaParaResposta"))
                         await NavigationService.NavigateAsync("NavigationPage/Home");
                     else
                         await NavigationService.NavigateAsync("//NavigationPage/ResponderChamada", null, true);
@@ -79,7 +87,7 @@ namespace MotoRapido
                 {
                     NavigationParameters param = new NavigationParameters();
                     param.Add("pesquisar", true);
-                    await NavigationService.NavigateAsync("NavigationPage/Veiculos",param);
+                    await NavigationService.NavigateAsync("NavigationPage/Veiculos", param);
                 }
             }
             else
@@ -92,8 +100,8 @@ namespace MotoRapido
             base.OnResume();
             Boolean tes = Plugin.Geolocator.CrossGeolocator.Current.IsGeolocationEnabled;
             if (tes && CrossSettings.Current.Contains("GPSDesabilitado"))
-            {              
-                 MessagingCenter.Send(this, "GPSHabilitou");
+            {
+                MessagingCenter.Send(this, "GPSHabilitou");
             }
         }
 
@@ -116,7 +124,11 @@ namespace MotoRapido
                 {
                     CrossSettings.Current.Clear();
                     AppNavigationService.NavigateAsync("NavigationPage/Login");
+                }
+                if (additionalData.ContainsKey("tempoEsperaAceitacao"))
+                {
 
+                    CrossSettings.Current.Set("dataRecebimentoChamada", DateTime.Now);
                 }
             }
 
@@ -134,18 +146,28 @@ namespace MotoRapido
 
             if (additionalData != null)
             {
-                if (additionalData.ContainsKey("id_chamada"))
+                if (additionalData.ContainsKey("codChamadaVeiculo"))
                 {
-                    var value = additionalData["id_chamada"];
+
+                    //DateTime dtRecebimento = CrossSettings.Current.Get<DateTime>("dataRecebimentoChamada");
+                    if (additionalData.ContainsKey("tempoEsperaAceitacao"))
+                    {
+                        string tempoEspera = additionalData["tempoEsperaAceitacao"].ToString();
+                        CrossSettings.Current.Set("tempoEsperaAceitacao", tempoEspera);
+                    }
+
+                    //  var tempoEspera = CrossSettings.Current.Contains
+
+                    var value = additionalData["codChamadaVeiculo"];
                     CrossSettings.Current.Set("ChamadaParaResposta", value.ToString());
                     //NavigationParameters param = new NavigationParameters();
-                  //  param.Add("codChamada", value);  
-                 // if(actionID != null)
+                    //  param.Add("codChamada", value);  
+                    // if(actionID != null)
                     AppNavigationService.NavigateAsync("//NavigationPage/ResponderChamada", null, true);
-                
+
                 }
             }
-            
+
             //if (actionID != null)
             //{
             //    if (actionID.Equals("__DEFAULT__"))
@@ -160,7 +182,7 @@ namespace MotoRapido
 
         protected override void RegisterTypes()
         {
-           // Container.RegisterTypeForNavigation<NavigationPage>();
+            // Container.RegisterTypeForNavigation<NavigationPage>();
             Container.RegisterTypeForNavigation<MainPage>();
             Container.RegisterTypeForNavigation<Login>();
             Container.RegisterTypeForNavigation<Home>();
@@ -174,6 +196,6 @@ namespace MotoRapido
             Container.RegisterTypeForNavigation<ResponderChamada>();
         }
 
-        
+
     }
 }

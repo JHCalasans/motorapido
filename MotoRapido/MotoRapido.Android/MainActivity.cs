@@ -58,7 +58,7 @@ namespace MotoRapido.Droid
 
         }
 
-       
+
 
         protected override void OnResume()
         {

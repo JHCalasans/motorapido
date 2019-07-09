@@ -141,6 +141,9 @@
     <PackageReference Include="Xamarin.GooglePlayServices.Gcm">
       <Version>60.1142.1</Version>
     </PackageReference>
+    <PackageReference Include="Xamarin.HotReload">
+      <Version>1.4.12</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CachingNativeBitmapDescriptorFactory.cs" />

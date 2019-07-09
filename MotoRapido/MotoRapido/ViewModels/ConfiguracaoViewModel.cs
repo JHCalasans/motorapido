@@ -57,7 +57,7 @@ namespace MotoRapido.ViewModels
             catch (Exception ex)
             {
                 UserDialogs.Instance.HideLoading();
-                await DialogService.DisplayAlertAsync("Aviso", "Falha ao tentar alterar senha", "Ok");
+                await DialogService.DisplayAlertAsync("Aviso", "Falha ao tentar realizar logoff", "Ok");
             }
 
         }

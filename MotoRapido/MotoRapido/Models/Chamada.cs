@@ -82,7 +82,7 @@ namespace MotoRapido.Models
 
         public String destinoFormatado
         {
-            get { return logradouroOrigem + ";" + bairroOrigem; }
+            get { return logradouroOrigem + $" - {numeroOrigem}; " + bairroOrigem; }
         }
 
         public String polylines { get; set; }
@@ -112,5 +112,12 @@ namespace MotoRapido.Models
         public String polylinesParaOrigem { get; set; }
 
         public String valorFinalAjustado { get; set; }
+
+        public Cliente cliente { get; set; }
+
+        public Boolean existeObs
+        {
+            get { return !String.IsNullOrEmpty(observacao); }
+        }
     }
 }

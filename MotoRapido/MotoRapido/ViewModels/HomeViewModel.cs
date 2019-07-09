@@ -374,7 +374,7 @@ namespace MotoRapido.ViewModels
                 UserDialogs.Instance.ShowLoading("Carregando...");
 
                 var response = await IniciarCliente(true)
-                    .GetAsync("motorista/alterarDisponivel?codMotorista=" + MotoristaLogado.codigo);
+                    .GetAsync("motorista/alterarDisponivel/" + MotoristaLogado.codigo+"/"+ MotoristaLogado.disponivel);
 
                 Motorista motoTemp = new Motorista();
                 motoTemp = MotoristaLogado;

@@ -9,14 +9,27 @@
 
 
     <StackLayout HorizontalOptions="Center">
-        <Label Text="Chamada"  HorizontalOptions="Center" FontSize="Small" 
-               FontAttributes="Bold" Margin="30,150,10,0">
+        <Label Text="Chamada"  HorizontalOptions="Center" FontSize="Medium"  TextDecorations="Underline"
+               FontAttributes="Bold" Margin="0,80,0,20">
         </Label>
-        <Label Text="Aqui estarão alguns detalhes da chamada"/>
-        <StackLayout Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="Center" >
-            <Button Text="Aceitar" BackgroundColor="Green" Padding="0,0,10,0" 
+        <Label Text="{Binding chamada.destinoFormatado}" HorizontalOptions="Center"/>
+
+        <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+            <Label Text="Cliente : " FontAttributes="Bold"></Label>
+            <Label Text="{Binding chamada.cliente.nome}"></Label>
+        </StackLayout>
+
+        <StackLayout Orientation="Horizontal" HorizontalOptions="Center" IsVisible="{Binding chamada.existeObs}">
+            <Label Text="Obs : " FontAttributes="Bold"></Label>
+            <Label Text="{Binding chamada.observacao}"></Label>
+        </StackLayout>
+
+
+        <StackLayout Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="Center" 
+                     Padding="0,40,0,0">
+            <Button Text="Aceitar" BackgroundColor="Green" Margin="0,0,10,0"
                     Command="{Binding IrParaChamadaCommand}"></Button>
-            <Button Text="Recusar" BackgroundColor="Red" Command="{Binding RecusarCommand}"></Button>
+            <Button Text="Recusar" BackgroundColor="Red" Command="{Binding RecusarChamadaCommand}"></Button>
           
         </StackLayout>
 
