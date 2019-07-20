@@ -1,21 +1,16 @@
 ﻿using Acr.Settings;
 using Acr.UserDialogs;
-using Matcha.BackgroundService;
+using MotoRapido.BD.Repositorio;
 using MotoRapido.Models;
-using MotoRapido.Renderers;
 using Newtonsoft.Json;
 using Prism.Commands;
-using Prism.Mvvm;
 using Prism.Navigation;
 using Prism.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.GoogleMaps;
 using Xamarin.Forms.GoogleMaps.Bindings;
@@ -141,7 +136,7 @@ namespace MotoRapido.ViewModels
                 TextoValor = "Previsão R$" + Chamada.valorPrevisto;
                 TextoBotaoFinal = "Cancelar";
                 ShowBotaoInicio = true;
-               
+
             }
             else if (CrossSettings.Current.Contains("ChamadaEmCorrida"))
             {
@@ -150,7 +145,7 @@ namespace MotoRapido.ViewModels
                 iniciarTimerPosicao();
                 TextoBotaoFinal = "Finalizar";
                 ShowBotaoInicio = false;
-               // TextoValor = Chamada.valorFinal.ToString("C2", new CultureInfo("pt-BR"));
+                // TextoValor = Chamada.valorFinal.ToString("C2", new CultureInfo("pt-BR"));
                 //MessagingCenter.Subscribe<ViewModelBase, float>(this, "MudancaValor",
                 //   (sender, arg) =>
                 //   {
@@ -180,7 +175,7 @@ namespace MotoRapido.ViewModels
 
                 if (CrossSettings.Current.Contains("ChamadaEmCorrida"))
                 {
-                    
+
                     Pin localAtualPin = new Pin()
                     {
                         Type = PinType.Place,
@@ -236,7 +231,7 @@ namespace MotoRapido.ViewModels
             {
                 if (CrossSettings.Current.Contains("ChamadaEmCorrida"))
                 {
-                    
+
                     Pin localAtualPin = new Pin()
                     {
                         Type = PinType.Place,
@@ -411,8 +406,16 @@ namespace MotoRapido.ViewModels
                         }
                         else
                         {
-                            await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
+                            AdicionarInfoPendente(json, "cancelarChamada");
+                            CrossSettings.Current.Remove("ChamadaAceita");
+                            await DialogService.DisplayAlertAsync("Aviso", "Corrida cancelada.", "OK");
+                            await NavigationService.NavigateAsync("/NavigationPage/Home", useModalNavigation: true);
+                           // await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
                         }
+                    }
+                    catch (AccessViolationException e)
+                    {
+                        await DialogService.DisplayAlertAsync("Aviso", e.Message, "OK");
                     }
                     catch (Exception e)
                     {
@@ -431,18 +434,18 @@ namespace MotoRapido.ViewModels
                     UserDialogs.Instance.ShowLoading("Processando...");
                     Chamada chamadaFinal = CrossSettings.Current.Get<Chamada>("ChamadaEmCorrida");
 
-                    MessagingCenter.Unsubscribe<ViewModelBase>(this,"MudancaValor");
+                    MessagingCenter.Unsubscribe<ViewModelBase>(this, "MudancaValor");
 
                     MessagingCenter.Unsubscribe<ViewModelBase>(this, "MudancaPosicao");
 
-                   // Plugin.Geolocator.Abstractions.Position pos = await GetCurrentPosition();
+                    // Plugin.Geolocator.Abstractions.Position pos = await GetCurrentPosition();
                     chamadaFinal.latitudeFinalCorrida = pos.Latitude.ToString();
                     chamadaFinal.longitudeFinalCorrida = pos.Longitude.ToString();
 
                     chamadaFinal.dataFimCorrida = DateTime.Now;
 
                     CancelarChamadaParam param = new CancelarChamadaParam();
-                    
+
                     chamadaFinal.valorFinalAjustado = float.Parse(chamadaFinal.valorFinal).ToString("N2");
                     param.chamada = chamadaFinal;
                     param.latitudeAtual = pos.Latitude.ToString();
@@ -460,7 +463,7 @@ namespace MotoRapido.ViewModels
 
                     if (response.IsSuccessStatusCode)
                     {
-                       
+
                         await DialogService.DisplayAlertAsync("Aviso", "Corrida finalizada.\nValor Final : R$" + param.chamada.valorFinalAjustado, "OK");
                         await NavigationService.NavigateAsync("/NavigationPage/Home", useModalNavigation: true);
                     }
@@ -525,6 +528,10 @@ namespace MotoRapido.ViewModels
                 {
                     await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
                 }
+            }
+            catch (AccessViolationException e)
+            {
+                await DialogService.DisplayAlertAsync("Aviso", e.Message, "OK");
             }
             catch (Exception e)
             {

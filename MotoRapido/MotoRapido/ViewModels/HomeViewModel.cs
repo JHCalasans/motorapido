@@ -23,6 +23,9 @@ using System.Threading.Tasks;
 using System.Threading;
 using Microsoft.AppCenter.Crashes;
 using Microsoft.AppCenter.Analytics;
+using MotoRapido.Customs;
+using System.Net.WebSockets;
+using PureWebSockets;
 
 namespace MotoRapido.ViewModels
 {
@@ -182,6 +185,13 @@ namespace MotoRapido.ViewModels
                 AreaPosicao.msgErro = "Buscando...";
                 if (UltimaLocalizacaoValida != null)
                 {
+                    MessagingCenter.Unsubscribe<MensagemErroArea>(this, "ErroPosicaoArea");
+                    MessagingCenter.Subscribe<MensagemErroArea>(this, "ErroPosicaoArea", (sender) =>
+                    {
+
+                        AreaPosicao = new RetornoVerificaPosicao() { msgErro = sender.msg };
+
+                    });
                     Localizar(UltimaLocalizacaoValida);
                 }
 
@@ -230,8 +240,16 @@ namespace MotoRapido.ViewModels
 
         private async void IrParaMensagem()
         {
-
-            await DialogService.DisplayAlertAsync("Aviso", "Funcionalidade em consstrução", "OK");
+            try
+            {
+                // await WebSocketClientClass.Connect(MotoristaLogado.chaveServicos, MotoristaLogado.codigo.ToString());
+                await WebSocketClientClass.SenMessagAsync("ListarSessoes=>");
+            }
+            catch (Exception e)
+            {
+                await DialogService.DisplayAlertAsync("Aviso", "Falha na conexão com servidor", "OK");
+            }
+            // await DialogService.DisplayAlertAsync("Aviso", "Funcionalidade em consstrução", "OK");
             //if (!CrossSettings.Current.Contains("mensagens") ||
             //    CrossSettings.Current.Get<List<MensagemMotoristaFuncionario>>("mensagens").Count < 1)
             //{
@@ -311,6 +329,10 @@ namespace MotoRapido.ViewModels
                     await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
                 }
             }
+            catch (AccessViolationException e)
+            {
+                await DialogService.DisplayAlertAsync("Aviso", e.Message, "OK");
+            }
             catch (Exception e)
             {
                 await DialogService.DisplayAlertAsync("Aviso", "Falha ao buscar histórico do motorista", "OK");
@@ -353,6 +375,10 @@ namespace MotoRapido.ViewModels
                         await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
                     }
                 }
+                catch (AccessViolationException e)
+                {
+                    await DialogService.DisplayAlertAsync("Aviso", e.Message, "OK");
+                }
                 catch (Exception e)
                 {
                     Crashes.TrackError(e);
@@ -374,7 +400,7 @@ namespace MotoRapido.ViewModels
                 UserDialogs.Instance.ShowLoading("Carregando...");
 
                 var response = await IniciarCliente(true)
-                    .GetAsync("motorista/alterarDisponivel/" + MotoristaLogado.codigo+"/"+ MotoristaLogado.disponivel);
+                    .GetAsync("motorista/alterarDisponivel/" + MotoristaLogado.codigo + "/" + MotoristaLogado.disponivel);
 
                 Motorista motoTemp = new Motorista();
                 motoTemp = MotoristaLogado;
@@ -391,10 +417,12 @@ namespace MotoRapido.ViewModels
                         CorDeFundoStatus = Color.Red;
                         TextoStatus = "OCUPADO";
                         ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.ocupado.png");
+                        MessagingCenter.Unsubscribe<MensagemErroArea>(this, "ErroPosicaoArea");
                         await StopListening();
                     }
                     else
                     {
+                        
                         AreaPosicao.msgErro = "Buscando...";
                         motoTemp.disponivel = "S";
                         ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_indisponivel.png");
@@ -404,7 +432,27 @@ namespace MotoRapido.ViewModels
                         ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.livre.png");
                         CrossSettings.Current.Set("IsTimerOn", true);
                         CrossSettings.Current.Remove("UltimaLocalizacaoValida");
+                        //MessagingCenter.Subscribe<ViewModelBase, RetornoVerificaPosicao>(this, "MudancaAreaPosicao", (sender, args) =>
+                        //   {
+                        //       AreaPosicao = args;
+                        //   });
+                        //MessagingCenter.Subscribe<ViewModelBase>(this, "TesteOps", (sender) =>
+                        //{
+                        //    Debug.Print("uyut");
+                        //});
+
+                        MessagingCenter.Unsubscribe<MensagemErroArea>(this, "ErroPosicaoArea");
+                        MessagingCenter.Subscribe<MensagemErroArea>(this, "ErroPosicaoArea", (sender) =>
+                        {
+
+                            AreaPosicao = new RetornoVerificaPosicao() { msgErro = sender.msg };
+
+                        });
+                        ConectarSocket();
                         iniciarTimerPosicao();
+
+
+
                     }
 
                     CrossSettings.Current.Set("MotoristaLogado", motoTemp);
@@ -417,7 +465,10 @@ namespace MotoRapido.ViewModels
             }
             catch (Exception e)
             {
-                await DialogService.DisplayAlertAsync("Aviso", "Falha ao alterar disponibilidade", "OK");
+                if (e is AccessViolationException || e is WebSocketException)
+                    await DialogService.DisplayAlertAsync("Aviso", e.Message, "OK");
+                else
+                    await DialogService.DisplayAlertAsync("Aviso", "Falha ao alterar disponibilidade", "OK");
             }
             finally
             {

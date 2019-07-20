@@ -12,5 +12,7 @@ namespace MotoRapido.Models
         public String longitude { get; set; }
 
         public int codMotorista { get; set; }
+
+        public int codUltimaArea { get; set; }
     }
 }

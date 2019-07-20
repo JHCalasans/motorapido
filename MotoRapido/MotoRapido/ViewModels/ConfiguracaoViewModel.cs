@@ -1,5 +1,6 @@
 ﻿using Acr.Settings;
 using Acr.UserDialogs;
+using MotoRapido.Customs;
 using MotoRapido.Models;
 using Newtonsoft.Json;
 using Prism.Commands;
@@ -37,22 +38,29 @@ namespace MotoRapido.ViewModels
                     UserDialogs.Instance.ShowLoading("Processando...", MaskType.Gradient);
 
                     var json = JsonConvert.SerializeObject(MotoristaLogado);
-                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+                      var content = new StringContent(json, Encoding.UTF8, "application/json");
+                    //ConectarSocket();
+                    //await WebSocketClientClass.SenMessagAsync("LogOut=>"+json);
+                    //CrossSettings.Current.Clear();
 
                     var client = new HttpClient();
                     client.Timeout = TimeSpan.FromMilliseconds(25000);
 
 
-                    using (var response = await IniciarCliente(true).PostAsync("motorista/logoff",
-                        content))
+                    using (var response = await IniciarCliente(true).PostAsync("motorista/logoff",  content))
                     {
                         UserDialogs.Instance.HideLoading();
 
                         CrossSettings.Current.Clear();
 
+
                         await NavigationService.NavigateAsync("/NavigationPage/Login", useModalNavigation: true);
                     }
                 }
+            }
+            catch (AccessViolationException e)
+            {
+                await DialogService.DisplayAlertAsync("Aviso", e.Message, "OK");
             }
             catch (Exception ex)
             {
@@ -96,6 +104,10 @@ namespace MotoRapido.ViewModels
 
                     }
                 }
+            }
+            catch (AccessViolationException e)
+            {
+                await DialogService.DisplayAlertAsync("Aviso", e.Message, "OK");
             }
             catch (Exception ex)
             {

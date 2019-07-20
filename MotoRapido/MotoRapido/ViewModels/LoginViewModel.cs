@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using Prism.Navigation;
 using Prism.Services;
 using Com.OneSignal;
+using Xamarin.Forms;
 
 namespace MotoRapido.ViewModels
 {
@@ -72,7 +73,13 @@ namespace MotoRapido.ViewModels
                         CrossSettings.Current.Set("MotoristaLogado", JsonConvert.DeserializeObject<Motorista>(respStr));
                         CrossSettings.Current.Set("IsTimerOn", MotoristaLogado.disponivel.Equals("S"));
                         // CrossSettings.Current.Set("UltimaLocalizacaoValida", );
+                        ConectarSocket();
+                        MessagingCenter.Subscribe<MensagemErroArea>(this, "ErroPosicaoArea", (sender) =>
+                        {
 
+                            AreaPosicao = new RetornoVerificaPosicao() { msgErro = sender.msg };
+
+                        });
 
                         await NavigationService.NavigateAsync("//NavigationPage/Veiculos", null, true);
 
@@ -83,6 +90,10 @@ namespace MotoRapido.ViewModels
                         await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
                     }
                 }
+            }
+            catch (AccessViolationException e)
+            {
+                await DialogService.DisplayAlertAsync("Aviso", e.Message, "OK");
             }
             catch (Exception e)
             {

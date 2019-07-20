@@ -94,6 +94,10 @@ namespace MotoRapido.ViewModels
                     await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
                 }
             }
+            catch (AccessViolationException e)
+            {
+                await DialogService.DisplayAlertAsync("Aviso", e.Message, "OK");
+            }
             catch (Exception e)
             {
                 await DialogService.DisplayAlertAsync("Aviso", "Falha ao buscar informações da chamada", "OK");
@@ -162,6 +166,10 @@ namespace MotoRapido.ViewModels
                         await NavigationService.NavigateAsync("/NavigationPage/Home", useModalNavigation: true);
                     }
                 }
+                catch (AccessViolationException e)
+                {
+                    await DialogService.DisplayAlertAsync("Aviso", e.Message, "OK");
+                }
                 catch (Exception e)
                 {
                     await DialogService.DisplayAlertAsync("Aviso", "Falha ao recusar corrida", "OK");
@@ -193,12 +201,12 @@ namespace MotoRapido.ViewModels
                     param.chamada = chamada;
                     param.dataDecisao = DateTime.Now;
                     param.codVeiculo = CrossSettings.Current.Get<RetornoVeiculosMotorista>("VeiculoSelecionado").codVeiculo;
-                    param.latitudeAtual = pos.Latitude.ToString();
-                    param.longitudeAtual = pos.Longitude.ToString();
+                    param.latitudeAtual = pos.Latitude.ToString().Replace(",", ".");
+                    param.longitudeAtual = pos.Longitude.ToString().Replace(",",".");
                     var json = JsonConvert.SerializeObject(param);
                     var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                    var response = await IniciarCliente(true).PostAsync("motorista/selecionarChamada", content);
+                    var response = await IniciarCliente(true).PostAsync("motorista/aceitarChamada", content);
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -206,6 +214,9 @@ namespace MotoRapido.ViewModels
                         chamada = JsonConvert.DeserializeObject<Chamada>(respStr);
                         CrossSettings.Current.Remove("ChamadaAceita");
                         CrossSettings.Current.Set("ChamadaAceita", chamada);
+                        CrossSettings.Current.Remove("tempoEsperaAceitacao");
+                        CrossSettings.Current.Remove("dataRecebimentoChamada");
+                        CrossSettings.Current.Remove("ChamadaParaResposta");
                         // var navParam = new NavigationParameters();
                         // navParam.Add("chamadaAceita", chamada);
                         await NavigationService.NavigateAsync("Chamada", null, true);
@@ -214,6 +225,10 @@ namespace MotoRapido.ViewModels
                     {
                         await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
                     }
+                }
+                catch (AccessViolationException e)
+                {
+                    await DialogService.DisplayAlertAsync("Aviso", e.Message, "OK");
                 }
                 catch (Exception e)
                 {

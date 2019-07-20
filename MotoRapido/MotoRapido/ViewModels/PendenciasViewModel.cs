@@ -80,6 +80,10 @@ namespace MotoRapido.ViewModels
                             await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
                         }
                     }
+                    catch (AccessViolationException e)
+                    {
+                        await DialogService.DisplayAlertAsync("Aviso", e.Message, "OK");
+                    }
                     catch (Exception e)
                     {
                         await DialogService.DisplayAlertAsync("Aviso", "Falha ao selecionar chamada", "OK");

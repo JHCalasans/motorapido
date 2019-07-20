@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Prism.Mvvm;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace MotoRapido.Models
 {
-    public class RetornoVerificaPosicao
+    public class RetornoVerificaPosicao 
     {
         public Area areaAtual { get; set; }
 

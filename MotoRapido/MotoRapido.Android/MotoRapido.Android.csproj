@@ -89,6 +89,12 @@
     <PackageReference Include="Plugin.Permissions">
       <Version>3.0.0.12</Version>
     </PackageReference>
+    <PackageReference Include="PureWebSockets">
+      <Version>2.4.4</Version>
+    </PackageReference>
+    <PackageReference Include="sqlite-net-pcl">
+      <Version>1.5.231</Version>
+    </PackageReference>
     <PackageReference Include="System.Net.Http">
       <Version>4.3.3</Version>
     </PackageReference>
@@ -146,6 +152,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BD\ConexaoBancoLocal.cs" />
     <Compile Include="CachingNativeBitmapDescriptorFactory.cs" />
     <Compile Include="ChecarGPSAndroid.cs" />
     <Compile Include="LocalService.cs" />
