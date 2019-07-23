@@ -37,7 +37,7 @@ namespace MotoRapido
 
         public static INavigationService AppNavigationService => (Current as App)?.CreateNavigationService();
 
-
+        public static bool IsInForeground { get; set; } = false;
 
 
         private Boolean _desviarParaChamada { get; set; }
@@ -49,8 +49,9 @@ namespace MotoRapido
                       typeof(Analytics), typeof(Crashes));
 
 
-            BackgroundAggregatorService.Add(() => new ChecarUltimaLocalidade());
+            BackgroundAggregatorService.Add(() => new ChecagemInformacaoPendente());
             BackgroundAggregatorService.StartBackgroundService();
+            IsInForeground = true;
 
         }
 
@@ -98,6 +99,7 @@ namespace MotoRapido
         protected override void OnResume()
         {
             base.OnResume();
+            IsInForeground = true;
             Boolean tes = Plugin.Geolocator.CrossGeolocator.Current.IsGeolocationEnabled;
             if (tes && CrossSettings.Current.Contains("GPSDesabilitado"))
             {
@@ -179,6 +181,15 @@ namespace MotoRapido
             //}
         }
 
+
+        protected override void OnSleep()
+        {
+            base.OnSleep();
+            IsInForeground = false;
+        }
+
+        
+       
 
         protected override void RegisterTypes()
         {

@@ -23,6 +23,7 @@
     using System.Net.WebSockets;
     using MotoRapido.BD.Repositorio;
     using System.Collections.Generic;
+    using Plugin.LocalNotifications;
 
     /// <summary>
     /// Defines the <see cref="ViewModelBase" />
@@ -127,7 +128,6 @@
                 throw new WebSocketException("Falha na conexão com servidor"); // await DialogService.DisplayAlertAsync("Aviso", "Falha na conexão com servidor", "OK");
             }
         }
-
 
 
 
@@ -331,6 +331,16 @@
             _informacaoPendenteRepositorio.AdicionarInformacaoPendente(new InformacaoPendente() { conteudo = conteudo, dtHora = DateTime.Now, servico = servico });
 
         }
+
+        public static void TratarMensagemChamada()
+        {
+            if (App.IsInForeground)
+                Device.BeginInvokeOnMainThread(async () => await App.Current.MainPage.DisplayAlert("Nova Chamada", "Nova Chamada", "OK"));
+            //await DialogService.DisplayAlertAsync("Nova Chamada", "Nova Chamada", "OK");
+            else
+                CrossLocalNotifications.Current.Show("Nova Chamada", "nova chamada");
+        }
+
 
         public static void RemoverInfoPendente(Int64 codInfoPendente)
         {

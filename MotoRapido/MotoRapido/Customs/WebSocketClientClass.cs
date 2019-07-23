@@ -1,11 +1,11 @@
 ﻿using MotoRapido.Models;
 using MotoRapido.ViewModels;
+using Plugin.LocalNotifications;
 using PureWebSockets;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.WebSockets;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -124,13 +124,18 @@ namespace MotoRapido.Customs
                 case "ErroMotoPosResp": MessagingCenter.Send(new MensagemErroArea() { msg = resp[1]}, "ErroPosicaoArea");  break;
                 case "LocalizacaoResp":   Debug.WriteLine(resp[1]); break;
                 case "InformacaoPendenteResp": RemoverInfoPendente(Convert.ToInt64(resp[1])); break;
+                case "NovaChamada":  TratarMensagemChamada(); break;
+
+                    //CrossNotifications.Current.Send(new Notification() {Title = "Nova Chamada", Vibrate = true })   
             }
-           // WebSocketClientClass._ws, "ErroPosicaoArea", resp[0] + DateTime.No
+            // WebSocketClientClass._ws, "ErroPosicaoArea", resp[0] + DateTime.No
 
 
 
         }
 
+
+     
         private static void Ws_OnStateChanged(WebSocketState newState, WebSocketState prevState)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;

@@ -1,31 +1,23 @@
-﻿using Prism.Commands;
-using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using Acr.Settings;
+﻿using Acr.Settings;
 using Acr.UserDialogs;
+using Microsoft.AppCenter.Crashes;
 using MotoRapido.Models;
-using MotoRapido.Views;
 using Newtonsoft.Json;
 using Plugin.Connectivity;
 using Plugin.Geolocator;
-using Prism.Navigation;
-using Prism.Services;
-using Xamarin.Forms;
+using Plugin.LocalNotifications;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
+using Prism.Commands;
+using Prism.Navigation;
+using Prism.Services;
+using System;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using System.Threading;
-using Microsoft.AppCenter.Crashes;
-using Microsoft.AppCenter.Analytics;
-using MotoRapido.Customs;
+using System.Net.Http;
 using System.Net.WebSockets;
-using PureWebSockets;
+using System.Text;
+using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace MotoRapido.ViewModels
 {
@@ -242,12 +234,13 @@ namespace MotoRapido.ViewModels
         {
             try
             {
+              
                 // await WebSocketClientClass.Connect(MotoristaLogado.chaveServicos, MotoristaLogado.codigo.ToString());
-                await WebSocketClientClass.SenMessagAsync("ListarSessoes=>");
+                //await WebSocketClientClass.SenMessagAsync("ListarSessoes=>");
             }
             catch (Exception e)
             {
-                await DialogService.DisplayAlertAsync("Aviso", "Falha na conexão com servidor", "OK");
+               // await DialogService.DisplayAlertAsync("Aviso", "Falha na conexão com servidor", "OK");
             }
             // await DialogService.DisplayAlertAsync("Aviso", "Funcionalidade em consstrução", "OK");
             //if (!CrossSettings.Current.Contains("mensagens") ||
