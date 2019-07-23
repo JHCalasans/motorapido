@@ -64,8 +64,12 @@ namespace MotoRapido.ViewModels
             }
             catch (Exception ex)
             {
-                UserDialogs.Instance.HideLoading();
+               
                 await DialogService.DisplayAlertAsync("Aviso", "Falha ao tentar realizar logoff", "Ok");
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
             }
 
         }

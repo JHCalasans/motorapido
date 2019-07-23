@@ -1,11 +1,15 @@
 ﻿using Acr.Settings;
 using Acr.UserDialogs;
 using Android.App;
+using Android.Content;
 using Android.Content.PM;
 using Android.Locations;
 using Android.OS;
 using Android.Runtime;
+using Android.Widget;
+using Java.Lang;
 using Matcha.BackgroundService.Droid;
+using MotoRapido.Customs;
 using Plugin.CurrentActivity;
 using Plugin.Permissions;
 using Prism.Unity;
@@ -39,7 +43,7 @@ namespace MotoRapido.Droid
             // Xamarin.FormsMaps.Init(this, bundle);
             //  Xamarin.FormsGoogleMaps.Init(this, bundle); 
 
-
+               
 
             var platformConfig = new PlatformConfig
             {
@@ -58,6 +62,13 @@ namespace MotoRapido.Droid
 
         }
 
+
+        protected override async void OnDestroy()
+        {
+            //await WebSocketClientClass.SendMessagAsync(MotoRapido.ViewModels.ViewModelBase.GetMotoristaStatic().chaveServicos,
+            //    MotoRapido.ViewModels.ViewModelBase.GetMotoristaStatic().codigo.ToString(),"FechouApp=>");
+            base.OnDestroy();
+        }
 
 
         protected override void OnResume()

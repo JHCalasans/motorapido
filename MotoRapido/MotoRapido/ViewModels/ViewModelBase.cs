@@ -167,7 +167,7 @@
                         CrossSettings.Current.Set("UltimaAtualizacaoLocalidade", new DateTime());
                         ConectarSocket();
                        // await client.SenMessagAsync("InformarLocalizacao=>" + json);
-                         await WebSocketClientClass.SenMessagAsync("InformarLocalizacao=>" + json);
+                         await WebSocketClientClass.SendMessagAsync("InformarLocalizacao=>" + json);
 
                         //var response = await IniciarCliente(true).PostAsync("motorista/verificarPosicao", content);
 
@@ -302,6 +302,12 @@
             set {; }
         }
 
+        public static Motorista GetMotoristaStatic()
+        {
+             return CrossSettings.Current.Get<Motorista>("MotoristaLogado");
+        }
+
+
         /// <summary>
         /// Defines the _areaPosicao
         /// </summary>
@@ -405,9 +411,9 @@
 
 
 
-        // private readonly String _urlBase = "http://10.0.3.2:8080/motorapido/wes/";
+         private readonly String _urlBase = "http://10.0.3.2:8080/motorapido/wes/";
 
-        private readonly String _urlBase = "http://192.168.0.4:8080/motorapido/wes/";
+       // private readonly String _urlBase = "http://192.168.0.4:8080/motorapido/wes/";
 
         //  private readonly String _urlBase = "http://104.248.186.97:8080/motorapido/wes/";
 

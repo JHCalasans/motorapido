@@ -1,6 +1,5 @@
 ﻿using MotoRapido.Models;
 using MotoRapido.ViewModels;
-using Plugin.LocalNotifications;
 using PureWebSockets;
 using System;
 using System.Collections.Generic;
@@ -52,7 +51,7 @@ namespace MotoRapido.Customs
                 
             };
 
-            _ws = new PureWebSocket("ws://192.168.0.4:8080/motorapido/socket", socketOptions);
+            _ws = new PureWebSocket("ws://10.0.3.2:8080/motorapido/socket", socketOptions);
 
             _ws.OnStateChanged += Ws_OnStateChanged;
             _ws.OnMessage += Ws_OnMessage;
@@ -93,13 +92,28 @@ namespace MotoRapido.Customs
             }
         }
 
-        public static async Task<bool> SenMessagAsync(string data)
+        public static async Task<bool> SendMessagAsync(string data)
         {
+         
+
             if (_ws.State != WebSocketState.Open) return false;
 
             return await _ws.SendAsync(data);
 
         }
+
+
+        public static async Task<bool> SendMessagAsync(String chaveServicos, String codMotorista, String data)
+        {
+            if (_ws == null)
+                await Connect(chaveServicos, codMotorista);
+
+            if (_ws.State != WebSocketState.Open) return false;
+
+            return await _ws.SendAsync(data);
+
+        }
+
 
         private static void Ws_OnClosed(WebSocketCloseStatus reason)
         {
