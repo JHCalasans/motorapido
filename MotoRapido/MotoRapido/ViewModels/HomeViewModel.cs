@@ -441,7 +441,7 @@ namespace MotoRapido.ViewModels
                             AreaPosicao = new RetornoVerificaPosicao() { msgErro = sender.msg };
 
                         });
-                        ConectarSocket();
+                        //ConectarSocket();
                         iniciarTimerPosicao();
 
 

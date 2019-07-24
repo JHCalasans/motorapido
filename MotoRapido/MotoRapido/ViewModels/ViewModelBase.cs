@@ -99,7 +99,7 @@
         }
 
 
-        public async void ConectarSocket()
+        public async Task ConectarSocket()
         {
             try
             {
@@ -165,7 +165,7 @@
                         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                         CrossSettings.Current.Set("UltimaAtualizacaoLocalidade", new DateTime());
-                        ConectarSocket();
+                        await ConectarSocket();
                        // await client.SenMessagAsync("InformarLocalizacao=>" + json);
                          await WebSocketClientClass.SendMessagAsync("InformarLocalizacao=>" + json);
 
@@ -625,6 +625,8 @@
         /// <returns>The <see cref="Task"/></returns>
         internal async Task StopListening()
         {
+
+            DesconectarSocket();
             if (!CrossGeolocator.Current.IsListening)
                 return;
 

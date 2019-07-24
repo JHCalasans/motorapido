@@ -19,7 +19,8 @@ namespace MotoRapido.Customs
 
         public static void CloseWs()
         {
-            _ws.Dispose(true);
+            if (_ws != null && _ws.State == WebSocketState.Open)
+                _ws.Dispose(true);
         }
 
         public static PureWebSocket GetWs()

@@ -63,12 +63,7 @@ namespace MotoRapido.Droid
         }
 
 
-        protected override async void OnDestroy()
-        {
-            //await WebSocketClientClass.SendMessagAsync(MotoRapido.ViewModels.ViewModelBase.GetMotoristaStatic().chaveServicos,
-            //    MotoRapido.ViewModels.ViewModelBase.GetMotoristaStatic().codigo.ToString(),"FechouApp=>");
-            base.OnDestroy();
-        }
+     
 
 
         protected override void OnResume()

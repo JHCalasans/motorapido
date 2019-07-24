@@ -73,7 +73,7 @@ namespace MotoRapido.ViewModels
                         CrossSettings.Current.Set("MotoristaLogado", JsonConvert.DeserializeObject<Motorista>(respStr));
                         CrossSettings.Current.Set("IsTimerOn", MotoristaLogado.disponivel.Equals("S"));
                         // CrossSettings.Current.Set("UltimaLocalizacaoValida", );
-                        ConectarSocket();
+                       // ConectarSocket();
                         MessagingCenter.Subscribe<MensagemErroArea>(this, "ErroPosicaoArea", (sender) =>
                         {
 

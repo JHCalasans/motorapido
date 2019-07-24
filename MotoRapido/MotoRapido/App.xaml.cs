@@ -45,13 +45,19 @@ namespace MotoRapido
         protected override void OnStart()
         {
             base.OnStart();
-            AppCenter.Start("android=3da30223-d2af-4457-80c8-d55fbe32880d;",
-                      typeof(Analytics), typeof(Crashes));
+            try
+            {
+                AppCenter.Start("android=3da30223-d2af-4457-80c8-d55fbe32880d;",
+                          typeof(Analytics), typeof(Crashes));
 
 
-            BackgroundAggregatorService.Add(() => new ChecagemInformacaoPendente());
-            BackgroundAggregatorService.StartBackgroundService();
-            IsInForeground = true;
+                BackgroundAggregatorService.Add(() => new ChecagemInformacaoPendente());
+                BackgroundAggregatorService.StartBackgroundService();
+                IsInForeground = true;
+            }catch(Exception e)
+            {
+
+            }
 
         }
 
