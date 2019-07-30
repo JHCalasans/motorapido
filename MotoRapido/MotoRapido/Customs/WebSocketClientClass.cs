@@ -1,5 +1,7 @@
-﻿using MotoRapido.Models;
+﻿using Acr.Settings;
+using MotoRapido.Models;
 using MotoRapido.ViewModels;
+using Plugin.Connectivity;
 using PureWebSockets;
 using System;
 using System.Collections.Generic;
@@ -11,9 +13,9 @@ using Xamarin.Forms;
 
 namespace MotoRapido.Customs
 {
-    public  class WebSocketClientClass : ViewModelBase
+    public class WebSocketClientClass : ViewModelBase
     {
-        private  static  PureWebSocket _ws;
+        private static PureWebSocket _ws;
         private static int _sendCount;
         private static Timer _timer;
 
@@ -31,7 +33,7 @@ namespace MotoRapido.Customs
         public static async Task Connect(String chaveServicos, String codMotorista)
         {
             // _timer = new Timer(OnTickAsync, null, 2000, 1);
-           
+
             if (_ws != null && _ws.State == WebSocketState.Open) return;
 
             Tuple<String, String> tupla = new Tuple<string, string>("Authentication", chaveServicos);
@@ -48,11 +50,13 @@ namespace MotoRapido.Customs
                 IgnoreCertErrors = true,
                 MyReconnectStrategy = new ReconnectStrategy(2000, 4000, 20),
                 Headers = en,
-                
-                
+
+
             };
 
-            _ws = new PureWebSocket("ws://10.0.3.2:8080/motorapido/socket", socketOptions);
+            //_ws = new PureWebSocket("ws://10.0.3.2:8080/motorapido/socket", socketOptions);
+
+            _ws = new PureWebSocket("ws://192.168.42.64:8080/motorapido/socket", socketOptions);
 
             _ws.OnStateChanged += Ws_OnStateChanged;
             _ws.OnMessage += Ws_OnMessage;
@@ -95,11 +99,33 @@ namespace MotoRapido.Customs
 
         public static async Task<bool> SendMessagAsync(string data)
         {
-         
+
+
 
             if (_ws.State != WebSocketState.Open) return false;
 
-            return await _ws.SendAsync(data);
+
+            //if (CrossSettings.Current.Contains("TENTAR_RECONECTAR") && CrossConnectivity.Current.IsConnected)
+            //{
+            //    CrossSettings.Current.Remove("TENTAR_RECONECTAR");
+            //    _ws.Dispose(true);
+            //    Motorista moto = CrossSettings.Current.Get<Motorista>("MotoristaLogado");
+            //    await WebSocketClientClass.Connect(moto.chaveServicos, moto.codigo.ToString());
+            //    return await _ws.SendAsync(data);
+            //}
+            //else if (!CrossSettings.Current.Contains("TENTAR_RECONECTAR") && CrossConnectivity.Current.IsConnected)
+            //{
+                return await _ws.SendAsync(data);
+
+            //}
+            //else
+            //{
+            //    CrossSettings.Current.Set("TENTAR_RECONECTAR", true);
+            //    MessagingCenter.Send(new MensagemErroArea() { msg = "Sem Conexão..." }, "ErroPosicaoArea"); 
+            //    return false;
+            //}
+
+
 
         }
 
@@ -125,7 +151,7 @@ namespace MotoRapido.Customs
             Console.ReadLine();
         }
 
-        private static  void Ws_OnMessage(string message)
+        private static void Ws_OnMessage(string message)
         {
             //Console.ForegroundColor = ConsoleColor.Green;
             //Console.WriteLine($"{DateTime.Now} New message: {message}");
@@ -136,10 +162,10 @@ namespace MotoRapido.Customs
             switch (resp[0])
             {
                 case "ErroResp": Device.BeginInvokeOnMainThread(async () => await App.Current.MainPage.DisplayAlert("Aviso", resp[1], "OK")); break;
-                case "ErroMotoPosResp": MessagingCenter.Send(new MensagemErroArea() { msg = resp[1]}, "ErroPosicaoArea");  break;
-                case "LocalizacaoResp":   Debug.WriteLine(resp[1]); break;
+                case "ErroMotoPosResp": MessagingCenter.Send(new MensagemErroArea() { msg = resp[1] }, "ErroPosicaoArea"); break;
+                case "LocalizacaoResp": Debug.WriteLine(resp[1]); break;
                 case "InformacaoPendenteResp": RemoverInfoPendente(Convert.ToInt64(resp[1])); break;
-                case "NovaChamada":  TratarMensagemChamada(); break;
+                case "NovaChamada": TratarMensagemChamada(resp[1]); break;
 
                     //CrossNotifications.Current.Send(new Notification() {Title = "Nova Chamada", Vibrate = true })   
             }
@@ -150,7 +176,7 @@ namespace MotoRapido.Customs
         }
 
 
-     
+
         private static void Ws_OnStateChanged(WebSocketState newState, WebSocketState prevState)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;

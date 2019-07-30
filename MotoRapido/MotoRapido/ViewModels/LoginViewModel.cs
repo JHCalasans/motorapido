@@ -14,6 +14,7 @@ using Prism.Navigation;
 using Prism.Services;
 using Com.OneSignal;
 using Xamarin.Forms;
+using Xamarin.Essentials;
 
 namespace MotoRapido.ViewModels
 {
@@ -81,6 +82,8 @@ namespace MotoRapido.ViewModels
 
                         });
 
+                     
+
                         await NavigationService.NavigateAsync("//NavigationPage/Veiculos", null, true);
 
                         //await NavigationService.NavigateAsync("//NavigationPage/Home");
@@ -106,6 +109,9 @@ namespace MotoRapido.ViewModels
 
 
         }
+
+
+      
 
         private static string HashPassword(string str)
         {

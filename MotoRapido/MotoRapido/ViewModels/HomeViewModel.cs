@@ -1,6 +1,7 @@
 ﻿using Acr.Settings;
 using Acr.UserDialogs;
 using Microsoft.AppCenter.Crashes;
+using MotoRapido.Customs;
 using MotoRapido.Models;
 using Newtonsoft.Json;
 using Plugin.Connectivity;
@@ -17,6 +18,7 @@ using System.Net.Http;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace MotoRapido.ViewModels
@@ -121,7 +123,7 @@ namespace MotoRapido.ViewModels
                     {
                         if (CrossGeolocator.Current.IsGeolocationEnabled)//App.IsGPSEnable)
                         {
-                            iniciarTimerPosicao();
+                            IniciarTimerPosicao();
                         }
                         //else
                         //{
@@ -236,7 +238,7 @@ namespace MotoRapido.ViewModels
             {
               
                 // await WebSocketClientClass.Connect(MotoristaLogado.chaveServicos, MotoristaLogado.codigo.ToString());
-                //await WebSocketClientClass.SenMessagAsync("ListarSessoes=>");
+                await WebSocketClientClass.SendMessagAsync("ListarSessoes=>");
             }
             catch (Exception e)
             {
@@ -441,8 +443,35 @@ namespace MotoRapido.ViewModels
                             AreaPosicao = new RetornoVerificaPosicao() { msgErro = sender.msg };
 
                         });
+                        MessagingCenter.Unsubscribe<MensagemErroArea>(this, "NovaChamada");
+                        MessagingCenter.Subscribe<Chamada>(this, "NovaChamada", (sender) =>
+                        {
+
+                            NavigationService.NavigateAsync("//NavigationPage/ResponderChamada", null, true);
+
+                        });
+
+
+                        MessagingCenter.Unsubscribe<App, Boolean>(this, "SemInternet");
+
+                        MessagingCenter.Subscribe<App, Boolean>(this, "SemInternet", async  (sender, args) =>
+                        {
+
+                            if (args && MotoristaLogado.disponivel.Equals("S"))
+                                AreaPosicao = new RetornoVerificaPosicao() { msgErro = "Sem Conexão..." };
+                            else if (!args && MotoristaLogado.disponivel.Equals("S"))
+                            {
+                                AreaPosicao.msgErro = "Buscando...";
+                                await CrossGeolocator.Current.StopListeningAsync();
+                                DesconectarSocket();
+                                IniciarTimerPosicao();
+                                BuscaPosicao(UltimaLocalizacaoValida);
+                            }
+
+                        });
+
                         //ConectarSocket();
-                        iniciarTimerPosicao();
+                        IniciarTimerPosicao();
 
 
 

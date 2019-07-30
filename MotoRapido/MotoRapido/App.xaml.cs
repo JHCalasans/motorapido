@@ -18,6 +18,8 @@ using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using MotoRapido.Interfaces;
 using Prism.Services;
+using Xamarin.Essentials;
+using MotoRapido.Models;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace MotoRapido
@@ -54,11 +56,52 @@ namespace MotoRapido
                 BackgroundAggregatorService.Add(() => new ChecagemInformacaoPendente());
                 BackgroundAggregatorService.StartBackgroundService();
                 IsInForeground = true;
-            }catch(Exception e)
+
+                Connectivity.ConnectivityChanged -= Connectivity_ConnectivityChanged;
+                Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
+
+              
+
+            }
+            catch(Exception e)
             {
 
             }
 
+        }
+
+        public void Connectivity_ConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
+        {
+            var access = e.NetworkAccess;
+            var profiles = e.ConnectionProfiles;
+            if (access != NetworkAccess.Internet)
+            {
+                MessagingCenter.Send(this, "SemInternet", true);
+            }
+            else
+            {
+                MessagingCenter.Send(this, "SemInternet", false);
+            }
+            //else if(access == NetworkAccess.ConstrainedInternet) {
+            //    lblNetStatus.Text = "Limited internet access";
+            //}
+            //else if(access == NetworkAccess.Local) {
+            //    lblNetStatus.Text = "Local network access only";
+            //}
+            //else if(access == NetworkAccess.None) {
+            //    lblNetStatus.Text = "No connectivity is available";
+            //}
+            //else if(access == NetworkAccess.Unknown) {
+            //    lblNetStatus.Text = "Unable to determine internet connectivity";
+            //}
+            //if (profiles.Contains(ConnectionProfile.WiFi))
+            //{
+            //    lblNetProfile.Text = profiles.FirstOrDefault().ToString();
+            //}
+            //else
+            //{
+            //    lblNetProfile.Text = profiles.FirstOrDefault().ToString();
+            //}
         }
 
 
@@ -203,7 +246,7 @@ namespace MotoRapido
             Container.RegisterTypeForNavigation<MainPage>();
             Container.RegisterTypeForNavigation<Login>();
             Container.RegisterTypeForNavigation<Home>();
-            Container.RegisterTypeForNavigation<Chamada>();
+            Container.RegisterTypeForNavigation<Views.Chamada>();
             Container.RegisterTypeForNavigation<Mensagem>();
             Container.RegisterTypeForNavigation<Views.NavigationPage>();
             Container.RegisterTypeForNavigation<Configuracao>();

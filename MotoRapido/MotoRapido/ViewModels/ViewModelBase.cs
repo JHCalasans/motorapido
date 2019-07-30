@@ -1,7 +1,7 @@
 ﻿namespace MotoRapido.ViewModels
 {
     using Acr.Settings;
-    using Acr.UserDialogs;
+    using MotoRapido.BD.Repositorio;
     using MotoRapido.Customs;
     using MotoRapido.Models;
     using Newtonsoft.Json;
@@ -12,6 +12,7 @@
     using Prism.Navigation;
     using Prism.Services;
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Net.Http;
     using System.Net.WebSockets;
@@ -20,10 +21,6 @@
     using System.Threading.Tasks;
     using Xamarin.Essentials;
     using Xamarin.Forms;
-    using System.Net.WebSockets;
-    using MotoRapido.BD.Repositorio;
-    using System.Collections.Generic;
-    using Plugin.LocalNotifications;
 
     /// <summary>
     /// Defines the <see cref="ViewModelBase" />
@@ -228,6 +225,43 @@
             }
         }
 
+
+
+        public void Connectivity_ConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
+        {
+            var access = e.NetworkAccess;
+            var profiles = e.ConnectionProfiles;
+            if (access != NetworkAccess.Internet)
+            {
+                MessagingCenter.Send(this, "SemInternet", true);
+            }
+            else
+            {
+                MessagingCenter.Send(this, "SemInternet", false);
+            }
+            //else if(access == NetworkAccess.ConstrainedInternet) {
+            //    lblNetStatus.Text = "Limited internet access";
+            //}
+            //else if(access == NetworkAccess.Local) {
+            //    lblNetStatus.Text = "Local network access only";
+            //}
+            //else if(access == NetworkAccess.None) {
+            //    lblNetStatus.Text = "No connectivity is available";
+            //}
+            //else if(access == NetworkAccess.Unknown) {
+            //    lblNetStatus.Text = "Unable to determine internet connectivity";
+            //}
+            //if (profiles.Contains(ConnectionProfile.WiFi))
+            //{
+            //    lblNetProfile.Text = profiles.FirstOrDefault().ToString();
+            //}
+            //else
+            //{
+            //    lblNetProfile.Text = profiles.FirstOrDefault().ToString();
+            //}
+        }
+
+
         public async void MostrarMensagem(String msg)
         {
             await DialogService.DisplayAlertAsync("Aviso", msg, "OK");
@@ -236,7 +270,7 @@
         /// <summary>
         /// The iniciarTimerPosicao
         /// </summary>
-        public async void iniciarTimerPosicao()
+        public async void IniciarTimerPosicao()
         {
             //   if (StoppableTimer == null) StoppableTimer = new StoppableTimer(TimeSpan.FromSeconds(2), Localizar);
 
@@ -338,13 +372,18 @@
 
         }
 
-        public static void TratarMensagemChamada()
+        public static  void TratarMensagemChamada(string json)
         {
+            var chamadaNova = JsonConvert.DeserializeObject<Chamada>(json);
             if (App.IsInForeground)
-                Device.BeginInvokeOnMainThread(async () => await App.Current.MainPage.DisplayAlert("Nova Chamada", "Nova Chamada", "OK"));
-            //await DialogService.DisplayAlertAsync("Nova Chamada", "Nova Chamada", "OK");
+                MessagingCenter.Send(chamadaNova, "NovaChamada");
+            //  Device.BeginInvokeOnMainThread(async () => await App.Current.MainPage.DisplayAlert("Nova Chamada", "Nova Chamada", "OK"));
+            //  await DialogService.DisplayAlertAsync("Nova Chamada", "Nova Chamada", "OK");
             else
-                CrossLocalNotifications.Current.Show("Nova Chamada", "nova chamada");
+            {
+                CrossSettings.Current.Set("ChamadaParaResposta", chamadaNova);
+               // CrossLocalNotifications.Current.Show("Nova Chamada", "nova chamada");
+            }
         }
 
 
@@ -411,9 +450,11 @@
 
 
 
-         private readonly String _urlBase = "http://10.0.3.2:8080/motorapido/wes/";
+        // private readonly String _urlBase = "http://10.0.3.2:8080/motorapido/wes/";
 
-       // private readonly String _urlBase = "http://192.168.0.4:8080/motorapido/wes/";
+        private readonly String _urlBase = "http://192.168.42.64:8080/motorapido/wes/";
+
+        // private readonly String _urlBase = "http://192.168.0.4:8080/motorapido/wes/";
 
         //  private readonly String _urlBase = "http://104.248.186.97:8080/motorapido/wes/";
 
@@ -533,6 +574,50 @@
             return deg * (Math.PI / 180d);
         }
 
+
+
+        public void BuscaPosicao(Position position)
+        {
+            Localizar(position);
+            Chamada chamadatemp = new Chamada();
+            chamadatemp = CrossSettings.Current.Get<Chamada>("ChamadaEmCorrida");
+            MessagingCenter.Send(this, "MudancaPosicao", position);
+            if (CrossSettings.Current.Contains("ChamadaEmCorrida"))
+            {
+                // MessagingCenter.Send(this, "MudancaPin", position);
+                AreaPosicao.msgErro = "Chamada Em Andamento!";
+                double distancia = Location.CalculateDistance(new Location(UltimaLocalizacaoValida.Latitude, UltimaLocalizacaoValida.Longitude),
+                    new Location(position.Latitude, position.Longitude), DistanceUnits.Kilometers);
+
+                //GetDistanceFromLatLonInKm(UltimaLocalizacaoValida.Latitude,
+                //UltimaLocalizacaoValida.Longitude, position.Latitude, position.Longitude);
+                chamadatemp.distanciaPercorrida = chamadatemp.distanciaPercorrida + (float)distancia;
+                //double distancia2 = Location.CalculateDistance(new Location(Double.Parse(chamadatemp.latitudeInicioCorrida),
+                //   Double.Parse(chamadatemp.longitudeInicioCorrida)),
+                //    new Location(position.Latitude, position.Longitude), DistanceUnits.Kilometers);
+
+                //GetDistanceFromLatLonInKm(Double.Parse(chamadatemp.latitudeInicioCorrida),
+                //   Double.Parse(chamadatemp.longitudeInicioCorrida), position.Latitude, position.Longitude);
+                // 
+                if (distancia > 0)
+                {
+                    chamadatemp.valorFinal = (float.Parse(chamadatemp.valorFinal) + (chamadatemp.valorPorDistancia * (float)distancia)).ToString("N2");
+                    CrossSettings.Current.Set("ChamadaEmCorrida", chamadatemp);
+                    //MessagingCenter.Send(this, "MudancaValor", chamadatemp.valorFinal);
+                    //;
+                }
+                else
+                    CrossSettings.Current.Set("ChamadaEmCorrida", chamadatemp);
+            }
+            else if (CrossSettings.Current.Contains("ChamadaAceita"))
+            {
+                AreaPosicao.msgErro = "Chamada Em Andamento!";
+
+            }
+            CrossSettings.Current.Set("UltimaLocalizacaoValida", position);
+        }
+
+
         /// <summary>
         /// The PositionChanged
         /// </summary>
@@ -544,46 +629,7 @@
             //If updating the UI, ensure you invoke on main thread
             var position = e.Position;
             if (UltimaLocalizacaoValida == null || isLocalizacaoDiferente(position, UltimaLocalizacaoValida))
-            {
-                Localizar(position);
-                Chamada chamadatemp = new Chamada();
-                chamadatemp = CrossSettings.Current.Get<Chamada>("ChamadaEmCorrida");
-                MessagingCenter.Send(this, "MudancaPosicao", position);
-                if (CrossSettings.Current.Contains("ChamadaEmCorrida"))
-                {
-                    // MessagingCenter.Send(this, "MudancaPin", position);
-                    AreaPosicao.msgErro = "Chamada Em Andamento!";
-                    double distancia = Location.CalculateDistance(new Location(UltimaLocalizacaoValida.Latitude, UltimaLocalizacaoValida.Longitude),
-                        new Location(position.Latitude, position.Longitude), DistanceUnits.Kilometers);
-
-                    //GetDistanceFromLatLonInKm(UltimaLocalizacaoValida.Latitude,
-                    //UltimaLocalizacaoValida.Longitude, position.Latitude, position.Longitude);
-                    chamadatemp.distanciaPercorrida = chamadatemp.distanciaPercorrida + (float)distancia;
-                    //double distancia2 = Location.CalculateDistance(new Location(Double.Parse(chamadatemp.latitudeInicioCorrida),
-                    //   Double.Parse(chamadatemp.longitudeInicioCorrida)),
-                    //    new Location(position.Latitude, position.Longitude), DistanceUnits.Kilometers);
-
-                    //GetDistanceFromLatLonInKm(Double.Parse(chamadatemp.latitudeInicioCorrida),
-                    //   Double.Parse(chamadatemp.longitudeInicioCorrida), position.Latitude, position.Longitude);
-                    // 
-                    if (distancia > 0)
-                    {
-                        chamadatemp.valorFinal = (float.Parse(chamadatemp.valorFinal) + (chamadatemp.valorPorDistancia * (float)distancia)).ToString("N2");
-                        CrossSettings.Current.Set("ChamadaEmCorrida", chamadatemp);
-                        //MessagingCenter.Send(this, "MudancaValor", chamadatemp.valorFinal);
-                        //;
-                    }
-                    else
-                        CrossSettings.Current.Set("ChamadaEmCorrida", chamadatemp);
-                }
-                else if (CrossSettings.Current.Contains("ChamadaAceita"))
-                {
-                    AreaPosicao.msgErro = "Chamada Em Andamento!";
-
-                }
-                CrossSettings.Current.Set("UltimaLocalizacaoValida", position);
-
-            }
+                BuscaPosicao(position);
         }
 
        

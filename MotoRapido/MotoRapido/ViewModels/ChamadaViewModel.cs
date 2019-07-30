@@ -142,7 +142,7 @@ namespace MotoRapido.ViewModels
             {
                 Chamada = CrossSettings.Current.Get<Chamada>("ChamadaEmCorrida");
                 CrossSettings.Current.Set("IsTimerOn", true);
-                iniciarTimerPosicao();
+                IniciarTimerPosicao();
                 TextoBotaoFinal = "Finalizar";
                 ShowBotaoInicio = false;
                 // TextoValor = Chamada.valorFinal.ToString("C2", new CultureInfo("pt-BR"));

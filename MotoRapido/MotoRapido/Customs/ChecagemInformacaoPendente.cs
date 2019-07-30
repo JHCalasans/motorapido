@@ -3,6 +3,7 @@ using Matcha.BackgroundService;
 using MotoRapido.Models;
 using MotoRapido.ViewModels;
 using Newtonsoft.Json;
+using Plugin.Connectivity;
 using Plugin.LocalNotifications;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 
 namespace MotoRapido.Customs
 {
@@ -28,8 +30,8 @@ namespace MotoRapido.Customs
 
         private async void ChecagemInformacaoPendenteAsync()
         {
-           
-          //  var lista = ListarTodasInfoPendentes();
+          
+            //  var lista = ListarTodasInfoPendentes();
 
 
             //foreach(InformacaoPendente info in lista)
@@ -37,13 +39,13 @@ namespace MotoRapido.Customs
             //    await WebSocketClientClass.SenMessagAsync("InformacaoPendente=>"+info.servico+"=>"+info.conteudo+"=>"+info.codInformacaoPendente);
             //}
 
-           // var response = await IniciarCliente(true).PostAsync("motorista/iniciarCorrida", content);
-            
-           // if (response.IsSuccessStatusCode)
-           //  {
+            // var response = await IniciarCliente(true).PostAsync("motorista/iniciarCorrida", content);
+
+            // if (response.IsSuccessStatusCode)
+            //  {
             //BackgroundAggregatorService.StopBackgroundService();
 
-          //  }
+            //  }
         }
 
      

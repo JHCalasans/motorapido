@@ -63,7 +63,12 @@ namespace MotoRapido.Droid
         }
 
 
-     
+        protected override void OnDestroy()
+        {
+
+
+            base.OnDestroy();
+        }
 
 
         protected override void OnResume()

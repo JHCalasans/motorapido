@@ -3,6 +3,7 @@ using Acr.UserDialogs;
 using MotoRapido.Customs;
 using MotoRapido.Models;
 using Newtonsoft.Json;
+using Plugin.Geolocator;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
@@ -53,7 +54,9 @@ namespace MotoRapido.ViewModels
 
                         CrossSettings.Current.Clear();
 
+                       await CrossGeolocator.Current.StopListeningAsync();
 
+                        DesconectarSocket();
                         await NavigationService.NavigateAsync("/NavigationPage/Login", useModalNavigation: true);
                     }
                 }
