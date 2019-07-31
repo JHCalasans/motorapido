@@ -179,8 +179,8 @@ namespace MotoRapido.ViewModels
                 AreaPosicao.msgErro = "Buscando...";
                 if (UltimaLocalizacaoValida != null)
                 {
-                    MessagingCenter.Unsubscribe<MensagemErroArea>(this, "ErroPosicaoArea");
-                    MessagingCenter.Subscribe<MensagemErroArea>(this, "ErroPosicaoArea", (sender) =>
+                    MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "ErroPosicaoArea");
+                    MessagingCenter.Subscribe<MensagemRespostaSocket>(this, "ErroPosicaoArea", (sender) =>
                     {
 
                         AreaPosicao = new RetornoVerificaPosicao() { msgErro = sender.msg };
@@ -412,7 +412,9 @@ namespace MotoRapido.ViewModels
                         CorDeFundoStatus = Color.Red;
                         TextoStatus = "OCUPADO";
                         ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.ocupado.png");
-                        MessagingCenter.Unsubscribe<MensagemErroArea>(this, "ErroPosicaoArea");
+                        MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "ErroPosicaoArea");
+                        MessagingCenter.Unsubscribe<Chamada>(this, "NovaChamada");
+                        MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "ErroPosicaoArea");
                         await StopListening();
                     }
                     else
@@ -427,33 +429,25 @@ namespace MotoRapido.ViewModels
                         ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.livre.png");
                         CrossSettings.Current.Set("IsTimerOn", true);
                         CrossSettings.Current.Remove("UltimaLocalizacaoValida");
-                        //MessagingCenter.Subscribe<ViewModelBase, RetornoVerificaPosicao>(this, "MudancaAreaPosicao", (sender, args) =>
-                        //   {
-                        //       AreaPosicao = args;
-                        //   });
-                        //MessagingCenter.Subscribe<ViewModelBase>(this, "TesteOps", (sender) =>
-                        //{
-                        //    Debug.Print("uyut");
-                        //});
 
-                        MessagingCenter.Unsubscribe<MensagemErroArea>(this, "ErroPosicaoArea");
-                        MessagingCenter.Subscribe<MensagemErroArea>(this, "ErroPosicaoArea", (sender) =>
+                        //Ouvindo mensagem de erro de posição em área
+                        MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "ErroPosicaoArea");
+                        MessagingCenter.Subscribe<MensagemRespostaSocket>(this, "ErroPosicaoArea", (sender) =>
                         {
 
                             AreaPosicao = new RetornoVerificaPosicao() { msgErro = sender.msg };
 
                         });
-                        MessagingCenter.Unsubscribe<MensagemErroArea>(this, "NovaChamada");
+                        //Ouvindo mensagem de nova chamada
+                        MessagingCenter.Unsubscribe<Chamada>(this, "NovaChamada");
                         MessagingCenter.Subscribe<Chamada>(this, "NovaChamada", (sender) =>
                         {
 
                             NavigationService.NavigateAsync("//NavigationPage/ResponderChamada", null, true);
 
                         });
-
-
+                        //Ouvindo mensagem de internet indisponível
                         MessagingCenter.Unsubscribe<App, Boolean>(this, "SemInternet");
-
                         MessagingCenter.Subscribe<App, Boolean>(this, "SemInternet", async  (sender, args) =>
                         {
 
@@ -467,6 +461,15 @@ namespace MotoRapido.ViewModels
                                 IniciarTimerPosicao();
                                 BuscaPosicao(UltimaLocalizacaoValida);
                             }
+
+                        });
+
+                        //Ouvindo mensagem de resposta de localização
+                        MessagingCenter.Unsubscribe<RetornoVerificaPosicao>(this, "LocalizacaoResposta");
+                        MessagingCenter.Subscribe<RetornoVerificaPosicao>(this, "LocalizacaoResposta", (sender) =>
+                        {
+
+                            AreaPosicao = sender;
 
                         });
 

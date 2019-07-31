@@ -541,11 +541,6 @@
                 CrossGeolocator.Current.PositionChanged += PositionChanged;
                 CrossGeolocator.Current.PositionError += PositionError;
 
-
-
-
-
-
             }
         }
 

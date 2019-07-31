@@ -75,7 +75,7 @@ namespace MotoRapido.ViewModels
                         CrossSettings.Current.Set("IsTimerOn", MotoristaLogado.disponivel.Equals("S"));
                         // CrossSettings.Current.Set("UltimaLocalizacaoValida", );
                        // ConectarSocket();
-                        MessagingCenter.Subscribe<MensagemErroArea>(this, "ErroPosicaoArea", (sender) =>
+                        MessagingCenter.Subscribe<MensagemRespostaSocket>(this, "ErroPosicaoArea", (sender) =>
                         {
 
                             AreaPosicao = new RetornoVerificaPosicao() { msgErro = sender.msg };

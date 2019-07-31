@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MotoRapido.Models
 {
-    public  class MensagemErroArea
+    public  class MensagemRespostaSocket
     {
         public  String msg { get; set; } 
     }

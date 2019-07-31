@@ -1,6 +1,7 @@
 ﻿using Acr.Settings;
 using MotoRapido.Models;
 using MotoRapido.ViewModels;
+using Newtonsoft.Json;
 using Plugin.Connectivity;
 using PureWebSockets;
 using System;
@@ -162,8 +163,8 @@ namespace MotoRapido.Customs
             switch (resp[0])
             {
                 case "ErroResp": Device.BeginInvokeOnMainThread(async () => await App.Current.MainPage.DisplayAlert("Aviso", resp[1], "OK")); break;
-                case "ErroMotoPosResp": MessagingCenter.Send(new MensagemErroArea() { msg = resp[1] }, "ErroPosicaoArea"); break;
-                case "LocalizacaoResp": Debug.WriteLine(resp[1]); break;
+                case "ErroMotoPosResp": MessagingCenter.Send(new MensagemRespostaSocket() { msg = resp[1] }, "ErroPosicaoArea"); break;
+                case "LocalizacaoResp": MessagingCenter.Send(JsonConvert.DeserializeObject<RetornoVerificaPosicao>(resp[1]), "LocalizacaoResposta"); break;
                 case "InformacaoPendenteResp": RemoverInfoPendente(Convert.ToInt64(resp[1])); break;
                 case "NovaChamada": TratarMensagemChamada(resp[1]); break;
 
