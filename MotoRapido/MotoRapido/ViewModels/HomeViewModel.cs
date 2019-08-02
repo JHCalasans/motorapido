@@ -473,6 +473,15 @@ namespace MotoRapido.ViewModels
 
                         });
 
+                        SensorSpeed speed = SensorSpeed.UI;
+
+                        if (Gyroscope.IsMonitoring)
+                            Gyroscope.Stop();
+                        else
+                            Gyroscope.Start(speed);
+
+                       
+
                         //ConectarSocket();
                         IniciarTimerPosicao();
 

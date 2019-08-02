@@ -147,12 +147,15 @@
                         //  else
                         //  {
 
+
+
                         VerificaPosicaoParam param = new VerificaPosicaoParam
                         {
                             codMotorista = MotoristaLogado.codigo,
                             latitude = posicao.Latitude.ToString().Replace(",", "."),
-                            longitude = posicao.Longitude.ToString().Replace(",", ".")
-
+                            longitude = posicao.Longitude.ToString().Replace(",", "."),
+                            direcao = posicao.Heading
+                            
                         };
 
                         if (AreaPosicao != null && AreaPosicao.areaAtual != null)

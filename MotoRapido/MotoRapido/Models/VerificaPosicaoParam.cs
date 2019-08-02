@@ -14,5 +14,7 @@ namespace MotoRapido.Models
         public int codMotorista { get; set; }
 
         public int codUltimaArea { get; set; }
+
+        public double direcao { get; set; }
     }
 }

@@ -60,7 +60,10 @@ namespace MotoRapido
                 Connectivity.ConnectivityChanged -= Connectivity_ConnectivityChanged;
                 Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
 
-              
+               
+                Gyroscope.ReadingChanged -= Gyroscope_ReadingChanged;
+                Gyroscope.ReadingChanged += Gyroscope_ReadingChanged;
+
 
             }
             catch(Exception e)
@@ -68,6 +71,15 @@ namespace MotoRapido
 
             }
 
+        }
+
+        void Gyroscope_ReadingChanged(object sender, GyroscopeChangedEventArgs e)
+        {
+            var data = e.Reading;
+            CrossSettings.Current.Set("OrientacaoPsoicao", data);
+
+            // Process Angular Velocity X, Y, and Z reported in rad/s
+            //Console.WriteLine($"Reading: X: {data.AngularVelocity.X}, Y: {data.AngularVelocity.Y}, Z: {data.AngularVelocity.Z}");
         }
 
         public void Connectivity_ConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
