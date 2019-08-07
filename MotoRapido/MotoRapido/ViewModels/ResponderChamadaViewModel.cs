@@ -1,16 +1,13 @@
 ﻿using Acr.Settings;
 using Acr.UserDialogs;
-using MotoRapido.Customs;
+using Microsoft.AppCenter.Crashes;
 using MotoRapido.Models;
 using Newtonsoft.Json;
 using Plugin.Connectivity;
 using Prism.Commands;
-using Prism.Mvvm;
 using Prism.Navigation;
 using Prism.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 
@@ -42,23 +39,26 @@ namespace MotoRapido.ViewModels
 
         }
 
-        public override  void OnNavigatingTo(NavigationParameters parameters)
+        public override void OnNavigatingTo(NavigationParameters parameters)
         {
             string codChamadaVeiculo = null;
-            //if (parameters.ContainsKey("codChamada"))
-            //     teste = parameters["codChamada"].ToString();
-            ValidaTempoEspera();
-
-            if (_expirouTempo)
-                NavegarHome();
+            if (parameters.ContainsKey("ChamadaSelecionada"))
+            {
+                chamada = (Chamada)parameters["ChamadaSelecionada"];
+            }
             else
             {
-
-                if (CrossSettings.Current.Contains("ChamadaParaResposta"))
+                ValidaTempoEspera();
+                if (_expirouTempo)
+                    NavegarHome();
+                else
                 {
-                    codChamadaVeiculo = CrossSettings.Current.Get<string>("ChamadaParaResposta");
-                    BuscarChamada(codChamadaVeiculo);
-                    //  CrossSettings.Current.Remove("ChamadaParaResposta");
+                    if (CrossSettings.Current.Contains("ChamadaParaResposta"))
+                    {
+                        codChamadaVeiculo = CrossSettings.Current.Get<string>("ChamadaParaResposta");
+                        BuscarChamada(codChamadaVeiculo);
+                        //  CrossSettings.Current.Remove("ChamadaParaResposta");
+                    }
                 }
             }
         }
@@ -74,7 +74,7 @@ namespace MotoRapido.ViewModels
             {
                 UserDialogs.Instance.ShowLoading("Carregando...");
 
-                Plugin.Geolocator.Abstractions.Position pos = await GetCurrentPosition();
+               // Plugin.Geolocator.Abstractions.Position pos = await GetCurrentPosition();
 
                 //var json = JsonConvert.SerializeObject(Int64.Parse(codChamada));
                 // var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -102,6 +102,7 @@ namespace MotoRapido.ViewModels
             }
             catch (Exception e)
             {
+                Crashes.TrackError(e);
                 await DialogService.DisplayAlertAsync("Aviso", "Falha ao buscar informações da chamada", "OK");
             }
             finally
@@ -110,7 +111,7 @@ namespace MotoRapido.ViewModels
             }
         }
 
-        private async void  ValidaTempoEspera()
+        private async void ValidaTempoEspera()
         {
 
             if (CrossSettings.Current.Contains("dataRecebimentoChamada"))
@@ -174,6 +175,7 @@ namespace MotoRapido.ViewModels
                 }
                 catch (Exception e)
                 {
+                    Crashes.TrackError(e);
                     await DialogService.DisplayAlertAsync("Aviso", "Falha ao recusar corrida", "OK");
                 }
                 finally
@@ -236,6 +238,7 @@ namespace MotoRapido.ViewModels
                     }
                     catch (Exception e)
                     {
+                        Crashes.TrackError(e);
                         await DialogService.DisplayAlertAsync("Aviso", "Falha ao aceitar chamada", "OK");
                     }
                     finally

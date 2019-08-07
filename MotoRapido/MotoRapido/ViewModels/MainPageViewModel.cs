@@ -12,6 +12,7 @@ using Plugin.Geolocator;
 using System.Diagnostics;
 using Plugin.Permissions.Abstractions;
 using Plugin.Permissions;
+using Microsoft.AppCenter.Crashes;
 
 namespace MotoRapido.ViewModels
 {
@@ -56,7 +57,7 @@ namespace MotoRapido.ViewModels
             }
             catch (Exception e)
             {
-
+                Crashes.TrackError(e);
             }
         }
             

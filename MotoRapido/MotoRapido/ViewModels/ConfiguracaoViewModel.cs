@@ -1,5 +1,6 @@
 ﻿using Acr.Settings;
 using Acr.UserDialogs;
+using Microsoft.AppCenter.Crashes;
 using MotoRapido.Customs;
 using MotoRapido.Models;
 using Newtonsoft.Json;
@@ -67,7 +68,7 @@ namespace MotoRapido.ViewModels
             }
             catch (Exception ex)
             {
-               
+                Crashes.TrackError(ex);
                 await DialogService.DisplayAlertAsync("Aviso", "Falha ao tentar realizar logoff", "Ok");
             }
             finally
@@ -118,6 +119,7 @@ namespace MotoRapido.ViewModels
             }
             catch (Exception ex)
             {
+                Crashes.TrackError(ex);
                 UserDialogs.Instance.HideLoading();
                 await DialogService.DisplayAlertAsync("Aviso", "Falha ao tentar alterar senha", "Ok");
             }

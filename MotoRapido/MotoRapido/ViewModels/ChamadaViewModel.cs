@@ -1,6 +1,6 @@
 ﻿using Acr.Settings;
 using Acr.UserDialogs;
-using MotoRapido.BD.Repositorio;
+using Microsoft.AppCenter.Crashes;
 using MotoRapido.Models;
 using Newtonsoft.Json;
 using Prism.Commands;
@@ -364,6 +364,7 @@ namespace MotoRapido.ViewModels
             }
             catch (Exception ex)
             {
+                Crashes.TrackError(ex);
                 // logo it
             }
             return poly;
@@ -419,6 +420,7 @@ namespace MotoRapido.ViewModels
                     }
                     catch (Exception e)
                     {
+                        Crashes.TrackError(e);
                         await DialogService.DisplayAlertAsync("Aviso", "Falha ao cancelar corrida", "OK");
                     }
                     finally
@@ -474,6 +476,7 @@ namespace MotoRapido.ViewModels
                 }
                 catch (Exception e)
                 {
+                    Crashes.TrackError(e);
                     await DialogService.DisplayAlertAsync("Aviso", "Falha ao finalizar corrida", "OK");
                 }
                 finally
@@ -535,6 +538,7 @@ namespace MotoRapido.ViewModels
             }
             catch (Exception e)
             {
+                Crashes.TrackError(e);
                 await DialogService.DisplayAlertAsync("Aviso", "Falha ao iniciar corrida", "OK");
             }
             finally

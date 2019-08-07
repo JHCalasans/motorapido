@@ -1,5 +1,6 @@
 ﻿using Acr.Settings;
 using Acr.UserDialogs;
+using Microsoft.AppCenter.Crashes;
 using MotoRapido.Models;
 using Newtonsoft.Json;
 using Prism.Commands;
@@ -92,6 +93,7 @@ namespace MotoRapido.ViewModels
             }
             catch (Exception e)
             {
+                Crashes.TrackError(e);
                 await DialogService.DisplayAlertAsync("Aviso", "Falha ao buscar veículos", "OK");
             }
             finally
@@ -124,6 +126,7 @@ namespace MotoRapido.ViewModels
             }
             catch (Exception e)
             {
+                Crashes.TrackError(e);
                 await DialogService.DisplayAlertAsync("Aviso", "Falha ao selecionar veículo", "OK");
             }
             finally

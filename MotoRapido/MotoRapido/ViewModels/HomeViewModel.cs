@@ -6,7 +6,6 @@ using MotoRapido.Models;
 using Newtonsoft.Json;
 using Plugin.Connectivity;
 using Plugin.Geolocator;
-using Plugin.LocalNotifications;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using Prism.Commands;
@@ -211,7 +210,7 @@ namespace MotoRapido.ViewModels
                 //UserDialogs.Instance.ShowLoading("Processando...", MaskType.Gradient);
                 // Task.Run(async () => await VerificaPermissaoLocalizacao());
 
-                await Task.Run(async () => VerificaPermissaoLocalizacao());
+                await Task.Run( ()  =>  VerificaPermissaoLocalizacao());
                 //if (UltimaLocalizacaoValida == null)
                 //{
                 //    while(status != PermissionStatus.Granted){
@@ -242,7 +241,8 @@ namespace MotoRapido.ViewModels
             }
             catch (Exception e)
             {
-               // await DialogService.DisplayAlertAsync("Aviso", "Falha na conexão com servidor", "OK");
+                Crashes.TrackError(e);
+                // await DialogService.DisplayAlertAsync("Aviso", "Falha na conexão com servidor", "OK");
             }
             // await DialogService.DisplayAlertAsync("Aviso", "Funcionalidade em consstrução", "OK");
             //if (!CrossSettings.Current.Contains("mensagens") ||
@@ -330,6 +330,7 @@ namespace MotoRapido.ViewModels
             }
             catch (Exception e)
             {
+                Crashes.TrackError(e);
                 await DialogService.DisplayAlertAsync("Aviso", "Falha ao buscar histórico do motorista", "OK");
             }
             finally
@@ -473,12 +474,12 @@ namespace MotoRapido.ViewModels
 
                         });
 
-                        SensorSpeed speed = SensorSpeed.UI;
+                        //SensorSpeed speed = SensorSpeed.UI;
 
-                        if (Gyroscope.IsMonitoring)
-                            Gyroscope.Stop();
-                        else
-                            Gyroscope.Start(speed);
+                        //if (Gyroscope.IsMonitoring)
+                        //    Gyroscope.Stop();
+                        //else
+                        //    Gyroscope.Start(speed);
 
                        
 
@@ -499,6 +500,7 @@ namespace MotoRapido.ViewModels
             }
             catch (Exception e)
             {
+                Crashes.TrackError(e);
                 if (e is AccessViolationException || e is WebSocketException)
                     await DialogService.DisplayAlertAsync("Aviso", e.Message, "OK");
                 else

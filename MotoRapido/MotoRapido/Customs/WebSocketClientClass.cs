@@ -63,7 +63,7 @@ namespace MotoRapido.Customs
             _ws.OnMessage += Ws_OnMessage;
             _ws.OnClosed += Ws_OnClosed;
             _ws.OnSendFailed += Ws_OnSendFailed;
-            await _ws.ConnectAsync();
+           var conectou = await _ws.ConnectAsync();
 
         }
 

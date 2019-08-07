@@ -1,15 +1,10 @@
 ﻿
+using Acr.UserDialogs;
+using MotoRapido.Models;
+using Prism.Commands;
 using Prism.Navigation;
 using Prism.Services;
 using System.Collections.ObjectModel;
-using MotoRapido.Models;
-using Prism.Commands;
-using Acr.UserDialogs;
-using System;
-using Newtonsoft.Json;
-using System.Net.Http;
-using System.Text;
-using Acr.Settings;
 
 namespace MotoRapido.ViewModels
 {
@@ -44,54 +39,58 @@ namespace MotoRapido.ViewModels
             if (App.IsGPSEnable)
             {
 
-                var resposta = await UserDialogs.Instance.ConfirmAsync("Aceitar Chamada?", "Confirmação", "Aceitar", "Não");
+                var resposta = await UserDialogs.Instance.ConfirmAsync("Visualizar Chamada?", "Chamada", "Sim", "Não");
                 if (resposta)
                 {
+                    NavigationParameters navParam = new NavigationParameters();
+                    navParam.Add("ChamadaSelecionada", chamada);
+                    await NavigationService.NavigateAsync("//NavigationPage/ResponderChamada", navParam, useModalNavigation: true);
 
-                    try
-                    {
-                        UserDialogs.Instance.ShowLoading("Carregando...");
+                    //try
+                    //{
+                    //    UserDialogs.Instance.ShowLoading("Carregando...");
 
-                        Plugin.Geolocator.Abstractions.Position pos = await GetCurrentPosition();
+                    //    Plugin.Geolocator.Abstractions.Position pos = await GetCurrentPosition();
 
-                        SelecaoChamadaParam param = new SelecaoChamadaParam();
-                        param.chamada = chamada;
-                        param.dataDecisao = DateTime.Now;
-                        param.codVeiculo = CrossSettings.Current.Get<RetornoVeiculosMotorista>("VeiculoSelecionado").codVeiculo;
-                        param.latitudeAtual = pos.Latitude.ToString();
-                        param.longitudeAtual = pos.Longitude.ToString();
-                        var json = JsonConvert.SerializeObject(param);
-                        var content = new StringContent(json, Encoding.UTF8, "application/json");
+                    //    SelecaoChamadaParam param = new SelecaoChamadaParam();
+                    //    param.chamada = chamada;
+                    //    param.dataDecisao = DateTime.Now;
+                    //    param.codVeiculo = CrossSettings.Current.Get<RetornoVeiculosMotorista>("VeiculoSelecionado").codVeiculo;
+                    //    param.latitudeAtual = pos.Latitude.ToString();
+                    //    param.longitudeAtual = pos.Longitude.ToString();
+                    //    var json = JsonConvert.SerializeObject(param);
+                    //    var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                        var response = await IniciarCliente(true).PostAsync("motorista/selecionarChamada", content);
+                    //    var response = await IniciarCliente(true).PostAsync("motorista/selecionarChamada", content);
 
-                        if (response.IsSuccessStatusCode)
-                        {
-                            var respStr = await response.Content.ReadAsStringAsync();
-                            chamada = JsonConvert.DeserializeObject<Chamada>(respStr);
-                            CrossSettings.Current.Remove("ChamadaAceita");
-                            CrossSettings.Current.Set("ChamadaAceita", chamada);
-                            // var navParam = new NavigationParameters();
-                            // navParam.Add("chamadaAceita", chamada);
-                            await NavigationService.NavigateAsync("Chamada", null, true);
-                        }
-                        else
-                        {
-                            await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
-                        }
-                    }
-                    catch (AccessViolationException e)
-                    {
-                        await DialogService.DisplayAlertAsync("Aviso", e.Message, "OK");
-                    }
-                    catch (Exception e)
-                    {
-                        await DialogService.DisplayAlertAsync("Aviso", "Falha ao selecionar chamada", "OK");
-                    }
-                    finally
-                    {
-                        UserDialogs.Instance.HideLoading();
-                    }
+                    //    if (response.IsSuccessStatusCode)
+                    //    {
+                    //        var respStr = await response.Content.ReadAsStringAsync();
+                    //        chamada = JsonConvert.DeserializeObject<Chamada>(respStr);
+                    //        CrossSettings.Current.Remove("ChamadaAceita");
+                    //        CrossSettings.Current.Set("ChamadaAceita", chamada);
+                    //        // var navParam = new NavigationParameters();
+                    //        // navParam.Add("chamadaAceita", chamada);
+                    //        await NavigationService.NavigateAsync("Chamada", null, true);
+                    //    }
+                    //    else
+                    //    {
+                    //        await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
+                    //    }
+                    //}
+                    //catch (AccessViolationException e)
+                    //{
+                    //    await DialogService.DisplayAlertAsync("Aviso", e.Message, "OK");
+                    //}
+                    //catch (Exception e)
+                    //{
+                    //    Crashes.TrackError(e);
+                    //    await DialogService.DisplayAlertAsync("Aviso", "Falha ao selecionar chamada", "OK");
+                    //}
+                    //finally
+                    //{
+                    //    UserDialogs.Instance.HideLoading();
+                    //}
                 }
             }
             else

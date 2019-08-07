@@ -10,6 +10,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using Microsoft.AppCenter.Crashes;
 using MotoRapido.Droid;
 using MotoRapido.Interfaces;
 
@@ -26,7 +27,7 @@ namespace MotoRapido.Droid
                 App.IsGPSEnable = mlocManager.IsProviderEnabled(LocationManager.GpsProvider);
             }catch(Exception e)
             {
-
+                Crashes.TrackError(e);
             }
             
         }

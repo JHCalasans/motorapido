@@ -2,24 +2,18 @@
 using Com.OneSignal;
 using Com.OneSignal.Abstractions;
 using Matcha.BackgroundService;
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 using MotoRapido.Customs;
-using MotoRapido.ViewModels;
 using MotoRapido.Views;
 using Prism.Navigation;
 using Prism.Unity;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using Microsoft.AppCenter;
-using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
-using MotoRapido.Interfaces;
-using Prism.Services;
-using Xamarin.Essentials;
-using MotoRapido.Models;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace MotoRapido
@@ -61,14 +55,14 @@ namespace MotoRapido
                 Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
 
                
-                Gyroscope.ReadingChanged -= Gyroscope_ReadingChanged;
-                Gyroscope.ReadingChanged += Gyroscope_ReadingChanged;
+                //Gyroscope.ReadingChanged -= Gyroscope_ReadingChanged;
+                //Gyroscope.ReadingChanged += Gyroscope_ReadingChanged;
 
 
             }
             catch(Exception e)
             {
-
+                Crashes.TrackError(e);
             }
 
         }
@@ -140,10 +134,13 @@ namespace MotoRapido
             {
                 if (CrossSettings.Current.Contains("VeiculoSelecionado"))
                 {
+                    if (CrossSettings.Current.Contains("ChamadaEmCorrida"))
+                        await NavigationService.NavigateAsync("//NavigationPage/Chamada", null, useModalNavigation:true);
+
                     if (!CrossSettings.Current.Contains("ChamadaParaResposta"))
                         await NavigationService.NavigateAsync("NavigationPage/Home");
                     else
-                        await NavigationService.NavigateAsync("//NavigationPage/ResponderChamada", null, true);
+                        await NavigationService.NavigateAsync("//NavigationPage/ResponderChamada", null, useModalNavigation: true);
                 }
                 else
                 {

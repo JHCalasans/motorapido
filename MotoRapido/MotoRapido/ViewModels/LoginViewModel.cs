@@ -15,6 +15,7 @@ using Prism.Services;
 using Com.OneSignal;
 using Xamarin.Forms;
 using Xamarin.Essentials;
+using Microsoft.AppCenter.Crashes;
 
 namespace MotoRapido.ViewModels
 {
@@ -100,6 +101,7 @@ namespace MotoRapido.ViewModels
             }
             catch (Exception e)
             {
+                Crashes.TrackError(e);
                 await DialogService.DisplayAlertAsync("Aviso", "Falha ao efetuar login", "OK");
             }
             finally

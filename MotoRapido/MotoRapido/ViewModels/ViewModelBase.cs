@@ -1,6 +1,7 @@
 ﻿namespace MotoRapido.ViewModels
 {
     using Acr.Settings;
+    using Microsoft.AppCenter.Crashes;
     using MotoRapido.BD.Repositorio;
     using MotoRapido.Customs;
     using MotoRapido.Models;
@@ -109,6 +110,7 @@
             }
             catch (Exception e)
             {
+                Crashes.TrackError(e);
                 throw new WebSocketException("Falha na conexão com servidor"); // await DialogService.DisplayAlertAsync("Aviso", "Falha na conexão com servidor", "OK");
             }
         }
@@ -122,6 +124,7 @@
             }
             catch (Exception e)
             {
+                Crashes.TrackError(e);
                 throw new WebSocketException("Falha na conexão com servidor"); // await DialogService.DisplayAlertAsync("Aviso", "Falha na conexão com servidor", "OK");
             }
         }
@@ -203,6 +206,7 @@
                     }
                     catch (Exception e)
                     {
+                        Crashes.TrackError(e);
                         if (CrossSettings.Current.Contains("ChamadaEmCorrida") || CrossSettings.Current.Contains("ChamadaAceita"))
                             AreaPosicao.msgErro = "Chamada Em Andamento!";
                         await DialogService.DisplayAlertAsync("Aviso", "Falha ao verificar posição", "OK");
@@ -218,7 +222,7 @@
 
                         if (MotoristaLogado.disponivel.Equals("S"))
                         {
-                            CrossSettings.Current.Set("UltimaLocalizacaoValida", Task.Run(async () => GetCurrentPosition()));
+                            CrossSettings.Current.Set("UltimaLocalizacaoValida", Task.Run( () => GetCurrentPosition()));
                             Localizar(UltimaLocalizacaoValida);
                         }
 
@@ -294,7 +298,7 @@
                         if (MotoristaLogado.disponivel.Equals("S"))
                         {
                             Thread.Sleep(TimeSpan.FromSeconds(3));
-                            CrossSettings.Current.Set("UltimaLocalizacaoValida", Task.Run(async () => GetCurrentPosition()));
+                            CrossSettings.Current.Set("UltimaLocalizacaoValida", Task.Run( () => GetCurrentPosition()));
                             Localizar(UltimaLocalizacaoValida);
                         }
 
@@ -498,6 +502,7 @@
             }
             catch (Exception ex)
             {
+                Crashes.TrackError(ex);
                 Debug.WriteLine("falha ao pegar localização: " + ex);
             }
             finally
