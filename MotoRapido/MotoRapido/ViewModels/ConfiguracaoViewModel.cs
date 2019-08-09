@@ -17,7 +17,7 @@ using System.Text;
 
 namespace MotoRapido.ViewModels
 {
-	public class ConfiguracaoViewModel : ViewModelBase
+    public class ConfiguracaoViewModel : ViewModelBase
     {
         public DelegateCommand AlterarSenhaCommand => new DelegateCommand(AlterarSenha);
 
@@ -40,7 +40,7 @@ namespace MotoRapido.ViewModels
                     UserDialogs.Instance.ShowLoading("Processando...", MaskType.Gradient);
 
                     var json = JsonConvert.SerializeObject(MotoristaLogado);
-                      var content = new StringContent(json, Encoding.UTF8, "application/json");
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
                     //ConectarSocket();
                     //await WebSocketClientClass.SenMessagAsync("LogOut=>"+json);
                     //CrossSettings.Current.Clear();
@@ -49,17 +49,17 @@ namespace MotoRapido.ViewModels
                     client.Timeout = TimeSpan.FromMilliseconds(25000);
 
 
-                    using (var response = await IniciarCliente(true).PostAsync("logoff",  content))
-                    {
+                    var response = await ChamarServicoPost(true, "logoff", content); //await IniciarCliente(true).PostAsync("logoff", content))
+                    //{
                         UserDialogs.Instance.HideLoading();
 
                         CrossSettings.Current.Clear();
 
-                       await CrossGeolocator.Current.StopListeningAsync();
+                        await CrossGeolocator.Current.StopListeningAsync();
 
                         DesconectarSocket();
                         await NavigationService.NavigateAsync("/NavigationPage/Login", useModalNavigation: true);
-                    }
+                   // }
                 }
             }
             catch (AccessViolationException e)
@@ -101,16 +101,17 @@ namespace MotoRapido.ViewModels
                     client.Timeout = TimeSpan.FromMilliseconds(25000);
 
 
-                    using (var response = await IniciarCliente(true).PostAsync("alterarSenha",
-                        content))
-                    {
-                        UserDialogs.Instance.HideLoading();
+                    var response = await ChamarServicoPost(true, "iniciarCorrida", content);
+                    //    await IniciarCliente(true).PostAsync("alterarSenha",                content))
+                    //{
+                    
+                    UserDialogs.Instance.HideLoading();
 
-                        await DialogService.DisplayAlertAsync("AVISO",
-                            "Senha Alterada Com Sucesso", "Ok");
+                    await DialogService.DisplayAlertAsync("AVISO",
+                        "Senha Alterada Com Sucesso", "Ok");
 
 
-                    }
+                    // }
                 }
             }
             catch (AccessViolationException e)
