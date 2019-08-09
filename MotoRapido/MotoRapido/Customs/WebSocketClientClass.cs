@@ -1,4 +1,6 @@
 ﻿using Acr.Settings;
+using Matcha.BackgroundService;
+using Microsoft.AppCenter.Crashes;
 using MotoRapido.Models;
 using MotoRapido.ViewModels;
 using Newtonsoft.Json;
@@ -7,6 +9,7 @@ using PureWebSockets;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net.Http;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,33 +40,59 @@ namespace MotoRapido.Customs
 
             if (_ws != null && _ws.State == WebSocketState.Open) return;
 
-            Tuple<String, String> tupla = new Tuple<string, string>("Authentication", chaveServicos);
-            List<Tuple<String, String>> lista = new List<Tuple<String, String>>();
-            lista.Add(tupla);
-            tupla = new Tuple<string, string>("CodMotorista", codMotorista);
-            lista.Add(tupla);
-            IEnumerable<Tuple<String, String>> en = lista;
-
-            var socketOptions = new PureWebSocketOptions()
+            //Verifico se servidor está disponível
+            var client = new HttpClient
             {
-                DebugMode = true,
-                SendDelay = 100,
-                IgnoreCertErrors = true,
-                MyReconnectStrategy = new ReconnectStrategy(2000, 4000, 20),
-                Headers = en,
-
-
+                Timeout = TimeSpan.FromMilliseconds(8000),
+                BaseAddress = new Uri("http://192.168.42.64:8080/motorapido/wes/")
             };
+            client.DefaultRequestHeaders.Add("Authentication", chaveServicos);
+            try
+            {
+                var response = await client.GetAsync("motorista/ping");
 
-            //_ws = new PureWebSocket("ws://10.0.3.2:8080/motorapido/socket", socketOptions);
 
-            _ws = new PureWebSocket("ws://192.168.42.64:8080/motorapido/socket", socketOptions);
+                Tuple<String, String> tupla = new Tuple<string, string>("Authentication", chaveServicos);
+                List<Tuple<String, String>> lista = new List<Tuple<String, String>>();
+                lista.Add(tupla);
+                tupla = new Tuple<string, string>("CodMotorista", codMotorista);
+                lista.Add(tupla);
+                IEnumerable<Tuple<String, String>> en = lista;
 
-            _ws.OnStateChanged += Ws_OnStateChanged;
-            _ws.OnMessage += Ws_OnMessage;
-            _ws.OnClosed += Ws_OnClosed;
-            _ws.OnSendFailed += Ws_OnSendFailed;
-           var conectou = await _ws.ConnectAsync();
+                var socketOptions = new PureWebSocketOptions()
+                {
+                    DebugMode = true,
+                    SendDelay = 100,
+                    IgnoreCertErrors = true,
+                    MyReconnectStrategy = new ReconnectStrategy(2000, 4000, 20),
+                    Headers = en
+
+
+                };
+
+                //_ws = new PureWebSocket("ws://10.0.3.2:8080/motorapido/socket", socketOptions);
+
+                _ws = new PureWebSocket("ws://192.168.42.64:8080/motorapido/socket", socketOptions);
+
+                _ws.OnStateChanged += Ws_OnStateChanged;
+                _ws.OnMessage += Ws_OnMessage;
+                _ws.OnClosed += Ws_OnClosed;
+                _ws.OnSendFailed += Ws_OnSendFailed;
+                await _ws.ConnectAsync();
+                CrossSettings.Current.Remove("ServidorFora");
+                BackgroundAggregatorService.StopBackgroundService();
+            }
+            catch (Exception e)
+            {
+                Crashes.TrackError(e);
+                if (!CrossSettings.Current.Contains("ServidorFora"))
+                {
+                    CrossSettings.Current.Set("ServidorFora", true);
+                    MessagingCenter.Send(new MensagemRespostaSocket() { msg = "Servidor indisponível!" }, "ErroPosicaoArea");
+                    BackgroundAggregatorService.Add(() => new ChecagemServidorDisponivel());
+                    BackgroundAggregatorService.StartBackgroundService();
+                }
+            }
 
         }
 
@@ -77,7 +106,7 @@ namespace MotoRapido.Customs
 
         private static async void OnTickAsync(object state)
         {
-            if (_ws.State != WebSocketState.Open) return;
+            if (_ws != null && _ws.State != WebSocketState.Open) return;
 
             if (_sendCount == 1000)
             {
@@ -103,7 +132,7 @@ namespace MotoRapido.Customs
 
 
 
-            if (_ws.State != WebSocketState.Open) return false;
+            if (_ws != null && _ws.State != WebSocketState.Open) return false;
 
 
             //if (CrossSettings.Current.Contains("TENTAR_RECONECTAR") && CrossConnectivity.Current.IsConnected)
@@ -116,7 +145,7 @@ namespace MotoRapido.Customs
             //}
             //else if (!CrossSettings.Current.Contains("TENTAR_RECONECTAR") && CrossConnectivity.Current.IsConnected)
             //{
-                return await _ws.SendAsync(data);
+            return await _ws.SendAsync(data);
 
             //}
             //else

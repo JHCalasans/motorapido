@@ -209,7 +209,7 @@
                         Crashes.TrackError(e);
                         if (CrossSettings.Current.Contains("ChamadaEmCorrida") || CrossSettings.Current.Contains("ChamadaAceita"))
                             AreaPosicao.msgErro = "Chamada Em Andamento!";
-                        await DialogService.DisplayAlertAsync("Aviso", "Falha ao verificar posição", "OK");
+                       // await DialogService.DisplayAlertAsync("Aviso", "Falha ao verificar posição", "OK");
                     }
                 }
                 else

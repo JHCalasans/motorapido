@@ -415,7 +415,7 @@ namespace MotoRapido.ViewModels
                         ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.ocupado.png");
                         MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "ErroPosicaoArea");
                         MessagingCenter.Unsubscribe<Chamada>(this, "NovaChamada");
-                        MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "ErroPosicaoArea");
+                       // MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "ErroPosicaoArea");
                         await StopListening();
                     }
                     else
@@ -431,7 +431,7 @@ namespace MotoRapido.ViewModels
                         CrossSettings.Current.Set("IsTimerOn", true);
                         CrossSettings.Current.Remove("UltimaLocalizacaoValida");
 
-                        //Ouvindo mensagem de erro de posição em área
+                        //Ouvindo mensagem de erro de posição em área ou de servidor fora
                         MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "ErroPosicaoArea");
                         MessagingCenter.Subscribe<MensagemRespostaSocket>(this, "ErroPosicaoArea", (sender) =>
                         {

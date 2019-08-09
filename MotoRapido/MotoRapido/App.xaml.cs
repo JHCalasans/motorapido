@@ -47,8 +47,8 @@ namespace MotoRapido
                           typeof(Analytics), typeof(Crashes));
 
 
-                BackgroundAggregatorService.Add(() => new ChecagemInformacaoPendente());
-                BackgroundAggregatorService.StartBackgroundService();
+                //BackgroundAggregatorService.Add(() => new ChecagemInformacaoPendente());
+                //BackgroundAggregatorService.StartBackgroundService();
                 IsInForeground = true;
 
                 Connectivity.ConnectivityChanged -= Connectivity_ConnectivityChanged;
