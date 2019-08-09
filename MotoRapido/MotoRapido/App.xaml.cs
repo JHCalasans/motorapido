@@ -127,7 +127,7 @@ namespace MotoRapido
 #endif
 
 
-
+            CrossSettings.Current.Remove("ServidorFora");
 
 
             if (CrossSettings.Current.Contains("MotoristaLogado"))

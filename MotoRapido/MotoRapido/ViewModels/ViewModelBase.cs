@@ -457,9 +457,9 @@
 
 
 
-        // private readonly String _urlBase = "http://10.0.3.2:8080/motorapido/wes/";
+         private readonly String _urlBase = "http://10.0.3.2:8080/motorapido/wes/";
 
-        private readonly String _urlBase = "http://192.168.42.64:8080/motorapido/wes/";
+       // private readonly String _urlBase = "http://192.168.42.64:8080/motorapido/wes/";
 
         // private readonly String _urlBase = "http://192.168.0.4:8080/motorapido/wes/";
 
