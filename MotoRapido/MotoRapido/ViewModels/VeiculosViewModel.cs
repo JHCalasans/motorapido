@@ -65,7 +65,7 @@ namespace MotoRapido.ViewModels
                 UserDialogs.Instance.ShowLoading("Carregando...");
                 var json = JsonConvert.SerializeObject(MotoristaLogado.codigo);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
-                using (var response = await IniciarCliente(true).PostAsync("motorista/atualizarVeiculos", content))
+                using (var response = await IniciarCliente(true).PostAsync("atualizarVeiculos", content))
                 {
                     if (response.IsSuccessStatusCode)
                     {
@@ -108,7 +108,7 @@ namespace MotoRapido.ViewModels
             try
             {
                 UserDialogs.Instance.ShowLoading("Carregando...");
-                using (var response = await IniciarCliente(true).PostAsync("motorista/selecionarVeiculo/"+ MotoristaLogado.codigo+"/"+veiculo.codVeiculo,null))
+                using (var response = await IniciarCliente(true).PostAsync("selecionarVeiculo/"+ MotoristaLogado.codigo+"/"+veiculo.codVeiculo,null))
                 {
                     if (response.IsSuccessStatusCode)
                     {

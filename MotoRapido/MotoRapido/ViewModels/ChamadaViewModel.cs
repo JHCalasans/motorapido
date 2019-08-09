@@ -397,7 +397,7 @@ namespace MotoRapido.ViewModels
                         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
 
-                        var response = await ChamarServicoPost(true, "motorista/cancelarChamada", content);
+                        var response = await ChamarServicoPost(true, "cancelarChamada", content);
                             //await IniciarCliente(true).PostAsync("motorista/cancelarChamada", content);
 
                         if (response.IsSuccessStatusCode)
@@ -432,9 +432,9 @@ namespace MotoRapido.ViewModels
             }
             else
             {
-                try
-                {
-                    UserDialogs.Instance.ShowLoading("Processando...");
+                //try
+                //{
+                //    UserDialogs.Instance.ShowLoading("Processando...");
                     Chamada chamadaFinal = CrossSettings.Current.Get<Chamada>("ChamadaEmCorrida");
 
                     MessagingCenter.Unsubscribe<ViewModelBase>(this, "MudancaValor");
@@ -462,7 +462,8 @@ namespace MotoRapido.ViewModels
                     var content = new StringContent(json, Encoding.UTF8, "application/json");
 
 
-                    var response = await IniciarCliente(true).PostAsync("motorista/finalizarCorrida", content);
+                   // var response = await IniciarCliente(true).PostAsync("motorista/finalizarCorrida", content);
+                    var response = await ChamarServicoPost(true, "finalizarCorrida", content);
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -474,16 +475,16 @@ namespace MotoRapido.ViewModels
                     {
                         await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
                     }
-                }
-                catch (Exception e)
-                {
-                    Crashes.TrackError(e);
-                    await DialogService.DisplayAlertAsync("Aviso", "Falha ao finalizar corrida", "OK");
-                }
-                finally
-                {
-                    UserDialogs.Instance.HideLoading();
-                }
+                //}
+                //catch (Exception e)
+                //{
+                //    Crashes.TrackError(e);
+                //    await DialogService.DisplayAlertAsync("Aviso", "Falha ao finalizar corrida", "OK");
+                //}
+                //finally
+                //{
+                //    UserDialogs.Instance.HideLoading();
+                //}
 
             }
         }
@@ -521,7 +522,7 @@ namespace MotoRapido.ViewModels
 
                 LimparRota();
                 AjustePosicaoMapa();
-                var response = await IniciarCliente(true).PostAsync("motorista/iniciarCorrida", content);
+                var response = await IniciarCliente(true).PostAsync("iniciarCorrida", content);
 
                 if (response.IsSuccessStatusCode)
                 {

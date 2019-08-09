@@ -79,7 +79,7 @@ namespace MotoRapido.ViewModels
                 //var json = JsonConvert.SerializeObject(Int64.Parse(codChamada));
                 // var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await IniciarCliente(true).GetAsync("motorista/buscarDetalhesChamada/" + Int64.Parse(codChamadaVeiculo));
+                var response = await IniciarCliente(true).GetAsync("buscarDetalhesChamada/" + Int64.Parse(codChamadaVeiculo));
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -155,7 +155,7 @@ namespace MotoRapido.ViewModels
                     var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                     CrossSettings.Current.Remove("ChamadaParaResposta");
-                    var response = await IniciarCliente(true).PostAsync("motorista/cancelarChamada", content);
+                    var response = await IniciarCliente(true).PostAsync("cancelarChamada", content);
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -211,7 +211,7 @@ namespace MotoRapido.ViewModels
                         var json = JsonConvert.SerializeObject(param);
                         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                        var response = await IniciarCliente(true).PostAsync("motorista/aceitarChamada", content);
+                        var response = await IniciarCliente(true).PostAsync("aceitarChamada", content);
 
 
                         if (response.IsSuccessStatusCode)

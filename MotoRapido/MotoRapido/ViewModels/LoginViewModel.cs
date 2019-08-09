@@ -56,64 +56,67 @@ namespace MotoRapido.ViewModels
 
         private async void Logar()
         {
-            try
+            //try
+            //{
+            //    UserDialogs.Instance.ShowLoading("Carregando...");
+            Motorista motorista = new Motorista();
+            motorista.senha = HashPassword(Senha);
+            motorista.login = Login;
+
+            OneSignal.Current.IdsAvailable((id, token) => motorista.idPush = id);
+
+            var json = JsonConvert.SerializeObject(motorista);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            //using (var response = await IniciarCliente(false).PostAsync("motorista/login", content))
+            //{
+            var response = await ChamarServicoPost(true, "login", content);
+            if (response != null)
             {
-                UserDialogs.Instance.ShowLoading("Carregando...");
-                Motorista motorista = new Motorista();
-                motorista.senha = HashPassword(Senha);
-                motorista.login = Login;
-               
-                OneSignal.Current.IdsAvailable((id, token) => motorista.idPush = id);
-
-                var json = JsonConvert.SerializeObject(motorista);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-                using (var response = await IniciarCliente(false).PostAsync("motorista/login", content))
+                if (response.IsSuccessStatusCode)
                 {
-                    if (response.IsSuccessStatusCode)
+                    var respStr = await response.Content.ReadAsStringAsync();
+                    CrossSettings.Current.Set("MotoristaLogado", JsonConvert.DeserializeObject<Motorista>(respStr));
+                    CrossSettings.Current.Set("IsTimerOn", MotoristaLogado.disponivel.Equals("S"));
+                    // CrossSettings.Current.Set("UltimaLocalizacaoValida", );
+                    // ConectarSocket();
+                    MessagingCenter.Subscribe<MensagemRespostaSocket>(this, "ErroPosicaoArea", (sender) =>
                     {
-                        var respStr = await response.Content.ReadAsStringAsync();
-                        CrossSettings.Current.Set("MotoristaLogado", JsonConvert.DeserializeObject<Motorista>(respStr));
-                        CrossSettings.Current.Set("IsTimerOn", MotoristaLogado.disponivel.Equals("S"));
-                        // CrossSettings.Current.Set("UltimaLocalizacaoValida", );
-                       // ConectarSocket();
-                        MessagingCenter.Subscribe<MensagemRespostaSocket>(this, "ErroPosicaoArea", (sender) =>
-                        {
 
-                            AreaPosicao = new RetornoVerificaPosicao() { msgErro = sender.msg };
+                        AreaPosicao = new RetornoVerificaPosicao() { msgErro = sender.msg };
 
-                        });
+                    });
 
-                     
 
-                        await NavigationService.NavigateAsync("//NavigationPage/Veiculos", null, true);
 
-                        //await NavigationService.NavigateAsync("//NavigationPage/Home");
-                    }
-                    else
-                    {
-                        await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
-                    }
+                    await NavigationService.NavigateAsync("//NavigationPage/Veiculos", null, true);
+
+                    //await NavigationService.NavigateAsync("//NavigationPage/Home");
+                }
+                else
+                {
+                    await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
                 }
             }
-            catch (AccessViolationException e)
-            {
-                await DialogService.DisplayAlertAsync("Aviso", e.Message, "OK");
-            }
-            catch (Exception e)
-            {
-                Crashes.TrackError(e);
-                await DialogService.DisplayAlertAsync("Aviso", "Falha ao efetuar login", "OK");
-            }
-            finally
-            {
-                UserDialogs.Instance.HideLoading();
-            }
+            //}
+            //catch (AccessViolationException e)
+            //{
+            //    await DialogService.DisplayAlertAsync("Aviso", e.Message, "OK");
+            //}
+            //catch (Exception e)
+            //{
+            //    Crashes.TrackError(e);
+            //    await DialogService.DisplayAlertAsync("Aviso", "Falha ao efetuar login", "OK");
+            //}
+            //finally
+            //{
+            //    UserDialogs.Instance.HideLoading();
+            //}
 
 
         }
 
 
-      
+
 
         private static string HashPassword(string str)
         {

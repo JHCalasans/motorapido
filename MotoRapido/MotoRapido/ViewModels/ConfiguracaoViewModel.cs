@@ -49,7 +49,7 @@ namespace MotoRapido.ViewModels
                     client.Timeout = TimeSpan.FromMilliseconds(25000);
 
 
-                    using (var response = await IniciarCliente(true).PostAsync("motorista/logoff",  content))
+                    using (var response = await IniciarCliente(true).PostAsync("logoff",  content))
                     {
                         UserDialogs.Instance.HideLoading();
 
@@ -101,7 +101,7 @@ namespace MotoRapido.ViewModels
                     client.Timeout = TimeSpan.FromMilliseconds(25000);
 
 
-                    using (var response = await IniciarCliente(true).PostAsync("motorista/alterarSenha",
+                    using (var response = await IniciarCliente(true).PostAsync("alterarSenha",
                         content))
                     {
                         UserDialogs.Instance.HideLoading();

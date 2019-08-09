@@ -49,7 +49,7 @@ namespace MotoRapido.Customs
             client.DefaultRequestHeaders.Add("Authentication", chaveServicos);
             try
             {
-                var response = await client.GetAsync("motorista/ping");
+                var response = await client.GetAsync("ping");
 
 
                 Tuple<String, String> tupla = new Tuple<string, string>("Authentication", chaveServicos);
