@@ -1,6 +1,7 @@
 ﻿namespace MotoRapido.ViewModels
 {
     using Acr.Settings;
+    using Acr.UserDialogs;
     using Microsoft.AppCenter.Crashes;
     using MotoRapido.BD.Repositorio;
     using MotoRapido.Customs;
@@ -457,7 +458,29 @@
 
         protected async Task<HttpResponseMessage> ChamarServicoPost(bool comChave, String complementoURL, StringContent content)
         {
-            return await IniciarCliente(comChave).PostAsync(complementoURL, content);
+            UserDialogs.Instance.ShowLoading("Processando...");
+            try
+            {
+                using (var resp = await IniciarCliente(comChave).PostAsync(complementoURL, content))
+                {
+                    return resp;
+                }
+            }
+            catch (AccessViolationException e)
+            {
+                await DialogService.DisplayAlertAsync("Aviso", e.Message, "OK");
+                return null;
+            }
+            catch (Exception e)
+            {
+                Crashes.TrackError(e);
+                await DialogService.DisplayAlertAsync("Aviso", "Falha ao cancelar corrida", "OK");
+                return null;
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
         }
 
 

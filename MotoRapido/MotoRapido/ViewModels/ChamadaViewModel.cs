@@ -381,9 +381,9 @@ namespace MotoRapido.ViewModels
                 var resposta = await UserDialogs.Instance.ConfirmAsync("Cancelar Chamada?", "Cancelamento", "Sim", "Não");
                 if (resposta)
                 {
-                    try
-                    {
-                        UserDialogs.Instance.ShowLoading("Processando...");
+                    //try
+                    //{
+                    //    UserDialogs.Instance.ShowLoading("Processando...");
 
                         CancelarChamadaParam param = new CancelarChamadaParam();
                         param.chamada = Chamada;
@@ -414,20 +414,20 @@ namespace MotoRapido.ViewModels
                             await NavigationService.NavigateAsync("/NavigationPage/Home", useModalNavigation: true);
                            // await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
                         }
-                    }
-                    catch (AccessViolationException e)
-                    {
-                        await DialogService.DisplayAlertAsync("Aviso", e.Message, "OK");
-                    }
-                    catch (Exception e)
-                    {
-                        Crashes.TrackError(e);
-                        await DialogService.DisplayAlertAsync("Aviso", "Falha ao cancelar corrida", "OK");
-                    }
-                    finally
-                    {
-                        UserDialogs.Instance.HideLoading();
-                    }
+                //    }
+                //    catch (AccessViolationException e)
+                //    {
+                //        await DialogService.DisplayAlertAsync("Aviso", e.Message, "OK");
+                //    }
+                //    catch (Exception e)
+                //    {
+                //        Crashes.TrackError(e);
+                //        await DialogService.DisplayAlertAsync("Aviso", "Falha ao cancelar corrida", "OK");
+                //    }
+                //    finally
+                //    {
+                //        UserDialogs.Instance.HideLoading();
+                //    }
                 }
             }
             else
