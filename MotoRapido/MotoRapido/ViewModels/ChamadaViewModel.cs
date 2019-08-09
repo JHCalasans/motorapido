@@ -397,7 +397,8 @@ namespace MotoRapido.ViewModels
                         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
 
-                        var response = await IniciarCliente(true).PostAsync("motorista/cancelarChamada", content);
+                        var response = await ChamarServicoPost(true, "motorista/cancelarChamada", content);
+                            //await IniciarCliente(true).PostAsync("motorista/cancelarChamada", content);
 
                         if (response.IsSuccessStatusCode)
                         {

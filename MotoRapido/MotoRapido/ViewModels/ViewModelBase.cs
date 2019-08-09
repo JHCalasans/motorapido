@@ -101,11 +101,11 @@
         {
             try
             {
-               // MessagingCenter.Send(this, "TesteOps");
+                // MessagingCenter.Send(this, "TesteOps");
                 //if (client == null)
                 //    client = new WebSocketClientDefault();
-              //  await client.Connect(MotoristaLogado.chaveServicos, MotoristaLogado.codigo.ToString());
-                  await WebSocketClientClass.Connect(MotoristaLogado.chaveServicos, MotoristaLogado.codigo.ToString());
+                //  await client.Connect(MotoristaLogado.chaveServicos, MotoristaLogado.codigo.ToString());
+                await WebSocketClientClass.Connect(MotoristaLogado.chaveServicos, MotoristaLogado.codigo.ToString());
                 //await WebSocketClientClass.SenMessagAsync("ListarSessoes=>");
             }
             catch (Exception e)
@@ -158,7 +158,7 @@
                             latitude = posicao.Latitude.ToString().Replace(",", "."),
                             longitude = posicao.Longitude.ToString().Replace(",", "."),
                             direcao = posicao.Heading
-                            
+
                         };
 
                         if (AreaPosicao != null && AreaPosicao.areaAtual != null)
@@ -169,8 +169,8 @@
 
                         CrossSettings.Current.Set("UltimaAtualizacaoLocalidade", new DateTime());
                         await ConectarSocket();
-                       // await client.SenMessagAsync("InformarLocalizacao=>" + json);
-                         await WebSocketClientClass.SendMessagAsync("InformarLocalizacao=>" + json);
+                        // await client.SenMessagAsync("InformarLocalizacao=>" + json);
+                        await WebSocketClientClass.SendMessagAsync("InformarLocalizacao=>" + json);
 
                         //var response = await IniciarCliente(true).PostAsync("motorista/verificarPosicao", content);
 
@@ -209,7 +209,7 @@
                         Crashes.TrackError(e);
                         if (CrossSettings.Current.Contains("ChamadaEmCorrida") || CrossSettings.Current.Contains("ChamadaAceita"))
                             AreaPosicao.msgErro = "Chamada Em Andamento!";
-                       // await DialogService.DisplayAlertAsync("Aviso", "Falha ao verificar posição", "OK");
+                        // await DialogService.DisplayAlertAsync("Aviso", "Falha ao verificar posição", "OK");
                     }
                 }
                 else
@@ -222,7 +222,7 @@
 
                         if (MotoristaLogado.disponivel.Equals("S"))
                         {
-                            CrossSettings.Current.Set("UltimaLocalizacaoValida", Task.Run( () => GetCurrentPosition()));
+                            CrossSettings.Current.Set("UltimaLocalizacaoValida", Task.Run(() => GetCurrentPosition()));
                             Localizar(UltimaLocalizacaoValida);
                         }
 
@@ -298,7 +298,7 @@
                         if (MotoristaLogado.disponivel.Equals("S"))
                         {
                             Thread.Sleep(TimeSpan.FromSeconds(3));
-                            CrossSettings.Current.Set("UltimaLocalizacaoValida", Task.Run( () => GetCurrentPosition()));
+                            CrossSettings.Current.Set("UltimaLocalizacaoValida", Task.Run(() => GetCurrentPosition()));
                             Localizar(UltimaLocalizacaoValida);
                         }
 
@@ -345,7 +345,7 @@
 
         public static Motorista GetMotoristaStatic()
         {
-             return CrossSettings.Current.Get<Motorista>("MotoristaLogado");
+            return CrossSettings.Current.Get<Motorista>("MotoristaLogado");
         }
 
 
@@ -363,7 +363,7 @@
             set { SetProperty(ref _areaPosicao, value); }
         }
 
-        private static IInformacaoPendenteRepositorio _informacaoPendenteRepositorio; 
+        private static IInformacaoPendenteRepositorio _informacaoPendenteRepositorio;
 
         public static void IniciarInformacaoPendenteRepositorio()
         {
@@ -379,7 +379,7 @@
 
         }
 
-        public static  void TratarMensagemChamada(string json)
+        public static void TratarMensagemChamada(string json)
         {
             var chamadaNova = JsonConvert.DeserializeObject<Chamada>(json);
             if (App.IsInForeground)
@@ -389,7 +389,7 @@
             else
             {
                 CrossSettings.Current.Set("ChamadaParaResposta", chamadaNova);
-               // CrossLocalNotifications.Current.Show("Nova Chamada", "nova chamada");
+                // CrossLocalNotifications.Current.Show("Nova Chamada", "nova chamada");
             }
         }
 
@@ -418,7 +418,7 @@
             return _informacaoPendenteRepositorio.ObterTodosInformacaoPendentes();
         }
 
-       
+
 
         /// <summary>
         /// Gets or sets the ultimaLocalizacaoValida
@@ -455,11 +455,17 @@
 
         }
 
+        protected async Task<HttpResponseMessage> ChamarServicoPost(bool comChave, String complementoURL, StringContent content)
+        {
+            return await IniciarCliente(comChave).PostAsync(complementoURL, content);
+        }
 
 
-         private readonly String _urlBase = "http://10.0.3.2:8080/motorapido/wes/";
 
-       // private readonly String _urlBase = "http://192.168.42.64:8080/motorapido/wes/";
+
+        private readonly String _urlBase = "http://10.0.3.2:8080/motorapido/wes/";
+
+        // private readonly String _urlBase = "http://192.168.42.64:8080/motorapido/wes/";
 
         // private readonly String _urlBase = "http://192.168.0.4:8080/motorapido/wes/";
 
@@ -587,27 +593,18 @@
             MessagingCenter.Send(this, "MudancaPosicao", position);
             if (CrossSettings.Current.Contains("ChamadaEmCorrida"))
             {
-                // MessagingCenter.Send(this, "MudancaPin", position);
                 AreaPosicao.msgErro = "Chamada Em Andamento!";
                 double distancia = Location.CalculateDistance(new Location(UltimaLocalizacaoValida.Latitude, UltimaLocalizacaoValida.Longitude),
                     new Location(position.Latitude, position.Longitude), DistanceUnits.Kilometers);
 
-                //GetDistanceFromLatLonInKm(UltimaLocalizacaoValida.Latitude,
-                //UltimaLocalizacaoValida.Longitude, position.Latitude, position.Longitude);
-                chamadatemp.distanciaPercorrida = chamadatemp.distanciaPercorrida + (float)distancia;
-                //double distancia2 = Location.CalculateDistance(new Location(Double.Parse(chamadatemp.latitudeInicioCorrida),
-                //   Double.Parse(chamadatemp.longitudeInicioCorrida)),
-                //    new Location(position.Latitude, position.Longitude), DistanceUnits.Kilometers);
 
-                //GetDistanceFromLatLonInKm(Double.Parse(chamadatemp.latitudeInicioCorrida),
-                //   Double.Parse(chamadatemp.longitudeInicioCorrida), position.Latitude, position.Longitude);
-                // 
+                chamadatemp.distanciaPercorrida = chamadatemp.distanciaPercorrida + (float)distancia;
+
                 if (distancia > 0)
                 {
                     chamadatemp.valorFinal = (float.Parse(chamadatemp.valorFinal) + (chamadatemp.valorPorDistancia * (float)distancia)).ToString("N2");
                     CrossSettings.Current.Set("ChamadaEmCorrida", chamadatemp);
-                    //MessagingCenter.Send(this, "MudancaValor", chamadatemp.valorFinal);
-                    //;
+
                 }
                 else
                     CrossSettings.Current.Set("ChamadaEmCorrida", chamadatemp);
@@ -635,7 +632,7 @@
                 BuscaPosicao(position);
         }
 
-       
+
 
         /// <summary>
         /// The isLocalizacaoDiferente
