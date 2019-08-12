@@ -11,7 +11,7 @@ namespace MotoRapido.Models
 
         public Int32 posicaoNaArea { get; set; }
 
-
+        public int codMotorista { get; set; }
         public String informacaoPosicao
         {
             get => msgErro != null ? msgErro : "Pos: " + posicaoNaArea + "  -  Área:" + areaAtual.descricao;

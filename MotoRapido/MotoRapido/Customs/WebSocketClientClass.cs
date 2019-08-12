@@ -44,7 +44,7 @@ namespace MotoRapido.Customs
             var client = new HttpClient
             {
                 Timeout = TimeSpan.FromMilliseconds(8000),
-                BaseAddress = new Uri("http://10.0.3.2:8080/motorapido/wes/")
+                BaseAddress = new Uri(ViewModelBase.GetUrlBase())
             };
             client.DefaultRequestHeaders.Add("Authentication", chaveServicos);
             try
@@ -70,9 +70,9 @@ namespace MotoRapido.Customs
 
                 };
 
-                _ws = new PureWebSocket("ws://10.0.3.2:8080/motorapido/socket", socketOptions);
+                //_ws = new PureWebSocket("ws://10.0.3.2:8080/motorapido/socket", socketOptions);
 
-               // _ws = new PureWebSocket("ws://192.168.42.64:8080/motorapido/socket", socketOptions);
+                _ws = new PureWebSocket("ws://192.168.42.64:8080/motorapido/socket", socketOptions);
 
                 _ws.OnStateChanged += Ws_OnStateChanged;
                 _ws.OnMessage += Ws_OnMessage;
@@ -196,6 +196,7 @@ namespace MotoRapido.Customs
                 case "LocalizacaoResp": MessagingCenter.Send(JsonConvert.DeserializeObject<RetornoVerificaPosicao>(resp[1]), "LocalizacaoResposta"); break;
                 case "InformacaoPendenteResp": RemoverInfoPendente(Convert.ToInt64(resp[1])); break;
                 case "NovaChamada": TratarMensagemChamada(resp[1]); break;
+                case "AtualizarPosicao": MessagingCenter.Send(JsonConvert.DeserializeObject<RetornoVerificaPosicao>(resp[1]), "LocalizacaoResposta"); break;
 
                     //CrossNotifications.Current.Send(new Notification() {Title = "Nova Chamada", Vibrate = true })   
             }
