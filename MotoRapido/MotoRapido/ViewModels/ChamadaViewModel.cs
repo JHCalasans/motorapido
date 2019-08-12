@@ -381,122 +381,123 @@ namespace MotoRapido.ViewModels
                 var resposta = await UserDialogs.Instance.ConfirmAsync("Cancelar Chamada?", "Cancelamento", "Sim", "Não");
                 if (resposta)
                 {
-                    //try
-                    //{
-                    //    UserDialogs.Instance.ShowLoading("Processando...");
+                    try
+                    {
+                        UserDialogs.Instance.ShowLoading("Processando...");
+
+                        CancelarChamadaParam param = new CancelarChamadaParam();
+                        param.chamada = Chamada;
+                        param.latitudeAtual = pos.Latitude.ToString();
+                        param.longitudeAtual = pos.Longitude.ToString();
+                        param.codChamadaVeiculo = Chamada.codChamadaVeiculo;
+                        param.dataCancelamento = DateTime.Now;
+                        param.codVeiculo = CrossSettings.Current.Get<RetornoVeiculosMotorista>("VeiculoSelecionado").codVeiculo;
+
+                        var json = JsonConvert.SerializeObject(param);
+                        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+
+                        var response = await IniciarCliente(true).PostAsync("motorista/cancelarChamada", content);
+                        if (response != null)
+                        {
+                            if (response.IsSuccessStatusCode)
+                            {
+                                CrossSettings.Current.Remove("ChamadaAceita");
+                                await DialogService.DisplayAlertAsync("Aviso", "Corrida cancelada.", "OK");
+                                await NavigationService.NavigateAsync("/NavigationPage/Home", useModalNavigation: true);
+                            }
+                            else
+                            {
+                                AdicionarInfoPendente(json, "cancelarChamada");
+                                CrossSettings.Current.Remove("ChamadaAceita");
+                                await DialogService.DisplayAlertAsync("Aviso", "Corrida cancelada.", "OK");
+                                await NavigationService.NavigateAsync("/NavigationPage/Home", useModalNavigation: true);
+                                // await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
+                            }
+                        }
+                    }
+                    catch (AccessViolationException e)
+                    {
+                        await DialogService.DisplayAlertAsync("Aviso", e.Message, "OK");
+                    }
+                    catch (Exception e)
+                    {
+                        Crashes.TrackError(e);
+                        await DialogService.DisplayAlertAsync("Aviso", "Falha ao cancelar corrida", "OK");
+                    }
+                    finally
+                    {
+                        UserDialogs.Instance.HideLoading();
+                    }
+                }
+            }
+            else
+            {
+                try
+                {
+                    UserDialogs.Instance.ShowLoading("Processando...");
+                    Chamada chamadaFinal = CrossSettings.Current.Get<Chamada>("ChamadaEmCorrida");
+
+                    MessagingCenter.Unsubscribe<ViewModelBase>(this, "MudancaValor");
+
+                    MessagingCenter.Unsubscribe<ViewModelBase>(this, "MudancaPosicao");
+
+                    // Plugin.Geolocator.Abstractions.Position pos = await GetCurrentPosition();
+                    chamadaFinal.latitudeFinalCorrida = pos.Latitude.ToString();
+                    chamadaFinal.longitudeFinalCorrida = pos.Longitude.ToString();
+
+                    chamadaFinal.dataFimCorrida = DateTime.Now;
 
                     CancelarChamadaParam param = new CancelarChamadaParam();
-                    param.chamada = Chamada;
+
+                    chamadaFinal.valorFinalAjustado = float.Parse(chamadaFinal.valorFinal).ToString("N2");
+                    param.chamada = chamadaFinal;
                     param.latitudeAtual = pos.Latitude.ToString();
                     param.longitudeAtual = pos.Longitude.ToString();
-                    param.codChamadaVeiculo = Chamada.codChamadaVeiculo;
-                    param.dataCancelamento = DateTime.Now;
+                    param.codChamadaVeiculo = chamadaFinal.codChamadaVeiculo;
                     param.codVeiculo = CrossSettings.Current.Get<RetornoVeiculosMotorista>("VeiculoSelecionado").codVeiculo;
+
+                    CrossSettings.Current.Remove("ChamadaEmCorrida");
 
                     var json = JsonConvert.SerializeObject(param);
                     var content = new StringContent(json, Encoding.UTF8, "application/json");
 
 
-                    var response = await ChamarServicoPost(true, "cancelarChamada", content);
-                    //await IniciarCliente(true).PostAsync("motorista/cancelarChamada", content);
+                    var response = await IniciarCliente(true).PostAsync("motorista/finalizarCorrida", content);
+                    // var response = await ChamarServicoPost(true, "finalizarCorrida", content);
+
                     if (response != null)
                     {
                         if (response.IsSuccessStatusCode)
                         {
-                            CrossSettings.Current.Remove("ChamadaAceita");
-                            await DialogService.DisplayAlertAsync("Aviso", "Corrida cancelada.", "OK");
+
+                            await DialogService.DisplayAlertAsync("Aviso", "Corrida finalizada.\nValor Final : R$" + param.chamada.valorFinalAjustado, "OK");
                             await NavigationService.NavigateAsync("/NavigationPage/Home", useModalNavigation: true);
                         }
                         else
                         {
-                            AdicionarInfoPendente(json, "cancelarChamada");
-                            CrossSettings.Current.Remove("ChamadaAceita");
-                            await DialogService.DisplayAlertAsync("Aviso", "Corrida cancelada.", "OK");
-                            await NavigationService.NavigateAsync("/NavigationPage/Home", useModalNavigation: true);
-                            // await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
+                            await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
                         }
                     }
-                    //    catch (AccessViolationException e)
-                    //    {
-                    //        await DialogService.DisplayAlertAsync("Aviso", e.Message, "OK");
-                    //    }
-                    //    catch (Exception e)
-                    //    {
-                    //        Crashes.TrackError(e);
-                    //        await DialogService.DisplayAlertAsync("Aviso", "Falha ao cancelar corrida", "OK");
-                    //    }
-                    //    finally
-                    //    {
-                    //        UserDialogs.Instance.HideLoading();
-                    //    }
                 }
-            }
-            else
-            {
-                //try
-                //{
-                //    UserDialogs.Instance.ShowLoading("Processando...");
-                Chamada chamadaFinal = CrossSettings.Current.Get<Chamada>("ChamadaEmCorrida");
-
-                MessagingCenter.Unsubscribe<ViewModelBase>(this, "MudancaValor");
-
-                MessagingCenter.Unsubscribe<ViewModelBase>(this, "MudancaPosicao");
-
-                // Plugin.Geolocator.Abstractions.Position pos = await GetCurrentPosition();
-                chamadaFinal.latitudeFinalCorrida = pos.Latitude.ToString();
-                chamadaFinal.longitudeFinalCorrida = pos.Longitude.ToString();
-
-                chamadaFinal.dataFimCorrida = DateTime.Now;
-
-                CancelarChamadaParam param = new CancelarChamadaParam();
-
-                chamadaFinal.valorFinalAjustado = float.Parse(chamadaFinal.valorFinal).ToString("N2");
-                param.chamada = chamadaFinal;
-                param.latitudeAtual = pos.Latitude.ToString();
-                param.longitudeAtual = pos.Longitude.ToString();
-                param.codChamadaVeiculo = chamadaFinal.codChamadaVeiculo;
-                param.codVeiculo = CrossSettings.Current.Get<RetornoVeiculosMotorista>("VeiculoSelecionado").codVeiculo;
-
-                CrossSettings.Current.Remove("ChamadaEmCorrida");
-
-                var json = JsonConvert.SerializeObject(param);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-
-                // var response = await IniciarCliente(true).PostAsync("motorista/finalizarCorrida", content);
-                var response = await ChamarServicoPost(true, "finalizarCorrida", content);
-
-                if (response != null)
+                catch (Exception e)
                 {
-                    if (response.IsSuccessStatusCode)
-                    {
-
-                        await DialogService.DisplayAlertAsync("Aviso", "Corrida finalizada.\nValor Final : R$" + param.chamada.valorFinalAjustado, "OK");
-                        await NavigationService.NavigateAsync("/NavigationPage/Home", useModalNavigation: true);
-                    }
-                    else
-                    {
-                        await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
-                    }
+                    Crashes.TrackError(e);
+                    await DialogService.DisplayAlertAsync("Aviso", "Falha ao finalizar corrida", "OK");
                 }
-                //catch (Exception e)
-                //{
-                //    Crashes.TrackError(e);
-                //    await DialogService.DisplayAlertAsync("Aviso", "Falha ao finalizar corrida", "OK");
-                //}
-                //finally
-                //{
-                //    UserDialogs.Instance.HideLoading();
-                //}
+                finally
+                {
+                    UserDialogs.Instance.HideLoading();
+                }
 
             }
         }
 
         private async void IniciarCorrida()
         {
-            //try
-            //{
-            //    UserDialogs.Instance.ShowLoading("Carregando...");
+            try
+            {
+                UserDialogs.Instance.ShowLoading("Carregando...");
 
                 Plugin.Geolocator.Abstractions.Position pos = await GetCurrentPosition();
                 Chamada.latitudeInicioCorrida = pos.Latitude.ToString();
@@ -525,8 +526,8 @@ namespace MotoRapido.ViewModels
 
                 LimparRota();
                 AjustePosicaoMapa();
-                var response = await ChamarServicoPost(true, "iniciarCorrida", content);
-                //await IniciarCliente(true).PostAsync("iniciarCorrida", content);
+                //var response = await ChamarServicoPost(true, "iniciarCorrida", content);
+                var response = await IniciarCliente(true).PostAsync("motorista/iniciarCorrida", content);
                 if (response != null)
                 {
                     if (response.IsSuccessStatusCode)
@@ -539,20 +540,20 @@ namespace MotoRapido.ViewModels
                         await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
                     }
                 }
-            //}
-            //catch (AccessViolationException e)
-            //{
-            //    await DialogService.DisplayAlertAsync("Aviso", e.Message, "OK");
-            //}
-            //catch (Exception e)
-            //{
-            //    Crashes.TrackError(e);
-            //    await DialogService.DisplayAlertAsync("Aviso", "Falha ao iniciar corrida", "OK");
-            //}
-            //finally
-            //{
-            //    UserDialogs.Instance.HideLoading();
-            //}
+            }
+            catch (AccessViolationException e)
+            {
+                await DialogService.DisplayAlertAsync("Aviso", e.Message, "OK");
+            }
+            catch (Exception e)
+            {
+                Crashes.TrackError(e);
+                await DialogService.DisplayAlertAsync("Aviso", "Falha ao iniciar corrida", "OK");
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
         }
 
 

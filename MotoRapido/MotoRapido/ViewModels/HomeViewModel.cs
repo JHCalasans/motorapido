@@ -310,7 +310,7 @@ namespace MotoRapido.ViewModels
                 var json = JsonConvert.SerializeObject(MotoristaLogado.codigo);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await IniciarCliente(true).PostAsync("buscarHistorico", content);
+                var response = await IniciarCliente(true).PostAsync("motorista/buscarHistorico", content);
                 if (response.IsSuccessStatusCode)
                 {
                     var respStr = await response.Content.ReadAsStringAsync();
@@ -353,7 +353,7 @@ namespace MotoRapido.ViewModels
                 {
                     UserDialogs.Instance.ShowLoading("Carregando...");
 
-                    var response = await IniciarCliente(true).GetAsync("buscarChamadasPendentes");
+                    var response = await IniciarCliente(true).GetAsync("motorista/buscarChamadasPendentes");
                     if (response.IsSuccessStatusCode)
                     {
                         var respStr = await response.Content.ReadAsStringAsync();
@@ -396,7 +396,7 @@ namespace MotoRapido.ViewModels
                 UserDialogs.Instance.ShowLoading("Carregando...");
 
                 var response = await IniciarCliente(true)
-                    .GetAsync("alterarDisponivel/" + MotoristaLogado.codigo + "/" + MotoristaLogado.disponivel);
+                    .GetAsync("motorista/alterarDisponivel/" + MotoristaLogado.codigo + "/" + MotoristaLogado.disponivel);
 
                 Motorista motoTemp = new Motorista();
                 motoTemp = MotoristaLogado;

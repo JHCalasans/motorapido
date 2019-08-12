@@ -456,43 +456,14 @@
 
         }
 
-        protected async Task<HttpResponseMessage> ChamarServicoPost(bool comChave, String complementoURL, StringContent content)
-        {
-            UserDialogs.Instance.ShowLoading("Processando...");
-            try
-            {
-                using (var resp = await IniciarCliente(comChave).PostAsync(complementoURL, content))
-                {
-                    return resp;
-                }
-            }
-            catch (AccessViolationException e)
-            {
-                await DialogService.DisplayAlertAsync("Aviso", e.Message, "OK");
-                return null;
-            }
-            catch (Exception e)
-            {
-                Crashes.TrackError(e);
-                await DialogService.DisplayAlertAsync("Aviso", "Falha ao realizar ação", "OK");
-                return null;
-            }
-            finally
-            {
-                UserDialogs.Instance.HideLoading();
-            }
-        }
 
+        private readonly String _urlBase = "http://10.0.3.2:8080/motorapido/wes/";
 
+        // private readonly String _urlBase = "http://192.168.42.64:8080/motorapido/wes/";
 
+        // private readonly String _urlBase = "http://192.168.0.4:8080/motorapido/wes/";
 
-        private readonly String _urlBase = "http://10.0.3.2:8080/motorapido/wes/motorista/";
-
-        // private readonly String _urlBase = "http://192.168.42.64:8080/motorapido/wes/motorista/";
-
-        // private readonly String _urlBase = "http://192.168.0.4:8080/motorapido/wes/motorista/";
-
-        //  private readonly String _urlBase = "http://104.248.186.97:8080/motorapido/wes/motorista/";
+        //  private readonly String _urlBase = "http://104.248.186.97:8080/motorapido/wes/";
 
 
 
