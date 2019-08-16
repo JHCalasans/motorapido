@@ -16,5 +16,7 @@ namespace MotoRapido.Models
         public int codUltimaArea { get; set; }
 
         public double direcao { get; set; }
+
+        public String loginMotorista { get; set; }
     }
 }

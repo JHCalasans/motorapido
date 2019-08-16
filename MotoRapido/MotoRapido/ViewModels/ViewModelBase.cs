@@ -158,7 +158,8 @@
                             codMotorista = MotoristaLogado.codigo,
                             latitude = posicao.Latitude.ToString().Replace(",", "."),
                             longitude = posicao.Longitude.ToString().Replace(",", "."),
-                            direcao = posicao.Heading
+                            loginMotorista = MotoristaLogado.login
+
 
                         };
 
@@ -173,31 +174,7 @@
                         // await client.SenMessagAsync("InformarLocalizacao=>" + json);
                         await WebSocketClientClass.SendMessagAsync("InformarLocalizacao=>" + json);
 
-                        //var response = await IniciarCliente(true).PostAsync("motorista/verificarPosicao", content);
-
-                        //if (!response.IsSuccessStatusCode)
-                        //{
-
-                        //    if (response.StatusCode == System.Net.HttpStatusCode.NotAcceptable)
-                        //    {
-                        //        AreaPosicao = new RetornoVerificaPosicao();
-                        //        AreaPosicao.msgErro = response.Content.ReadAsStringAsync().Result;
-                        //    }
-
-                        //    //await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result,
-                        //    //    "OK");
-                        //}
-                        //else
-                        //{
-                        //    var respStr = await response.Content.ReadAsStringAsync();
-                        //    AreaPosicao = JsonConvert.DeserializeObject<RetornoVerificaPosicao>(respStr);
-                        //    MessagingCenter.Send(this, "MudancaAreaPosicao", AreaPosicao);
-                        //    if (AreaPosicao.areaAtual == null)
-                        //        AreaPosicao = null;
-
-
-                        //}
-                        //   }
+                      
 
 
                     }
@@ -233,7 +210,48 @@
             }
         }
 
+        public static async void InformarCoordenada()
+        {
+           
+                if (CrossGeolocator.Current.IsGeolocationEnabled)//App.IsGPSEnable)
+                {
+                    CrossSettings.Current.Remove("GPSDesabilitado");
+                    try
+                    {
 
+                       var pos = await GetCurrentPosition();
+
+                        VerificaPosicaoParam param = new VerificaPosicaoParam
+                        {
+                            codMotorista = CrossSettings.Current.Get<Motorista>("MotoristaLogado").codigo,
+                            latitude = pos.Latitude.ToString().Replace(",", "."),
+                            longitude = pos.Longitude.ToString().Replace(",", "."),
+                            loginMotorista = CrossSettings.Current.Get<Motorista>("MotoristaLogado").login
+
+
+                        };
+
+                      
+                        var json = JsonConvert.SerializeObject(param);
+                        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                        CrossSettings.Current.Set("UltimaAtualizacaoLocalidade", new DateTime());
+                        // await client.SenMessagAsync("InformarLocalizacao=>" + json);
+                        await WebSocketClientClass.SendMessagAsync("InformarLocalizacao=>" + json);
+
+
+
+
+                    }
+                    catch (Exception e)
+                    {
+                        Crashes.TrackError(e);
+                       
+                    }
+                }
+                
+            
+        }
 
         public void Connectivity_ConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
         {
@@ -247,26 +265,7 @@
             {
                 MessagingCenter.Send(this, "SemInternet", false);
             }
-            //else if(access == NetworkAccess.ConstrainedInternet) {
-            //    lblNetStatus.Text = "Limited internet access";
-            //}
-            //else if(access == NetworkAccess.Local) {
-            //    lblNetStatus.Text = "Local network access only";
-            //}
-            //else if(access == NetworkAccess.None) {
-            //    lblNetStatus.Text = "No connectivity is available";
-            //}
-            //else if(access == NetworkAccess.Unknown) {
-            //    lblNetStatus.Text = "Unable to determine internet connectivity";
-            //}
-            //if (profiles.Contains(ConnectionProfile.WiFi))
-            //{
-            //    lblNetProfile.Text = profiles.FirstOrDefault().ToString();
-            //}
-            //else
-            //{
-            //    lblNetProfile.Text = profiles.FirstOrDefault().ToString();
-            //}
+         
         }
 
 
@@ -305,22 +304,7 @@
 
 
                     });
-                //if (!CrossSettings.Current.Contains("GPSDesabilitado"))
-                //{
-                //    CrossSettings.Current.Set("GPSDesabilitado", true);
-                //    MessagingCenter.Subscribe<App, Boolean>(this, "GPSHabilitou", (sender, args) =>
-                //    {
-
-                //        if (MotoristaLogado.disponivel.Equals("S") && args)
-                //        {
-                //            CrossSettings.Current.Set("UltimaLocalizacaoValida", GetCurrentPosition());
-                //            Localizar(UltimaLocalizacaoValida);
-                //        }
-                //        else if (MotoristaLogado.disponivel.Equals("S") && !args)
-                //            AreaPosicao.msgErro = "Favor ativar gps no celular.";
-
-                //    });
-                //}
+              
             }
 
         }
@@ -457,9 +441,9 @@
         }
 
 
-       // private static readonly String _urlBase = "http://10.0.3.2:8080/motorapido/wes/";
+        private static readonly String _urlBase = "http://10.0.3.2:8080/motorapido/wes/";
 
-         private static readonly String _urlBase = "http://192.168.42.64:8080/motorapido/wes/";
+        // private static readonly String _urlBase = "http://192.168.42.64:8080/motorapido/wes/";
 
         // private static readonly String _urlBase = "http://192.168.0.4:8080/motorapido/wes/";
 

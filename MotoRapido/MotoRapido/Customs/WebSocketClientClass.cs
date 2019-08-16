@@ -70,9 +70,9 @@ namespace MotoRapido.Customs
 
                 };
 
-                //_ws = new PureWebSocket("ws://10.0.3.2:8080/motorapido/socket", socketOptions);
+                _ws = new PureWebSocket("ws://10.0.3.2:8080/motorapido/socket", socketOptions);
 
-                _ws = new PureWebSocket("ws://192.168.42.64:8080/motorapido/socket", socketOptions);
+               // _ws = new PureWebSocket("ws://192.168.42.64:8080/motorapido/socket", socketOptions);
 
                 _ws.OnStateChanged += Ws_OnStateChanged;
                 _ws.OnMessage += Ws_OnMessage;
@@ -135,26 +135,8 @@ namespace MotoRapido.Customs
             if (_ws != null && _ws.State != WebSocketState.Open) return false;
 
 
-            //if (CrossSettings.Current.Contains("TENTAR_RECONECTAR") && CrossConnectivity.Current.IsConnected)
-            //{
-            //    CrossSettings.Current.Remove("TENTAR_RECONECTAR");
-            //    _ws.Dispose(true);
-            //    Motorista moto = CrossSettings.Current.Get<Motorista>("MotoristaLogado");
-            //    await WebSocketClientClass.Connect(moto.chaveServicos, moto.codigo.ToString());
-            //    return await _ws.SendAsync(data);
-            //}
-            //else if (!CrossSettings.Current.Contains("TENTAR_RECONECTAR") && CrossConnectivity.Current.IsConnected)
-            //{
+          
             return await _ws.SendAsync(data);
-
-            //}
-            //else
-            //{
-            //    CrossSettings.Current.Set("TENTAR_RECONECTAR", true);
-            //    MessagingCenter.Send(new MensagemErroArea() { msg = "Sem Conexão..." }, "ErroPosicaoArea"); 
-            //    return false;
-            //}
-
 
 
         }
@@ -197,6 +179,7 @@ namespace MotoRapido.Customs
                 case "InformacaoPendenteResp": RemoverInfoPendente(Convert.ToInt64(resp[1])); break;
                 case "NovaChamada": TratarMensagemChamada(resp[1]); break;
                 case "AtualizarPosicao": MessagingCenter.Send(JsonConvert.DeserializeObject<RetornoVerificaPosicao>(resp[1]), "LocalizacaoResposta"); break;
+                case "InformarCoordenada": ViewModelBase.InformarCoordenada(); break;
 
                     //CrossNotifications.Current.Send(new Notification() {Title = "Nova Chamada", Vibrate = true })   
             }
