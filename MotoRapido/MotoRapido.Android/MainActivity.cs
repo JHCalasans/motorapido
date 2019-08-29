@@ -3,6 +3,7 @@ using Acr.UserDialogs;
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
+using Android.Content.Res;
 using Android.Locations;
 using Android.OS;
 using Android.Runtime;
@@ -10,6 +11,7 @@ using Android.Widget;
 using Java.Lang;
 using Matcha.BackgroundService.Droid;
 using MotoRapido.Customs;
+using MotoRapido.Models;
 using Plugin.CurrentActivity;
 using Plugin.Permissions;
 using Prism.Unity;
@@ -62,15 +64,7 @@ namespace MotoRapido.Droid
 
         }
 
-
-        protected async override void OnDestroy()
-        {
-
-           
-            base.OnDestroy();
-        }
-
-    
+     
 
         protected override void OnResume()
         {

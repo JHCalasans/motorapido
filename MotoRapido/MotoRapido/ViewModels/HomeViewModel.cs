@@ -188,6 +188,27 @@ namespace MotoRapido.ViewModels
                     Localizar(UltimaLocalizacaoValida);
                 }
 
+                MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "IndisponivelResp");
+                MessagingCenter.Subscribe<MensagemRespostaSocket>(this, "IndisponivelResp", async (sender) =>
+                {
+                    Motorista motoTemp = new Motorista();
+                    motoTemp = MotoristaLogado;
+                    motoTemp.disponivel = "N";
+                    ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_disponivel.png");
+                    EstaLivre = false;
+                    CorDeFundoStatus = Color.Red;
+                    TextoStatus = "OCUPADO";
+                    ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.ocupado.png");
+                    MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "ErroPosicaoArea");
+                    MessagingCenter.Unsubscribe<Chamada>(this, "NovaChamada");
+                    // MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "ErroPosicaoArea");                  
+
+                    AreaPosicao = new RetornoVerificaPosicao() { msgErro = "MOTORISTA INDISPONÍVEL" };
+                    CrossSettings.Current.Set("MotoristaLogado", motoTemp);
+
+                    await StopListening();
+                });
+
 
                 if (MotoristaLogado.disponivel.Equals("S"))
                 {
@@ -210,7 +231,7 @@ namespace MotoRapido.ViewModels
                 //UserDialogs.Instance.ShowLoading("Processando...", MaskType.Gradient);
                 // Task.Run(async () => await VerificaPermissaoLocalizacao());
 
-                await Task.Run( ()  =>  VerificaPermissaoLocalizacao());
+                await Task.Run(() => VerificaPermissaoLocalizacao());
                 //if (UltimaLocalizacaoValida == null)
                 //{
                 //    while(status != PermissionStatus.Granted){
@@ -235,7 +256,7 @@ namespace MotoRapido.ViewModels
         {
             try
             {
-              
+
                 // await WebSocketClientClass.Connect(MotoristaLogado.chaveServicos, MotoristaLogado.codigo.ToString());
                 await WebSocketClientClass.SendMessagAsync("ListarSessoes=>");
             }
@@ -415,12 +436,12 @@ namespace MotoRapido.ViewModels
                         ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.ocupado.png");
                         MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "ErroPosicaoArea");
                         MessagingCenter.Unsubscribe<Chamada>(this, "NovaChamada");
-                       // MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "ErroPosicaoArea");
+                        // MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "ErroPosicaoArea");
                         await StopListening();
                     }
                     else
                     {
-                        
+
                         AreaPosicao.msgErro = "Buscando...";
                         motoTemp.disponivel = "S";
                         ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_indisponivel.png");
@@ -449,7 +470,7 @@ namespace MotoRapido.ViewModels
                         });
                         //Ouvindo mensagem de internet indisponível
                         MessagingCenter.Unsubscribe<App, Boolean>(this, "SemInternet");
-                        MessagingCenter.Subscribe<App, Boolean>(this, "SemInternet", async  (sender, args) =>
+                        MessagingCenter.Subscribe<App, Boolean>(this, "SemInternet", async (sender, args) =>
                         {
 
                             if (args && MotoristaLogado.disponivel.Equals("S"))
@@ -481,7 +502,7 @@ namespace MotoRapido.ViewModels
                         //else
                         //    Gyroscope.Start(speed);
 
-                       
+
 
                         //ConectarSocket();
                         IniciarTimerPosicao();

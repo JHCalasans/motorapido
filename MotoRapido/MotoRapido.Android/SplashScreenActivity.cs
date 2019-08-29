@@ -33,5 +33,10 @@ namespace MotoRapido.Droid
             // startupWork.Start();
         }
 
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+        }
+
     }
 }
