@@ -11,6 +11,7 @@ using Prism.Navigation;
 using Prism.Unity;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -34,8 +35,7 @@ namespace MotoRapido
         public static INavigationService AppNavigationService => (Current as App)?.CreateNavigationService();
 
         public static bool IsInForeground { get; set; } = false;
-
-
+        public static String DeviceID { get; set; }
         private Boolean _desviarParaChamada { get; set; }
 
         protected override void OnStart()
@@ -118,8 +118,7 @@ namespace MotoRapido
             OneSignal.Current.StartInit("a1a45079-6c44-4353-9588-47d8fbc306bb").HandleNotificationReceived(HandleNotificationReceived)
                 .HandleNotificationOpened(HandleNotificationOpened).EndInit();
 
-
-
+      
 
             InitializeComponent();
 #if DEBUG

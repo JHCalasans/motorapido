@@ -15,11 +15,12 @@ namespace MotoRapido.BD
         {
             var dependencyService = DependencyService.Get<IConexaoBancoLocal>();
 
-            string stringConexao = dependencyService.Conexao("contatos.sqlite");
+            string stringConexao = dependencyService.Conexao("motorapido.sqlite");
 
             _conexao = new SQLiteConnection(stringConexao);
 
             _conexao.CreateTable<InformacaoPendente>();
+            _conexao.CreateTable<Message>();
         }
 
         public void AdicionarInformacaoPendente(InformacaoPendente informacaoPendente)
@@ -50,6 +51,16 @@ namespace MotoRapido.BD
         public void DeletarTodosInformacaoPendentes()
         {
             _conexao.DeleteAll<InformacaoPendente>();
+        }
+
+        public List<Message> ObterTodasAsMensagens()
+        {
+            return (from Message in _conexao.Table<Message>() orderby Message.MessageDateTime ascending select Message).ToList();
+        }
+
+        public void GravarMensagem(Message mensagem)
+        {
+            _conexao.Insert(mensagem);
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="br.com.motorapido" android:installLocation="auto">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="1.4" package="br.com.motorapido" android:installLocation="auto" android:versionCode="5">
 	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="27" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -15,11 +15,12 @@
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
 	<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-  <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
-  <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+	<uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 	<permission android:name="br.com.motorapido.permission.C2D_MESSAGE" android:protectionLevel="signature" />
 	<uses-permission android:name="br.com.motorapido.permission.C2D_MESSAGE" />
 	<uses-permission android:name="android.permission.LOCATION_HARDWARE" />
+	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
 	<application android:label="Moto Rápido" android:icon="@drawable/ic_launcher">
 		<receiver android:name="com.onesignal.GcmBroadcastReceiver" android:permission="com.google.android.c2dm.permission.SEND">
 			<intent-filter>
@@ -27,7 +28,7 @@
 				<category android:name="br.com.motorapido" />
 			</intent-filter>
 		</receiver>
-    <!--<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyCXnSw7uj9P9oZIc_7c74peSmkmkYU1O5s" />-->
-    <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+		<!--<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyCXnSw7uj9P9oZIc_7c74peSmkmkYU1O5s" />-->
+		<meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
 	</application>
 </manifest>

@@ -12,6 +12,7 @@ using Prism.Commands;
 using Prism.Navigation;
 using Prism.Services;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Net.WebSockets;
@@ -253,57 +254,13 @@ namespace MotoRapido.ViewModels
         }
 
         private async void IrParaMensagem()
-        {
-            try
-            {
-
-                // await WebSocketClientClass.Connect(MotoristaLogado.chaveServicos, MotoristaLogado.codigo.ToString());
-                await WebSocketClientClass.SendMessagAsync("ListarSessoes=>");
-            }
-            catch (Exception e)
-            {
-                Crashes.TrackError(e);
-                // await DialogService.DisplayAlertAsync("Aviso", "Falha na conexão com servidor", "OK");
-            }
-            // await DialogService.DisplayAlertAsync("Aviso", "Funcionalidade em consstrução", "OK");
-            //if (!CrossSettings.Current.Contains("mensagens") ||
-            //    CrossSettings.Current.Get<List<MensagemMotoristaFuncionario>>("mensagens").Count < 1)
-            //{
-            //    try
-            //    {
-            //        UserDialogs.Instance.ShowLoading("Carregando...");
-
-            //        MensagemParam param = new MensagemParam
-            //        {
-            //            codMotorista = MotoristaLogado.codigo
-            //        };
-
-            //        var json = JsonConvert.SerializeObject(param);
-            //        var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            //        var response = await IniciarCliente(true).PostAsync("motorista/atualizarMensagens", content);
-            //        if (response.IsSuccessStatusCode)
-            //        {
-            //            var respStr = await response.Content.ReadAsStringAsync();
-            //            // CrossSettings.Current.Set("mensagens", JsonConvert.DeserializeObject<List<Message>>(respStr));
-            //        }
-            //        else
-            //        {
-            //            await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result,
-            //                "OK");
-            //        }
-            //    }
-            //    catch (Exception e)
-            //    {
-            //        await DialogService.DisplayAlertAsync("Aviso", "Falha ao buscar mensagens", "OK");
-            //    }
-            //    finally
-            //    {
-            //        UserDialogs.Instance.HideLoading();
-            //    }
-            //}
-
-            //await NavigationService.NavigateAsync("Mensagem");
+        {            
+               
+            UserDialogs.Instance.ShowLoading("Carregando...");
+           
+            var navParam = new NavigationParameters();
+            navParam.Add("historicoMsgs", ObterMensagens());
+            await NavigationService.NavigateAsync("Mensagem", navParam);
         }
 
         private async void IrParaConfig()

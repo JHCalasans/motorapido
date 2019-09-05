@@ -1,13 +1,20 @@
 ﻿
 using Prism.Mvvm;
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace MotoRapido.Models
 {
+
+    [Table("Message")]
     public class Message : BindableBase
     {
+
+        [PrimaryKey, AutoIncrement]
+        public Int64 codMessage{ get; set; }
+
         public string Text
         {
             get { return _text; }

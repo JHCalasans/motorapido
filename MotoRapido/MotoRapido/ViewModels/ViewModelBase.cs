@@ -364,6 +364,32 @@
 
         }
 
+        private static IMessageRepositorio _messageRepositorio;
+
+        public static void IniciarMessageRepositorio()
+        {
+            _messageRepositorio = new MessageRepositorio();
+        }
+
+        public static Message GravarMensagem(string mensagem)
+        {
+            if (_messageRepositorio == null)
+                IniciarMessageRepositorio();
+
+            Message message = new Message { Text = mensagem, IsTextIn = false, MessageDateTime = DateTime.Now };
+            _messageRepositorio.GravarMensagem(message);
+            return message;
+        }
+
+        public static List<Message> ObterMensagens()
+        {
+            if (_messageRepositorio == null)
+                IniciarMessageRepositorio();
+
+            return _messageRepositorio.ObterTodasAsMensagens();
+
+        }
+
         public static void TratarMensagemChamada(string json)
         {
             var chamadaNova = JsonConvert.DeserializeObject<Chamada>(json);
@@ -447,7 +473,7 @@
 
         // private static readonly String _urlBase = "http://192.168.0.4:8080/motorapido/wes/";
 
-        //  private static readonly String _urlBase = "http://104.248.186.97:8080/motorapido/wes/";
+       //  private static readonly String _urlBase = "http://104.248.186.97:8080/motorapido/wes/";
 
         public static string GetUrlBase()
         {
