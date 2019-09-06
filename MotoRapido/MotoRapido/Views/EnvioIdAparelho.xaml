@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="MotoRapido.Views.EnvioIdAparelho"
+             Title="Envio de ID Celular">
+
+
+    <StackLayout Margin="0,80,0,0">
+
+        <Frame Margin="0,0,0,50">
+            <Label Text="Enviar Identificador do aparelho para a central liberar o acesso"  
+               FontSize="18"  >
+            </Label>
+        </Frame>
+        <StackLayout Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="Center">
+            <Label Text="ID Aparelho: " FontSize="20">
+            </Label>
+
+            <Label Text="{Binding IDAparelho}"   FontAttributes="Bold"
+             FontSize="20"  HorizontalTextAlignment="Center">
+            </Label>
+        </StackLayout>
+
+
+        <Button Text="Enviar" Command="{Binding EnviarCommand}" BackgroundColor="#dd2705" 
+                TextColor="White"  Margin="50,50,50,0"></Button>
+    </StackLayout>
+
+</ContentPage>

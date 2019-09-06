@@ -328,6 +328,12 @@
             set {; }
         }
 
+        public String IDAparelho
+        {
+            get { return App.DeviceID; }
+            set {; }
+        }
+
         public static Motorista GetMotoristaStatic()
         {
             return CrossSettings.Current.Get<Motorista>("MotoristaLogado");

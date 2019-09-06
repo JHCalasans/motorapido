@@ -118,7 +118,19 @@ namespace MotoRapido
             OneSignal.Current.StartInit("a1a45079-6c44-4353-9588-47d8fbc306bb").HandleNotificationReceived(HandleNotificationReceived)
                 .HandleNotificationOpened(HandleNotificationOpened).EndInit();
 
-      
+
+            //if (CrossSettings.Current.Contains("IdAparelhoVinculado"))
+            //{
+            //    if (CrossSettings.Current.Get<Boolean>("IdAparelhoVinculado"))
+            //    {
+
+            //    }
+            //}
+            //else
+            //{
+            //    CrossSettings.Current.Set("IdAparelhoVinculado", false);
+            //}
+            
 
             InitializeComponent();
 #if DEBUG
@@ -128,28 +140,34 @@ namespace MotoRapido
 
             CrossSettings.Current.Remove("ServidorFora");
 
-
-            if (CrossSettings.Current.Contains("MotoristaLogado"))
+            if (CrossSettings.Current.Contains("IdAparelhoVinculado") && CrossSettings.Current.Get<Boolean>("IdAparelhoVinculado"))
             {
-                if (CrossSettings.Current.Contains("VeiculoSelecionado"))
+                if (CrossSettings.Current.Contains("MotoristaLogado"))
                 {
-                    if (CrossSettings.Current.Contains("ChamadaEmCorrida"))
-                        await NavigationService.NavigateAsync("//NavigationPage/Chamada", null, useModalNavigation:true);
+                    if (CrossSettings.Current.Contains("VeiculoSelecionado"))
+                    {
+                        if (CrossSettings.Current.Contains("ChamadaEmCorrida"))
+                            await NavigationService.NavigateAsync("//NavigationPage/Chamada", null, useModalNavigation: true);
 
-                    if (!CrossSettings.Current.Contains("ChamadaParaResposta"))
-                        await NavigationService.NavigateAsync("NavigationPage/Home");
+                        if (!CrossSettings.Current.Contains("ChamadaParaResposta"))
+                            await NavigationService.NavigateAsync("NavigationPage/Home");
+                        else
+                            await NavigationService.NavigateAsync("//NavigationPage/ResponderChamada", null, useModalNavigation: true);
+                    }
                     else
-                        await NavigationService.NavigateAsync("//NavigationPage/ResponderChamada", null, useModalNavigation: true);
+                    {
+                        NavigationParameters param = new NavigationParameters();
+                        param.Add("pesquisar", true);
+                        await NavigationService.NavigateAsync("NavigationPage/Veiculos", param);
+                    }
                 }
                 else
-                {
-                    NavigationParameters param = new NavigationParameters();
-                    param.Add("pesquisar", true);
-                    await NavigationService.NavigateAsync("NavigationPage/Veiculos", param);
-                }
+                    await NavigationService.NavigateAsync("NavigationPage/Login");
             }
             else
-                await NavigationService.NavigateAsync("NavigationPage/Login");
+            {
+                await NavigationService.NavigateAsync("NavigationPage/EnvioIdAparelho");
+            }
         }
 
 
@@ -262,6 +280,7 @@ namespace MotoRapido
             Container.RegisterTypeForNavigation<Historico>();
             Container.RegisterTypeForNavigation<Veiculos>();
             Container.RegisterTypeForNavigation<ResponderChamada>();
+            Container.RegisterTypeForNavigation<EnvioIdAparelho>();
         }
 
 
