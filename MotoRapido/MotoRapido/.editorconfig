@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# CA2000: Descartar objetos antes de perder o escopo
+dotnet_diagnostic.CA2000.severity = none

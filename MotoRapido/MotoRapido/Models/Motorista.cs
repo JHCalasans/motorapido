@@ -70,5 +70,7 @@ namespace MotoRapido.Models
 
         public List<RetornoVeiculosMotorista> veiculos { get; set; }
 
+        public String idAparelho { get; set; }
+
     }
 }

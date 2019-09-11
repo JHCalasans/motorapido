@@ -1,4 +1,5 @@
-﻿using Acr.UserDialogs;
+﻿using Acr.Settings;
+using Acr.UserDialogs;
 using Com.OneSignal;
 using Microsoft.AppCenter.Crashes;
 using MotoRapido.Models;
@@ -33,21 +34,23 @@ namespace MotoRapido.ViewModels
             {
                 UserDialogs.Instance.ShowLoading("Carregando...");
                 Motorista motorista = new Motorista();
-
-                OneSignal.Current.IdsAvailable((id, token) => motorista.idPush = id);
+                motorista.idAparelho = App.DeviceID;
+                motorista.idPush = App.OneSignalID;
 
                 var json = JsonConvert.SerializeObject(motorista);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
-                using (var response = await IniciarCliente(false).PostAsync("motorista/login", content))
+                using (var response = await IniciarCliente(false).PostAsync("motorista/enviarID", content))
                 {
                     //var response = await ChamarServicoPost(true, "login", content);
                     if (response != null)
                     {
                         if (response.IsSuccessStatusCode)
                         {
-                           
 
-                            //await NavigationService.NavigateAsync("//NavigationPage/Home");
+                            await DialogService.DisplayAlertAsync("Aviso", "ID do aparelho enviado, entre em contato com a central para ativar o aparelho.", "OK");
+                            CrossSettings.Current.Set("IdAparelhoVinculado", true);
+                            await NavigationService.NavigateAsync("MotoRapido:///NavigationPage/Login");
+                            
                         }
                         else
                         {

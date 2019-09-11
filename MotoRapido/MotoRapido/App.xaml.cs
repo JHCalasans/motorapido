@@ -36,6 +36,8 @@ namespace MotoRapido
 
         public static bool IsInForeground { get; set; } = false;
         public static String DeviceID { get; set; }
+
+        public static String OneSignalID { get; set; }
         private Boolean _desviarParaChamada { get; set; }
 
         protected override void OnStart()
@@ -118,6 +120,8 @@ namespace MotoRapido
             OneSignal.Current.StartInit("a1a45079-6c44-4353-9588-47d8fbc306bb").HandleNotificationReceived(HandleNotificationReceived)
                 .HandleNotificationOpened(HandleNotificationOpened).EndInit();
 
+            OneSignal.Current.IdsAvailable((id, token) => OneSignalID = id);
+
 
             //if (CrossSettings.Current.Contains("IdAparelhoVinculado"))
             //{
@@ -130,16 +134,15 @@ namespace MotoRapido
             //{
             //    CrossSettings.Current.Set("IdAparelhoVinculado", false);
             //}
-            
 
-            InitializeComponent();
-#if DEBUG
-            HotReloader.Current.Run(this);
-#endif
+
+//            InitializeComponent();
+//#if DEBUG
+//            HotReloader.Current.Run(this);
+//#endif
 
 
             CrossSettings.Current.Remove("ServidorFora");
-
             if (CrossSettings.Current.Contains("IdAparelhoVinculado") && CrossSettings.Current.Get<Boolean>("IdAparelhoVinculado"))
             {
                 if (CrossSettings.Current.Contains("MotoristaLogado"))

@@ -30,6 +30,9 @@
         
         <Button Text="Entrar" Command="{Binding LoginCommand}" BackgroundColor="#dd2705" 
                 TextColor="White" AbsoluteLayout.LayoutBounds="0.5,0.8,100,50" AbsoluteLayout.LayoutFlags="PositionProportional" ></Button>
+
+
+     
     </AbsoluteLayout>
     
   
