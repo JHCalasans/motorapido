@@ -7,6 +7,16 @@ namespace MotoRapido.Models
 {
     public class RetornoVerificaPosicao 
     {
+
+        public RetornoVerificaPosicao()
+        {
+
+        }
+
+        public RetornoVerificaPosicao(String msgErro)
+        {
+            this.msgErro = msgErro;
+        }
         public Area areaAtual { get; set; }
 
         public Int32 posicaoNaArea { get; set; }

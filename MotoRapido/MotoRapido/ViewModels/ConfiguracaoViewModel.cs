@@ -56,6 +56,8 @@ namespace MotoRapido.ViewModels
 
                         CrossSettings.Current.Clear();
 
+                        CrossSettings.Current.Set("IdAparelhoVinculado", true);
+
                         await CrossGeolocator.Current.StopListeningAsync();
 
                         DesconectarSocket();

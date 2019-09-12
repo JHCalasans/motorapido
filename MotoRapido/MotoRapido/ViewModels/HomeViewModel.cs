@@ -168,79 +168,89 @@ namespace MotoRapido.ViewModels
 
         public override async void OnNavigatingTo(NavigationParameters parameters)
         {
-            if (CrossSettings.Current.Contains("ChamadaParaResposta"))
+            try
             {
-                await NavigationService.NavigateAsync("//NavigationPage/ResponderChamada");
-            }
-            else
-            {
-
-                AreaPosicao = new RetornoVerificaPosicao();
-                AreaPosicao.msgErro = "Buscando...";
-                if (UltimaLocalizacaoValida != null)
+                if (CrossSettings.Current.Contains("ChamadaParaResposta"))
                 {
-                    MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "ErroPosicaoArea");
-                    MessagingCenter.Subscribe<MensagemRespostaSocket>(this, "ErroPosicaoArea", (sender) =>
-                    {
-
-                        AreaPosicao = new RetornoVerificaPosicao() { msgErro = sender.msg };
-
-                    });
-                    Localizar(UltimaLocalizacaoValida);
-                }
-
-                MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "IndisponivelResp");
-                MessagingCenter.Subscribe<MensagemRespostaSocket>(this, "IndisponivelResp", async (sender) =>
-                {
-                    Motorista motoTemp = new Motorista();
-                    motoTemp = MotoristaLogado;
-                    motoTemp.disponivel = "N";
-                    ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_disponivel.png");
-                    EstaLivre = false;
-                    CorDeFundoStatus = Color.Red;
-                    TextoStatus = "OCUPADO";
-                    ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.ocupado.png");
-                    MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "ErroPosicaoArea");
-                    MessagingCenter.Unsubscribe<Chamada>(this, "NovaChamada");
-                    // MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "ErroPosicaoArea");                  
-
-                    AreaPosicao = new RetornoVerificaPosicao() { msgErro = "MOTORISTA INDISPONÍVEL" };
-                    CrossSettings.Current.Set("MotoristaLogado", motoTemp);
-
-                    await StopListening();
-                });
-
-
-                if (MotoristaLogado.disponivel.Equals("S"))
-                {
-                    ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_indisponivel.png");
-                    EstaLivre = true;
-                    CorDeFundoStatus = Color.Green;
-                    TextoStatus = "LIVRE";
-                    ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.livre.png");
+                    await NavigationService.NavigateAsync("//NavigationPage/ResponderChamada");
                 }
                 else
                 {
-                    ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_disponivel.png");
-                    EstaLivre = false;
-                    CorDeFundoStatus = Color.Red;
-                    TextoStatus = "OCUPADO";
-                    ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.ocupado.png");
-                    AreaPosicao.msgErro = "MOTORISTA INDISPONÍVEL";
+
+                    AreaPosicao = new RetornoVerificaPosicao("Buscando...");
+                    // AreaPosicao.msgErro = "Buscando...";
+                    TextoStatus = "Buscando...";
+                    if (UltimaLocalizacaoValida != null)
+                    {
+                        MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "ErroPosicaoArea");
+                        MessagingCenter.Subscribe<MensagemRespostaSocket>(this, "ErroPosicaoArea", (sender) =>
+                        {
+
+                            AreaPosicao = new RetornoVerificaPosicao() { msgErro = sender.msg };
+                            TextoStatus = sender.msg;
+
+                        });
+                        Localizar(UltimaLocalizacaoValida);
+                    }
+
+                    MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "IndisponivelResp");
+                    MessagingCenter.Subscribe<MensagemRespostaSocket>(this, "IndisponivelResp", async (sender) =>
+                    {
+                        Motorista motoTemp = new Motorista();
+                        motoTemp = MotoristaLogado;
+                        motoTemp.disponivel = "N";
+                        ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_disponivel.png");
+                        EstaLivre = false;
+                        CorDeFundoStatus = Color.Red;
+                        TextoStatus = "OCUPADO";
+                        ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.ocupado.png");
+                        MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "ErroPosicaoArea");
+                        MessagingCenter.Unsubscribe<Chamada>(this, "NovaChamada");
+                    // MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "ErroPosicaoArea");                  
+
+                        AreaPosicao = new RetornoVerificaPosicao() { msgErro = "MOTORISTA INDISPONÍVEL" };
+                        TextoStatus = "MOTORISTA INDISPONÍVEL";
+                        CrossSettings.Current.Set("MotoristaLogado", motoTemp);
+
+                        await StopListening();
+                    });
+
+
+                    if (MotoristaLogado.disponivel.Equals("S"))
+                    {
+                        ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_indisponivel.png");
+                        EstaLivre = true;
+                        CorDeFundoStatus = Color.Green;
+                        //TextoStatus = "LIVRE";
+                        ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.livre.png");
+                    }
+                    else
+                    {
+                        ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_disponivel.png");
+                        EstaLivre = false;
+                        CorDeFundoStatus = Color.Red;
+                        TextoStatus = "OCUPADO";
+                        ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.ocupado.png");
+                        AreaPosicao.msgErro = "MOTORISTA INDISPONÍVEL";
+                        TextoStatus = "MOTORISTA INDISPONÍVEL";
+                    }
+
+                    //UserDialogs.Instance.ShowLoading("Processando...", MaskType.Gradient);
+                    // Task.Run(async () => await VerificaPermissaoLocalizacao());
+
+                    await Task.Run(() => VerificaPermissaoLocalizacao());
+                    //if (UltimaLocalizacaoValida == null)
+                    //{
+                    //    while(status != PermissionStatus.Granted){
+
+                    //    }
+                    //   // Thread.Sleep(TimeSpan.FromSeconds(5));
+                    //    BuscarLocalizacao();
+                    //}
                 }
-
-                //UserDialogs.Instance.ShowLoading("Processando...", MaskType.Gradient);
-                // Task.Run(async () => await VerificaPermissaoLocalizacao());
-
-                await Task.Run(() => VerificaPermissaoLocalizacao());
-                //if (UltimaLocalizacaoValida == null)
-                //{
-                //    while(status != PermissionStatus.Granted){
-
-                //    }
-                //   // Thread.Sleep(TimeSpan.FromSeconds(5));
-                //    BuscarLocalizacao();
-                //}
+            }catch(Exception e)
+            {
+                Crashes.TrackError(e);
             }
         }
 
@@ -389,7 +399,7 @@ namespace MotoRapido.ViewModels
                         ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_disponivel.png");
                         EstaLivre = false;
                         CorDeFundoStatus = Color.Red;
-                        TextoStatus = "OCUPADO";
+                        TextoStatus = "MOTORISTA INDISPONÍVEL";
                         ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.ocupado.png");
                         MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "ErroPosicaoArea");
                         MessagingCenter.Unsubscribe<Chamada>(this, "NovaChamada");
@@ -400,11 +410,12 @@ namespace MotoRapido.ViewModels
                     {
 
                         AreaPosicao.msgErro = "Buscando...";
+                        TextoStatus = "Buscando...";
                         motoTemp.disponivel = "S";
                         ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_indisponivel.png");
                         EstaLivre = true;
                         CorDeFundoStatus = Color.Green;
-                        TextoStatus = "LIVRE";
+                        
                         ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.livre.png");
                         CrossSettings.Current.Set("IsTimerOn", true);
                         CrossSettings.Current.Remove("UltimaLocalizacaoValida");
@@ -415,7 +426,7 @@ namespace MotoRapido.ViewModels
                         {
 
                             AreaPosicao = new RetornoVerificaPosicao() { msgErro = sender.msg };
-
+                            TextoStatus = sender.msg;
                         });
                         //Ouvindo mensagem de nova chamada
                         MessagingCenter.Unsubscribe<Chamada>(this, "NovaChamada");
@@ -431,10 +442,14 @@ namespace MotoRapido.ViewModels
                         {
 
                             if (args && MotoristaLogado.disponivel.Equals("S"))
+                            {
                                 AreaPosicao = new RetornoVerificaPosicao() { msgErro = "Sem Conexão..." };
+                                TextoStatus = "Sem Conexão...";
+                            }
                             else if (!args && MotoristaLogado.disponivel.Equals("S"))
                             {
                                 AreaPosicao.msgErro = "Buscando...";
+                                TextoStatus = "Buscando...";
                                 await CrossGeolocator.Current.StopListeningAsync();
                                 DesconectarSocket();
                                 IniciarTimerPosicao();
@@ -449,7 +464,7 @@ namespace MotoRapido.ViewModels
                         {
 
                             AreaPosicao = sender;
-
+                            TextoStatus = sender.informacaoPosicao;
                         });
 
                         //SensorSpeed speed = SensorSpeed.UI;

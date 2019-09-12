@@ -136,7 +136,7 @@ namespace MotoRapido
             //}
 
 
-//            InitializeComponent();
+            InitializeComponent();
 //#if DEBUG
 //            HotReloader.Current.Run(this);
 //#endif

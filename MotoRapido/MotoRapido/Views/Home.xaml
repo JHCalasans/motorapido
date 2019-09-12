@@ -23,7 +23,7 @@
                            VerticalTextAlignment="Center" TextColor="Black"
                     FontAttributes="Bold" Grid.ColumnSpan="2" HorizontalOptions="Center"></Label>
 
-                    <Label Text="{Binding AreaPosicao.informacaoPosicao}"  HorizontalOptions="Center" HorizontalTextAlignment="Center"
+                <Label Text="{Binding TextoStatus}"  HorizontalOptions="Center" HorizontalTextAlignment="Center"
                     FontSize="18"  VerticalOptions="Center" VerticalTextAlignment="Center"
                     FontAttributes="Bold" ></Label>
 
