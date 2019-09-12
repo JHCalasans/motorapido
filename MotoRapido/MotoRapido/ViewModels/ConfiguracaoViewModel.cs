@@ -59,7 +59,7 @@ namespace MotoRapido.ViewModels
                         await CrossGeolocator.Current.StopListeningAsync();
 
                         DesconectarSocket();
-                        await NavigationService.NavigateAsync("/NavigationPage/Login", useModalNavigation: true);
+                        await NavigationService.NavigateAsync("/NavigationPage/Logar", useModalNavigation: true);
                     }
                 }
             }

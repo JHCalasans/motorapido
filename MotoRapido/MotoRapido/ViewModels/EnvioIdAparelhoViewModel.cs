@@ -49,7 +49,7 @@ namespace MotoRapido.ViewModels
 
                             await DialogService.DisplayAlertAsync("Aviso", "ID do aparelho enviado, entre em contato com a central para ativar o aparelho.", "OK");
                             CrossSettings.Current.Set("IdAparelhoVinculado", true);
-                            await NavigationService.NavigateAsync("MotoRapido:///NavigationPage/Login");
+                            await NavigationService.NavigateAsync("MotoRapido:///NavigationPage/Logar");
                             
                         }
                         else

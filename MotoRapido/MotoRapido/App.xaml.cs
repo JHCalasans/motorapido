@@ -165,7 +165,7 @@ namespace MotoRapido
                     }
                 }
                 else
-                    await NavigationService.NavigateAsync("NavigationPage/Login");
+                    await NavigationService.NavigateAsync("NavigationPage/Logar");
             }
             else
             {
@@ -203,7 +203,7 @@ namespace MotoRapido
                 if (additionalData.ContainsKey("logout"))
                 {
                     CrossSettings.Current.Clear();
-                    AppNavigationService.NavigateAsync("NavigationPage/Login");
+                    AppNavigationService.NavigateAsync("NavigationPage/Logar");
                 }
                 if (additionalData.ContainsKey("tempoEsperaAceitacao"))
                 {
@@ -284,6 +284,7 @@ namespace MotoRapido
             Container.RegisterTypeForNavigation<Veiculos>();
             Container.RegisterTypeForNavigation<ResponderChamada>();
             Container.RegisterTypeForNavigation<EnvioIdAparelho>();
+            Container.RegisterTypeForNavigation<Logar>();
         }
 
 

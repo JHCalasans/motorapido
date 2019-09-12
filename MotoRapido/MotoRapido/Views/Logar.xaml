@@ -2,24 +2,19 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
-             xmlns:customs="clr-namespace:MotoRapido.Customs"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="MotoRapido.Views.Login" 
-             NavigationPage.HasNavigationBar="False" >
+             x:Class="MotoRapido.Views.Logar"
+              xmlns:customs="clr-namespace:MotoRapido.Customs"
+              NavigationPage.HasNavigationBar="False" >
+
 
     <AbsoluteLayout >
-
-        <!--<Image Source="background.png" AbsoluteLayout.LayoutBounds="0,0,1,1"
-               AbsoluteLayout.LayoutFlags="All" Aspect="AspectFill"></Image>-->
 
         <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.logo_novo.png}" 
                AbsoluteLayout.LayoutBounds="0.5,0.3,0.6,0.2"
                AbsoluteLayout.LayoutFlags="All"></Image>
 
 
-        <!--<Image Source="logo_novo.png" AbsoluteLayout.LayoutBounds="0.5,0.3,0.6,0.2"
-               AbsoluteLayout.LayoutFlags="All"></Image>-->
-        
         <Entry Placeholder="login"  AbsoluteLayout.LayoutBounds="0.5,0.55,200,40"
                AbsoluteLayout.LayoutFlags="PositionProportional"
                Text="{Binding Login}" HorizontalTextAlignment="Center" PlaceholderColor="Gray"></Entry>
@@ -27,21 +22,16 @@
         <Entry Placeholder="senha"  
                AbsoluteLayout.LayoutBounds="0.5,0.65,200,40" AbsoluteLayout.LayoutFlags="PositionProportional"
                Text="{Binding Senha}" IsPassword="True" PlaceholderColor="Gray" HorizontalTextAlignment="Center"></Entry>
-        
+
         <Button Text="Entrar" Command="{Binding LoginCommand}" BackgroundColor="#dd2705" 
                 TextColor="White" AbsoluteLayout.LayoutBounds="0.5,0.8,100,50" AbsoluteLayout.LayoutFlags="PositionProportional" ></Button>
 
+        <Label Text="ID Aparelho:" AbsoluteLayout.LayoutBounds="0.2,1,100,50" AbsoluteLayout.LayoutFlags="PositionProportional" FontSize="18" FontAttributes="Bold"></Label>
 
-      
+        <Label Text="{Binding IDAparelho}" AbsoluteLayout.LayoutBounds="0.8,1,160,50" AbsoluteLayout.LayoutFlags="PositionProportional" FontSize="18"></Label>
 
-     
+
     </AbsoluteLayout>
-    
-  
-    <!--<AbsoluteLayout>
-        <Button Text="Entrar" Command="{Binding LoginCommand}" BackgroundColor="#9d2704" 
-            TextColor="White"  AbsoluteLayout.LayoutBounds="115,150,100,100" AbsoluteLayout.LayoutFlags="None"  ></Button>
-    </AbsoluteLayout>-->
 
 
 </ContentPage>
