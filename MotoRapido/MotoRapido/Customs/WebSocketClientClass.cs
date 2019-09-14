@@ -49,7 +49,7 @@ namespace MotoRapido.Customs
             client.DefaultRequestHeaders.Add("Authentication", chaveServicos);
             try
             {
-                var response = await client.GetAsync("ping");
+                var response = await client.GetAsync("motorista/ping");
 
 
                 Tuple<String, String> tupla = new Tuple<string, string>("Authentication", chaveServicos);
@@ -70,15 +70,19 @@ namespace MotoRapido.Customs
 
                 };
 
-                _ws = new PureWebSocket("ws://10.0.3.2:8080/motorapido/socket", socketOptions);
+                //_ws = new PureWebSocket("ws://10.0.3.2:8080/motorapido/socket", socketOptions);
 
-               // _ws = new PureWebSocket("ws://192.168.42.64:8080/motorapido/socket", socketOptions);
+              //  _ws = new PureWebSocket("ws://192.168.0.4:8080/motorapido/socket", socketOptions);
+                
+
+                _ws = new PureWebSocket("ws://104.248.186.97:8080/motorapido/socket", socketOptions);
 
                 _ws.OnStateChanged += Ws_OnStateChanged;
                 _ws.OnMessage += Ws_OnMessage;
                 _ws.OnClosed += Ws_OnClosed;
                 _ws.OnSendFailed += Ws_OnSendFailed;
-                await _ws.ConnectAsync();
+               var res =  await _ws.ConnectAsync();
+                Console.ReadLine();
                 CrossSettings.Current.Remove("ServidorFora");
                 BackgroundAggregatorService.StopBackgroundService();
             }
@@ -96,7 +100,7 @@ namespace MotoRapido.Customs
 
         }
 
-        private static void Ws_OnSendFailed(string data, Exception ex)
+        private static void Ws_OnSendFailed(object sender, string data, Exception ex)
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"{DateTime.Now} Send Failed: {ex.Message}");
@@ -123,7 +127,7 @@ namespace MotoRapido.Customs
             }
             else
             {
-                Ws_OnSendFailed("", new Exception("Send Returned False"));
+                Ws_OnSendFailed(null,"", new Exception("Send Returned False"));
             }
         }
 
@@ -154,7 +158,7 @@ namespace MotoRapido.Customs
         }
 
 
-        private static void Ws_OnClosed(WebSocketCloseStatus reason)
+        private static void Ws_OnClosed(object sender, WebSocketCloseStatus reason)
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"{DateTime.Now} Connection Closed: {reason}");
@@ -163,7 +167,7 @@ namespace MotoRapido.Customs
             Console.ReadLine();
         }
 
-        private static void Ws_OnMessage(string message)
+        private static void Ws_OnMessage(object sender, string message)
         {
             //Console.ForegroundColor = ConsoleColor.Green;
             //Console.WriteLine($"{DateTime.Now} New message: {message}");
@@ -192,7 +196,7 @@ namespace MotoRapido.Customs
 
 
 
-        private static void Ws_OnStateChanged(WebSocketState newState, WebSocketState prevState)
+        private static void Ws_OnStateChanged(object sender, WebSocketState newState, WebSocketState prevState)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"{DateTime.Now} Status changed from {prevState} to {newState}");

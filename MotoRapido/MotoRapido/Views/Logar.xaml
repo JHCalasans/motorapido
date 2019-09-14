@@ -26,9 +26,9 @@
         <Button Text="Entrar" Command="{Binding LoginCommand}" BackgroundColor="#dd2705" 
                 TextColor="White" AbsoluteLayout.LayoutBounds="0.5,0.8,100,50" AbsoluteLayout.LayoutFlags="PositionProportional" ></Button>
 
-        <Label Text="ID Aparelho:" AbsoluteLayout.LayoutBounds="0.2,1,100,50" AbsoluteLayout.LayoutFlags="PositionProportional" FontSize="18" FontAttributes="Bold"></Label>
+        <Label Text="ID Aparelho:" AbsoluteLayout.LayoutBounds="0.2,1,100,50" AbsoluteLayout.LayoutFlags="PositionProportional" FontSize="16" FontAttributes="Bold"></Label>
 
-        <Label Text="{Binding IDAparelho}" AbsoluteLayout.LayoutBounds="0.8,1,160,50" AbsoluteLayout.LayoutFlags="PositionProportional" FontSize="18"></Label>
+        <Label Text="{Binding IDAparelho}" AbsoluteLayout.LayoutBounds="0.8,1,160,50" AbsoluteLayout.LayoutFlags="PositionProportional" FontSize="16"></Label>
 
 
     </AbsoluteLayout>

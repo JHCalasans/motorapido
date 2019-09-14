@@ -6,6 +6,7 @@ using MotoRapido.Models;
 using Newtonsoft.Json;
 using Plugin.Connectivity;
 using Plugin.Geolocator;
+using Plugin.Geolocator.Abstractions;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using Prism.Commands;
@@ -264,10 +265,10 @@ namespace MotoRapido.ViewModels
         }
 
         private async void IrParaMensagem()
-        {            
-               
+        {
+
             UserDialogs.Instance.ShowLoading("Carregando...");
-           
+
             var navParam = new NavigationParameters();
             navParam.Add("historicoMsgs", ObterMensagens());
             await NavigationService.NavigateAsync("Mensagem", navParam);
@@ -408,7 +409,7 @@ namespace MotoRapido.ViewModels
                     }
                     else
                     {
-
+                      //  CrossSettings.Current.Set<Position>("UltimaLocalizacaoValida",null);
                         AreaPosicao.msgErro = "Buscando...";
                         TextoStatus = "Buscando...";
                         motoTemp.disponivel = "S";
