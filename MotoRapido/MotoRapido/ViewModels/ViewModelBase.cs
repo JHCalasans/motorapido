@@ -473,17 +473,17 @@
         }
 
 
-       // private static readonly String _urlBase = "http://10.0.3.2:8080/motorapido/wes/";
+         private static readonly String _urlBase = "http://"+GetUrlBase()+"/motorapido/wes/";
 
-        // private static readonly String _urlBase = "http://192.168.42.64:8080/motorapido/wes/";
-
-        // private static readonly String _urlBase = "http://192.168.0.4:8080/motorapido/wes/";
-
-         private static readonly String _urlBase = "http://104.248.186.97:8080/motorapido/wes/";
+       
 
         public static string GetUrlBase()
         {
-            return _urlBase;
+            return "192.168.0.4:8080";
+
+          //  return "104.248.186.97:8080";
+
+          //  return "10.0.3.2:8080";
         }
 
         private static Position _posicaoTeste;

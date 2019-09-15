@@ -44,7 +44,7 @@ namespace MotoRapido.Customs
             var client = new HttpClient
             {
                 Timeout = TimeSpan.FromMilliseconds(8000),
-                BaseAddress = new Uri(ViewModelBase.GetUrlBase())
+                BaseAddress = new Uri("http://" + ViewModelBase.GetUrlBase() + "/motorapido/wes/")
             };
             client.DefaultRequestHeaders.Add("Authentication", chaveServicos);
             try
@@ -68,14 +68,9 @@ namespace MotoRapido.Customs
                     Headers = en
 
 
-                };
+                };                
 
-                //_ws = new PureWebSocket("ws://10.0.3.2:8080/motorapido/socket", socketOptions);
-
-              //  _ws = new PureWebSocket("ws://192.168.0.4:8080/motorapido/socket", socketOptions);
-                
-
-                _ws = new PureWebSocket("ws://104.248.186.97:8080/motorapido/socket", socketOptions);
+                _ws = new PureWebSocket("ws://"+ ViewModelBase.GetUrlBase() + "/motorapido/socket", socketOptions);
 
                 _ws.OnStateChanged += Ws_OnStateChanged;
                 _ws.OnMessage += Ws_OnMessage;
