@@ -19,7 +19,7 @@
                 <OnPlatform x:TypeArguments="x:Boolean" iOS="false" Android="true"/>
             </Frame.HasShadow>
             <StackLayout>
-                <Label TextColor="White" Text="Texto" />
+                <Label TextColor="White" Text="{Binding Text}" />
             </StackLayout>
         </Frame>
 

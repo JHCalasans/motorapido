@@ -6,28 +6,25 @@
              xmlns:customs="clr-namespace:MotoRapido.Customs"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MotoRapido.Views.Mensagem"
-             Title="Mensagens">
+             Title="Chat Central">
     <ContentPage.Resources>
         <ResourceDictionary>
             <local:SelectorDataTemplate x:Key="MessageTemplateSelector"/>
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <ScrollView >
-        <Grid RowSpacing="0" ColumnSpacing="0" >
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+      
 
-            <ListView 
+    <StackLayout >
+
+
+        <ListView ItemSelected="MessagesListView_ItemSelected"
                 x:Name="MessagesListView" 
                 ItemTemplate="{StaticResource MessageTemplateSelector}" 
                 ItemsSource="{Binding ListMessages}" 
-                HasUnevenRows="True" SeparatorVisibility="None" IsEnabled="True" Grid.Row="0"/>
+                HasUnevenRows="True" SeparatorVisibility="None" IsEnabled="True" />
 
-
-            <StackLayout Orientation="Horizontal" Grid.Row="1" BackgroundColor="White" VerticalOptions="EndAndExpand">
+            <StackLayout Orientation="Horizontal" BackgroundColor="White" VerticalOptions="EndAndExpand">               
                 <Entry 
                     HorizontalOptions="FillAndExpand"  
                     Placeholder="Message"  
@@ -40,7 +37,6 @@
                 </Image>
             </StackLayout>
 
-        </Grid>
-    </ScrollView>
+    </StackLayout>
 
 </ContentPage>

@@ -9,18 +9,20 @@ namespace MotoRapido.Views
         {
             InitializeComponent();
 
-            if (((MensagemViewModel)(BindingContext)).ListMessages != null)
+
+            ((MensagemViewModel)(BindingContext)).ListMessages.CollectionChanged += (sender, e) =>
             {
-                var target1 = ((MensagemViewModel)(BindingContext)).ListMessages[((MensagemViewModel)(BindingContext)).ListMessages.Count - 1];
-                MessagesListView.ScrollTo(target1, ScrollToPosition.End, false);
+                var target = ((MensagemViewModel)(BindingContext)).ListMessages[((MensagemViewModel)(BindingContext)).ListMessages.Count - 1];
+                MessagesListView.ScrollTo(target, ScrollToPosition.End, true);
 
-                ((MensagemViewModel)(BindingContext)).ListMessages.CollectionChanged += (sender, e) =>
-                {
-                    var target = ((MensagemViewModel)(BindingContext)).ListMessages[((MensagemViewModel)(BindingContext)).ListMessages.Count - 1];
-                    MessagesListView.ScrollTo(target, ScrollToPosition.End, true);
+            };
 
-                };
-            }
+
+        }      
+
+        private void MessagesListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+            MessagesListView.SelectedItem = null;
         }
     }
 }
