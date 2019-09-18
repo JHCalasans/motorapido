@@ -17,8 +17,22 @@ namespace MotoRapido.Views
 
             };
 
+            //MessagingCenter.Subscribe<App>(this, "GPSHabilitou", (sender) =>
+            //{
 
-        }      
+            //    if (MotoristaLogado.disponivel.Equals("S"))
+            //    {
+            //        Thread.Sleep(TimeSpan.FromSeconds(3));
+            //        CrossSettings.Current.Set("UltimaLocalizacaoValida", Task.Run(() => GetCurrentPosition()));
+            //        Localizar(UltimaLocalizacaoValida);
+            //    }
+
+
+            //});
+
+
+
+        }
 
         private void MessagesListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {

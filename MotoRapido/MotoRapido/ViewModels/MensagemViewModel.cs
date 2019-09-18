@@ -27,7 +27,7 @@ namespace MotoRapido.ViewModels
         public MensagemViewModel(INavigationService navigationService, IPageDialogService dialogService)
             : base(navigationService, dialogService)
         {
-            ListMessages = new ObservableCollection<Message>();
+            ListMessages = new ObservableCollection<Message>(ObterMensagens());
 
         }
 
@@ -42,26 +42,27 @@ namespace MotoRapido.ViewModels
                     MessageDateTime = DateTime.Now
                 };
 
-
-                ListMessages.Add(GravarMensagem(OutText));
+                GravarMensagem(message);
+                ListMessages.Add(message);
+              
+                //await ConectarSocket();
+                //await WebSocketClientClass.SendMessagAsync("MensagemChat=>"+ OutText);
                 OutText = "";
-                await ConectarSocket();
-                await WebSocketClientClass.SendMessagAsync("MensagemChat=>"+ OutText);
             }
         }
 
 
         public override  void OnNavigatingTo(NavigationParameters parameters)
         {
-          
+           
         }
 
         public override void OnNavigatedTo(NavigationParameters parameters)
         {
-            if (parameters.ContainsKey("historicoMsgs"))
-            {
-                ListMessages = new ObservableCollection<Message>((List<Message>)parameters["historicoMsgs"]);
-            }
+            //  if (parameters.ContainsKey("historicoMsgs"))
+            // {
+               // ListMessages = new ObservableCollection<Message>((List<Message>)parameters["historicoMsgs"]);
+         //   }
            
         }
     }

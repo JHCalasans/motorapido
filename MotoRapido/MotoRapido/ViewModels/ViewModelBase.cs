@@ -387,6 +387,16 @@
             return message;
         }
 
+        public static void GravarMensagem(Message mensagem)
+        {
+            if (_messageRepositorio == null)
+                IniciarMessageRepositorio();
+
+          
+            _messageRepositorio.GravarMensagem(mensagem);
+            
+        }
+
         public static List<Message> ObterMensagens()
         {
             if (_messageRepositorio == null)
