@@ -31,7 +31,7 @@ namespace MotoRapido.ViewModels
 
         }
 
-        public async void EnviarNovaMensagem()
+        public  void EnviarNovaMensagem()
         {
             if (!String.IsNullOrWhiteSpace(OutText))
             {

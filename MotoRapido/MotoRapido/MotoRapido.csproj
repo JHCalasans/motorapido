@@ -68,10 +68,11 @@
     <PackageReference Include="Xam.Plugin.Geolocator" Version="4.5.0.6" />
     <PackageReference Include="Xam.Plugins.Notifier" Version="3.0.1" />
     <PackageReference Include="Xamarin.Essentials" Version="1.1.0" />
-    <PackageReference Include="Xamarin.Forms" Version="4.2.0.709249" />
+    <PackageReference Include="Xamarin.Forms" Version="4.2.0.815419" />
     <PackageReference Include="Prism.Unity.Forms" Version="7.0.0.269-pre" />
     <PackageReference Include="Xamarin.Forms.GoogleMaps" Version="3.0.4" />
     <PackageReference Include="Xamarin.Forms.GoogleMaps.Bindings" Version="2.2.0" />
+    <PackageReference Include="Xamarin.Forms.Visual.Material" Version="4.2.0.815419" />
     <PackageReference Include="Xamarin.HotReload" Version="1.4.12" />
   </ItemGroup>
 
@@ -98,9 +99,6 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Logar.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\Login.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Mensagem.xaml">

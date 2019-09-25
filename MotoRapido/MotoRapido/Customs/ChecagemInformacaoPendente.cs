@@ -28,7 +28,7 @@ namespace MotoRapido.Customs
             return true;
         }
 
-        private async void ChecagemInformacaoPendenteAsync()
+        private  void ChecagemInformacaoPendenteAsync()
         {
           
             //  var lista = ListarTodasInfoPendentes();

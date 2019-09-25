@@ -155,7 +155,7 @@ namespace MotoRapido.ViewModels
                     var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                     CrossSettings.Current.Remove("ChamadaParaResposta");
-                    var response = await IniciarCliente(true).PostAsync("motorita/cancelarChamada", content);
+                    var response = await IniciarCliente(true).PostAsync("motorista/cancelarChamada", content);
 
                     if (response.IsSuccessStatusCode)
                     {

@@ -33,6 +33,7 @@ namespace MotoRapido.Droid
 
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
+            //global::Xamarin.Forms.FormsMaterial.Init(this, bundle);
             UserDialogs.Init(this);
             // Xamarin.FormsMaps.Init(this, bundle);
             //  Xamarin.FormsGoogleMaps.Init(this, bundle); 

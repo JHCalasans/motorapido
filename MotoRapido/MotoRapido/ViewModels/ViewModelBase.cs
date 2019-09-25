@@ -489,14 +489,13 @@
 
         public static string GetUrlBase()
         {
-            return "192.168.0.4:8080";
+          // return "192.168.0.4:8080";
 
-          //  return "104.248.186.97:8080";
+           return "104.248.186.97:8080";
 
           //  return "10.0.3.2:8080";
         }
 
-        private static Position _posicaoTeste;
 
         /// <summary>
         /// The GetCurrentPosition
