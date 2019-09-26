@@ -27,42 +27,43 @@ namespace MotoRapido.ViewModels
         public MensagemViewModel(INavigationService navigationService, IPageDialogService dialogService)
             : base(navigationService, dialogService)
         {
-          //  ListMessages = new ObservableCollection<Message>(CrossSettings.Current.Get<List<Message>>("mensagens")); 
+            ListMessages = new ObservableCollection<Message>(ObterMensagens());
 
         }
 
-        public async void EnviarNovaMensagem()
+        public  void EnviarNovaMensagem()
         {
             if (!String.IsNullOrWhiteSpace(OutText))
             {
-                //var message = new Message
-                //{
-                //    Text = OutText,
-                //    IsTextIn = false,
-                //    MessageDateTime = DateTime.Now
-                //};
+                var message = new Message
+                {
+                    Text = OutText,
+                    IsTextIn = false,
+                    MessageDateTime = DateTime.Now
+                };
 
-               
-                ListMessages.Add(GravarMensagem(OutText));
+                GravarMensagem(message);
+                ListMessages.Add(message);
+              
+                //await ConectarSocket();
+                //await WebSocketClientClass.SendMessagAsync("MensagemChat=>"+ OutText);
                 OutText = "";
-
-                await WebSocketClientClass.SendMessagAsync("MensagemChat=>"+ OutText);
             }
         }
 
 
         public override  void OnNavigatingTo(NavigationParameters parameters)
         {
-            if (parameters.ContainsKey("historicoMsgs"))
-            {
-                ListMessages = new ObservableCollection<Message> ((List<Message>)parameters["historicoMsgs"]);
-            }
+           
         }
 
         public override void OnNavigatedTo(NavigationParameters parameters)
         {
+            //  if (parameters.ContainsKey("historicoMsgs"))
+            // {
+               // ListMessages = new ObservableCollection<Message>((List<Message>)parameters["historicoMsgs"]);
+         //   }
            
-
         }
     }
 }

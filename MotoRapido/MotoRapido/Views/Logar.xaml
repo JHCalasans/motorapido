@@ -5,7 +5,8 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MotoRapido.Views.Logar"
               xmlns:customs="clr-namespace:MotoRapido.Customs"
-              NavigationPage.HasNavigationBar="False" >
+              NavigationPage.HasNavigationBar="False" 
+             Visual="Material">
 
 
     <AbsoluteLayout >
@@ -16,19 +17,19 @@
 
 
         <Entry Placeholder="login"  AbsoluteLayout.LayoutBounds="0.5,0.55,200,40"
-               AbsoluteLayout.LayoutFlags="PositionProportional"
+               AbsoluteLayout.LayoutFlags="PositionProportional" Visual="Default"
                Text="{Binding Login}" HorizontalTextAlignment="Center" PlaceholderColor="Gray"></Entry>
         
         <Entry Placeholder="senha"  
-               AbsoluteLayout.LayoutBounds="0.5,0.65,200,40" AbsoluteLayout.LayoutFlags="PositionProportional"
+               AbsoluteLayout.LayoutBounds="0.5,0.65,200,40" AbsoluteLayout.LayoutFlags="PositionProportional" Visual="Default"
                Text="{Binding Senha}" IsPassword="True" PlaceholderColor="Gray" HorizontalTextAlignment="Center"></Entry>
 
         <Button Text="Entrar" Command="{Binding LoginCommand}" BackgroundColor="#dd2705" 
                 TextColor="White" AbsoluteLayout.LayoutBounds="0.5,0.8,100,50" AbsoluteLayout.LayoutFlags="PositionProportional" ></Button>
 
-        <Label Text="ID Aparelho:" AbsoluteLayout.LayoutBounds="0.2,1,100,50" AbsoluteLayout.LayoutFlags="PositionProportional" FontSize="16" FontAttributes="Bold"></Label>
+        <Label Text="ID Aparelho:" AbsoluteLayout.LayoutBounds="0.1,1,100,50" AbsoluteLayout.LayoutFlags="PositionProportional" FontSize="16" FontAttributes="Bold"></Label>
 
-        <Label Text="{Binding IDAparelho}" AbsoluteLayout.LayoutBounds="0.8,1,160,50" AbsoluteLayout.LayoutFlags="PositionProportional" FontSize="16"></Label>
+        <Label Text="{Binding IDAparelho}" AbsoluteLayout.LayoutBounds="0.8,1,160,50" AbsoluteLayout.LayoutFlags="PositionProportional" FontSize="15"></Label>
 
 
     </AbsoluteLayout>

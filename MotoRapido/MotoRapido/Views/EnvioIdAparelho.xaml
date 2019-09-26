@@ -4,28 +4,36 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MotoRapido.Views.EnvioIdAparelho"
-             Title="Envio de ID Celular">
+             Title="Envio de ID Celular"
+             Visual="Material">
 
 
-    <StackLayout Margin="0,80,0,0">
+    <Grid  VerticalOptions="Center">
 
-        <Frame Margin="0,0,0,50">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+
+
+        <Frame Margin="0,0,0,50" Grid.Row="0">
             <Label Text="Enviar Identificador do aparelho para a central liberar o acesso"  
                FontSize="18"  >
             </Label>
         </Frame>
-        <StackLayout Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="Center">
-            <Label Text="ID Aparelho: " FontSize="20">
+        <StackLayout Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="Center" Grid.Row="1">
+            <Label Text="ID Aparelho: " >
             </Label>
 
             <Label Text="{Binding IDAparelho}"   FontAttributes="Bold"
-             FontSize="20"  HorizontalTextAlignment="Center">
+              HorizontalTextAlignment="Center">
             </Label>
         </StackLayout>
 
 
-        <Button Text="Enviar" Command="{Binding EnviarCommand}" BackgroundColor="#dd2705" 
+        <Button Text="Enviar" Command="{Binding EnviarCommand}" BackgroundColor="#dd2705"  Grid.Row="2"
                 TextColor="White"  Margin="50,50,50,0"></Button>
-    </StackLayout>
+    </Grid>
 
 </ContentPage>
