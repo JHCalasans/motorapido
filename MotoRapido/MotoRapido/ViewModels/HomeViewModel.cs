@@ -266,22 +266,23 @@ namespace MotoRapido.ViewModels
 
         private async void IrParaMensagem()
         {
-            await DialogService.DisplayAlertAsync("Aviso", "Funcionalidade indisponível", "OK");
-            //try
-            //{
-            //    UserDialogs.Instance.ShowLoading("Carregando...");
+            //await DialogService.DisplayAlertAsync("Aviso", "Funcionalidade indisponível", "OK");
+            try
+            {
+                UserDialogs.Instance.ShowLoading("Carregando...");
 
-            //    var navParam = new NavigationParameters();
-            //    navParam.Add("historicoMsgs", ObterMensagens());
-            //    await NavigationService.NavigateAsync("Mensagem", navParam);
-            //}catch(Exception e)
-            //{
-            //    Crashes.TrackError(e);
-            //}
-            //finally
-            //{
-            //    UserDialogs.Instance.HideLoading();
-            //}
+                var navParam = new NavigationParameters();
+                navParam.Add("historicoMsgs", ObterMensagens());
+                await NavigationService.NavigateAsync("Mensagem", navParam);
+            }
+            catch (Exception e)
+            {
+                Crashes.TrackError(e);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
         }
 
         private async void IrParaConfig()

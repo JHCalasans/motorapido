@@ -31,7 +31,7 @@ namespace MotoRapido.ViewModels
 
         }
 
-        public  void EnviarNovaMensagem()
+        public async void EnviarNovaMensagem()
         {
             if (!String.IsNullOrWhiteSpace(OutText))
             {
@@ -45,8 +45,8 @@ namespace MotoRapido.ViewModels
                 GravarMensagem(message);
                 ListMessages.Add(message);
               
-                //await ConectarSocket();
-                //await WebSocketClientClass.SendMessagAsync("MensagemChat=>"+ OutText);
+                await ConectarSocket();
+                await WebSocketClientClass.SendMessagAsync("MensagemChat=>"+ OutText);
                 OutText = "";
             }
         }
