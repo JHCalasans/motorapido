@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Xamarin.Forms;
 
 namespace MotoRapido.ViewModels
 {
@@ -54,7 +55,19 @@ namespace MotoRapido.ViewModels
 
         public override  void OnNavigatingTo(NavigationParameters parameters)
         {
-           
+
+            MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "NovaMensagemChat");
+            MessagingCenter.Subscribe<MensagemRespostaSocket>(this, "NovaMensagemChat",  (sender) =>
+            {
+                var resposta = sender.msg.Split(new string[] { "=>" }, StringSplitOptions.None);
+                var message = new Message
+                {
+                    Text = resposta[0],
+                    IsTextIn = true,
+                    MessageDateTime = DateTime.ParseExact(resposta[1], "dd/MM/yyyy hh:mm", System.Globalization.CultureInfo.InvariantCulture)
+                };
+                ListMessages.Add(message);
+            });
         }
 
         public override void OnNavigatedTo(NavigationParameters parameters)

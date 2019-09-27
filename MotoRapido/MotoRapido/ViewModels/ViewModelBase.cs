@@ -472,7 +472,11 @@
                     Timeout = TimeSpan.FromMilliseconds(35000),
                     BaseAddress = new Uri(_urlBase)
                 };
-                if (comChave) client.DefaultRequestHeaders.Add("Authentication", MotoristaLogado.chaveServicos);
+                if (comChave)
+                {
+                    client.DefaultRequestHeaders.Add("Authentication", MotoristaLogado.chaveServicos);
+                    client.DefaultRequestHeaders.Add("CodMotorista", MotoristaLogado.codigo.ToString());
+                }
                 return client;
             }
             else
@@ -489,9 +493,12 @@
 
         public static string GetUrlBase()
         {
-          // return "192.168.0.4:8080";
 
-          // return "104.248.186.97:8080";
+            //return "192.168.42.64:8080";
+
+            // return "192.168.0.4:8080";
+
+           //  return "104.248.186.97:8080";
 
             return "10.0.3.2:8080";
         }

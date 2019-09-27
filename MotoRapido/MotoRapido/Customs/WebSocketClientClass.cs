@@ -180,7 +180,7 @@ namespace MotoRapido.Customs
                 case "AtualizarPosicao": MessagingCenter.Send(JsonConvert.DeserializeObject<RetornoVerificaPosicao>(resp[1]), "LocalizacaoResposta"); break;
                 case "InformarCoordenada": ViewModelBase.InformarCoordenada(); break;
                 case "IndisponivelResp": MessagingCenter.Send(new MensagemRespostaSocket() { msg = "Motorista Indisponível" }, "IndisponivelResp"); break;
-
+                case "NovaMensagemChat": MessagingCenter.Send(new MensagemRespostaSocket() { msg = resp[1] + "=>" + resp[2] }, "NovaMensagemChat"); break;
                     //CrossNotifications.Current.Send(new Notification() {Title = "Nova Chamada", Vibrate = true })   
             }
             // WebSocketClientClass._ws, "ErroPosicaoArea", resp[0] + DateTime.No

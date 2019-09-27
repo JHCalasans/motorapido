@@ -479,6 +479,19 @@ namespace MotoRapido.ViewModels
                             TextoStatus = sender.informacaoPosicao;
                         });
 
+                        MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "NovaMensagemChat");
+                        MessagingCenter.Subscribe<MensagemRespostaSocket>(this, "NovaMensagemChat", (sender) =>
+                        {
+                            var resposta = sender.msg.Split(new string[] { "=>" }, StringSplitOptions.None);
+                            var message = new Message
+                            {
+                                Text = resposta[0],
+                                IsTextIn = true,
+                                MessageDateTime = DateTime.ParseExact(resposta[1], "dd/MM/yyyy hh:mm", System.Globalization.CultureInfo.InvariantCulture)
+                            };
+                            GravarMensagem(message);
+                        });
+
                         //SensorSpeed speed = SensorSpeed.UI;
 
                         //if (Gyroscope.IsMonitoring)
