@@ -15,6 +15,7 @@
     using Prism.Services;
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Net.Http;
     using System.Net.WebSockets;
@@ -395,6 +396,28 @@
           
             _messageRepositorio.GravarMensagem(mensagem);
             
+        }
+
+        public static void GravarMensagem(Message mensagem, ObservableCollection<Message> listaMensagens)
+        {
+            if (_messageRepositorio == null)
+                IniciarMessageRepositorio();
+
+            var count = listaMensagens.Count - 10;
+            ;
+            if (count > 0)
+            {
+                while (count > 0) 
+                {
+                    var msg = listaMensagens[0];
+                    _messageRepositorio.DeletarMensagem(msg);
+                    listaMensagens.RemoveAt(0);
+                    count--;
+                }
+            }
+           
+            _messageRepositorio.GravarMensagem(mensagem);
+
         }
 
         public static List<Message> ObterMensagens()

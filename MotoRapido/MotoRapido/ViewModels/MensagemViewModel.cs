@@ -1,19 +1,16 @@
-﻿using Acr.Settings;
-using MotoRapido.Customs;
+﻿using MotoRapido.Customs;
 using MotoRapido.Models;
 using Prism.Commands;
-using Prism.Mvvm;
 using Prism.Navigation;
 using Prism.Services;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Xamarin.Forms;
 
 namespace MotoRapido.ViewModels
 {
-	public class MensagemViewModel : ViewModelBase
+    public class MensagemViewModel : ViewModelBase
 	{
         public ObservableCollection<Message> ListMessages { get; set; }
         public DelegateCommand SendCommand => new DelegateCommand(EnviarNovaMensagem);
@@ -55,7 +52,6 @@ namespace MotoRapido.ViewModels
 
         public override  void OnNavigatingTo(NavigationParameters parameters)
         {
-
             MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "NovaMensagemChat");
             MessagingCenter.Subscribe<MensagemRespostaSocket>(this, "NovaMensagemChat",  (sender) =>
             {
@@ -67,16 +63,20 @@ namespace MotoRapido.ViewModels
                     MessageDateTime = DateTime.ParseExact(resposta[1], "dd/MM/yyyy hh:mm", System.Globalization.CultureInfo.InvariantCulture)
                 };
                 ListMessages.Add(message);
+                GravarMensagem(message, ListMessages);
             });
         }
 
         public override void OnNavigatedTo(NavigationParameters parameters)
         {
-            //  if (parameters.ContainsKey("historicoMsgs"))
-            // {
-               // ListMessages = new ObservableCollection<Message>((List<Message>)parameters["historicoMsgs"]);
-         //   }
-           
+            //Lógica para automaticamente colocar a tela de chat na ultima msg recebida
+            if (ListMessages.Count > 0)
+            {
+                var msg = ListMessages.Last<Message>();
+                ListMessages.Remove(msg);
+                ListMessages.Add(msg);
+            }
+
         }
     }
 }

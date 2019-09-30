@@ -13,6 +13,12 @@ namespace MotoRapido.BD.Repositorio
         {
             _dataBase = new DataBase();
         }
+
+        public void DeletarMensagem(Message mensagem)
+        {
+            _dataBase.DeletarMensagem(mensagem);
+        }
+
         public void GravarMensagem(Message mensagem)
         {
             _dataBase.GravarMensagem(mensagem);

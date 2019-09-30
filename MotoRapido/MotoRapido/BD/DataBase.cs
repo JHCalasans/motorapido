@@ -62,5 +62,10 @@ namespace MotoRapido.BD
         {
             _conexao.Insert(mensagem);
         }
+
+        public void DeletarMensagem(Message mensagem)
+        {
+            _conexao.Delete<Message>(mensagem);
+        }
     }
 }

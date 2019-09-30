@@ -203,7 +203,7 @@ namespace MotoRapido.ViewModels
                         ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_disponivel.png");
                         EstaLivre = false;
                         CorDeFundoStatus = Color.Red;
-                        TextoStatus = "OCUPADO";
+                       // TextoStatus = "OCUPADO";
                         ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.ocupado.png");
                         MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "ErroPosicaoArea");
                         MessagingCenter.Unsubscribe<Chamada>(this, "NovaChamada");
@@ -230,7 +230,7 @@ namespace MotoRapido.ViewModels
                         ImgDisponibilidade = ImageSource.FromResource("MotoRapido.Imagens.btn_ficar_disponivel.png");
                         EstaLivre = false;
                         CorDeFundoStatus = Color.Red;
-                        TextoStatus = "OCUPADO";
+                       // TextoStatus = "OCUPADO";
                         ImgStatus = ImageSource.FromResource("MotoRapido.Imagens.ocupado.png");
                         AreaPosicao.msgErro = "MOTORISTA INDISPONÍVEL";
                         TextoStatus = "MOTORISTA INDISPONÍVEL";
@@ -267,6 +267,7 @@ namespace MotoRapido.ViewModels
         private async void IrParaMensagem()
         {
             //await DialogService.DisplayAlertAsync("Aviso", "Funcionalidade indisponível", "OK");
+            var teveErro = false;
             try
             {
                 UserDialogs.Instance.ShowLoading("Carregando...");
@@ -277,10 +278,14 @@ namespace MotoRapido.ViewModels
             }
             catch (Exception e)
             {
+                teveErro = true;
                 Crashes.TrackError(e);
             }
             finally
             {
+                if(!teveErro)
+                    MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "NovaMensagemChat");
+
                 UserDialogs.Instance.HideLoading();
             }
         }
@@ -490,6 +495,7 @@ namespace MotoRapido.ViewModels
                                 MessageDateTime = DateTime.ParseExact(resposta[1], "dd/MM/yyyy hh:mm", System.Globalization.CultureInfo.InvariantCulture)
                             };
                             GravarMensagem(message);
+
                         });
 
                         //SensorSpeed speed = SensorSpeed.UI;
