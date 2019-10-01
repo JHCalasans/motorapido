@@ -1,25 +1,21 @@
 ﻿using Acr.Settings;
 using Acr.UserDialogs;
 using Microsoft.AppCenter.Crashes;
-using MotoRapido.Customs;
 using MotoRapido.Models;
 using Newtonsoft.Json;
 using Plugin.Connectivity;
 using Plugin.Geolocator;
-using Plugin.Geolocator.Abstractions;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using Prism.Commands;
 using Prism.Navigation;
 using Prism.Services;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
-using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace MotoRapido.ViewModels
@@ -70,16 +66,21 @@ namespace MotoRapido.ViewModels
             get => _corDeFundoStatus;
             set => SetProperty(ref _corDeFundoStatus, value);
         }
-
-
-
+               
 
         private String _textoStatus;
 
         public string TextoStatus
         {
             get => _textoStatus;
-            set => SetProperty(ref _textoStatus, value);
+            set 
+            {
+                if (value.Equals("MOTORISTA INDISPONÍVEL"))
+                    value = "OFFLINE";
+
+                SetProperty(ref _textoStatus, value); 
+                
+            }
         }
 
 
@@ -266,28 +267,32 @@ namespace MotoRapido.ViewModels
 
         private async void IrParaMensagem()
         {
-            //await DialogService.DisplayAlertAsync("Aviso", "Funcionalidade indisponível", "OK");
-            var teveErro = false;
-            try
+            if (MotoristaLogado.disponivel.Equals("S"))
             {
-                UserDialogs.Instance.ShowLoading("Carregando...");
+                var teveErro = false;
+                try
+                {
+                    UserDialogs.Instance.ShowLoading("Carregando...");
 
-                var navParam = new NavigationParameters();
-                navParam.Add("historicoMsgs", ObterMensagens());
-                await NavigationService.NavigateAsync("Mensagem", navParam);
-            }
-            catch (Exception e)
-            {
-                teveErro = true;
-                Crashes.TrackError(e);
-            }
-            finally
-            {
-                if(!teveErro)
-                    MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "NovaMensagemChat");
+                    var navParam = new NavigationParameters();
+                    navParam.Add("historicoMsgs", ObterMensagens());
+                    await NavigationService.NavigateAsync("Mensagem", navParam);
+                }
+                catch (Exception e)
+                {
+                    teveErro = true;
+                    Crashes.TrackError(e);
+                }
+                finally
+                {
+                    if (!teveErro)
+                        MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "NovaMensagemChat");
 
-                UserDialogs.Instance.HideLoading();
+                    UserDialogs.Instance.HideLoading();
+                }
             }
+            else
+                await DialogService.DisplayAlertAsync("Aviso", "Motorista Offline", "OK");
         }
 
         private async void IrParaConfig()

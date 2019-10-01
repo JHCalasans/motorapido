@@ -19,23 +19,23 @@
 
         <StackLayout Orientation="Horizontal">
             <StackLayout WidthRequest="500" Margin="0,10,0,0">
-             
-                    <Label Text="{Binding MotoristaLogado.nome}"  FontSize="16"  VerticalOptions="Center"
+
+                <Label Text="{Binding MotoristaLogado.nome}"  FontSize="16"  VerticalOptions="Center"
                            VerticalTextAlignment="Center" TextColor="Black"
                     FontAttributes="Bold" Grid.ColumnSpan="2" HorizontalOptions="Center"></Label>
 
                 <Label Text="{Binding TextoStatus}"  HorizontalOptions="Center" HorizontalTextAlignment="Center"
-                    FontSize="18"  VerticalOptions="Center" VerticalTextAlignment="Center"
+                    FontSize="18"  VerticalOptions="Center" VerticalTextAlignment="Center" 
                     FontAttributes="Bold" ></Label>
 
-                    <Label Text="{Binding VeiculoSelecionado}"  HorizontalOptions="Center" HorizontalTextAlignment="Center"
+                <Label Text="{Binding VeiculoSelecionado}"  HorizontalOptions="Center" HorizontalTextAlignment="Center"
                     FontSize="12"  VerticalOptions="Center" VerticalTextAlignment="Center"
                     TextColor="OrangeRed"></Label>
 
             </StackLayout>
 
             <Image Source="{Binding  ImgStatus}"  WidthRequest="100" HeightRequest="100" Margin="5,10,5,10"></Image>
-          
+
 
         </StackLayout>
 
@@ -93,7 +93,7 @@
                 </Image.GestureRecognizers>
             </Image>
 
-           
+
 
             <!--<Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.vazio.png}" Grid.Row="3" Grid.Column="0" WidthRequest="130" HeightRequest="130"></Image>
 
