@@ -452,10 +452,10 @@ namespace MotoRapido.ViewModels
                         });
                         //Ouvindo mensagem de nova chamada
                         MessagingCenter.Unsubscribe<Chamada>(this, "NovaChamada");
-                        MessagingCenter.Subscribe<Chamada>(this, "NovaChamada", (sender) =>
+                        MessagingCenter.Subscribe<Chamada>(this, "NovaChamada", async (sender) =>
                         {
-
-                            NavigationService.NavigateAsync("//NavigationPage/ResponderChamada", null, true);
+                            await DialogService.DisplayAlertAsync("Aviso", "chamadaaaa", "OK");
+                           // NavigationService.NavigateAsync("//NavigationPage/ResponderChamada", null, true);
 
                         });
                         //Ouvindo mensagem de internet indisponível
