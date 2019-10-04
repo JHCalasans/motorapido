@@ -159,12 +159,14 @@
                             codMotorista = MotoristaLogado.codigo,
                             latitude = posicao.Latitude.ToString().Replace(",", "."),
                             longitude = posicao.Longitude.ToString().Replace(",", "."),
-                            loginMotorista = MotoristaLogado.login
-
-
+                            loginMotorista = MotoristaLogado.login,
+                            corridaRecusada = CrossSettings.Current.Contains("RecusouChamada"),
+                            corridaPendenteRecusada = CrossSettings.Current.Contains("RecusouChamadaPendente")
                         };
 
-                        if (AreaPosicao != null && AreaPosicao.areaAtual != null)
+                        CrossSettings.Current.Remove("RecusouChamada");
+                        CrossSettings.Current.Remove("RecusouChamadaPendente");
+                        if (AreaPosicao != null && AreaPosicao.areaAtual != null && UltimaLocalizacaoValida != null)
                             param.codUltimaArea = AreaPosicao.areaAtual.codigo;
 
                         var json = JsonConvert.SerializeObject(param);
@@ -175,7 +177,7 @@
                         // await client.SenMessagAsync("InformarLocalizacao=>" + json);
                         await WebSocketClientClass.SendMessagAsync("InformarLocalizacao=>" + json);
 
-                      
+
 
 
                     }
@@ -213,45 +215,45 @@
 
         public static async void InformarCoordenada()
         {
-           
-                if (CrossGeolocator.Current.IsGeolocationEnabled)//App.IsGPSEnable)
+
+            if (CrossGeolocator.Current.IsGeolocationEnabled)//App.IsGPSEnable)
+            {
+                CrossSettings.Current.Remove("GPSDesabilitado");
+                try
                 {
-                    CrossSettings.Current.Remove("GPSDesabilitado");
-                    try
+
+                    var pos = await GetCurrentPosition();
+
+                    VerificaPosicaoParam param = new VerificaPosicaoParam
                     {
-
-                       var pos = await GetCurrentPosition();
-
-                        VerificaPosicaoParam param = new VerificaPosicaoParam
-                        {
-                            codMotorista = CrossSettings.Current.Get<Motorista>("MotoristaLogado").codigo,
-                            latitude = pos.Latitude.ToString().Replace(",", "."),
-                            longitude = pos.Longitude.ToString().Replace(",", "."),
-                            loginMotorista = CrossSettings.Current.Get<Motorista>("MotoristaLogado").login
+                        codMotorista = CrossSettings.Current.Get<Motorista>("MotoristaLogado").codigo,
+                        latitude = pos.Latitude.ToString().Replace(",", "."),
+                        longitude = pos.Longitude.ToString().Replace(",", "."),
+                        loginMotorista = CrossSettings.Current.Get<Motorista>("MotoristaLogado").login
 
 
-                        };
+                    };
 
-                      
-                        var json = JsonConvert.SerializeObject(param);
-                        var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                        CrossSettings.Current.Set("UltimaAtualizacaoLocalidade", new DateTime());
-                        // await client.SenMessagAsync("InformarLocalizacao=>" + json);
-                        await WebSocketClientClass.SendMessagAsync("InformarLocalizacao=>" + json);
+                    var json = JsonConvert.SerializeObject(param);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                    CrossSettings.Current.Set("UltimaAtualizacaoLocalidade", new DateTime());
+                    // await client.SenMessagAsync("InformarLocalizacao=>" + json);
+                    await WebSocketClientClass.SendMessagAsync("InformarLocalizacao=>" + json);
 
 
 
 
-                    }
-                    catch (Exception e)
-                    {
-                        Crashes.TrackError(e);
-                       
-                    }
                 }
-                
-            
+                catch (Exception e)
+                {
+                    Crashes.TrackError(e);
+
+                }
+            }
+
+
         }
 
         public void Connectivity_ConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
@@ -266,7 +268,7 @@
             {
                 MessagingCenter.Send(this, "SemInternet", false);
             }
-         
+
         }
 
 
@@ -305,7 +307,7 @@
 
 
                     });
-              
+
             }
 
         }
@@ -393,9 +395,9 @@
             if (_messageRepositorio == null)
                 IniciarMessageRepositorio();
 
-          
+
             _messageRepositorio.GravarMensagem(mensagem);
-            
+
         }
 
         public static void GravarMensagem(Message mensagem, ObservableCollection<Message> listaMensagens)
@@ -407,7 +409,7 @@
             ;
             if (count > 0)
             {
-                while (count > 0) 
+                while (count > 0)
                 {
                     var msg = listaMensagens[0];
                     _messageRepositorio.DeletarMensagem(msg);
@@ -415,7 +417,7 @@
                     count--;
                 }
             }
-           
+
             _messageRepositorio.GravarMensagem(mensagem);
 
         }
@@ -432,13 +434,15 @@
         public static void TratarMensagemChamada(string json)
         {
             var chamadaNova = JsonConvert.DeserializeObject<Chamada>(json);
+            chamadaNova.dataRecebimento = DateTime.Now;
+            CrossSettings.Current.Set("ChamadaParaResposta", chamadaNova);
             if (App.IsInForeground)
                 MessagingCenter.Send(chamadaNova, "NovaChamada");
             //  Device.BeginInvokeOnMainThread(async () => await App.Current.MainPage.DisplayAlert("Nova Chamada", "Nova Chamada", "OK"));
             //  await DialogService.DisplayAlertAsync("Nova Chamada", "Nova Chamada", "OK");
             else
             {
-                CrossSettings.Current.Set("ChamadaParaResposta", chamadaNova);
+                //  CrossSettings.Current.Set("ChamadaParaResposta", chamadaNova);
                 // CrossLocalNotifications.Current.Show("Nova Chamada", "nova chamada");
             }
         }
@@ -510,20 +514,20 @@
         }
 
 
-         private static readonly String _urlBase = "http://"+GetUrlBase()+"/motorapido/wes/";
+        private static readonly String _urlBase = "http://" + GetUrlBase() + "/motorapido/wes/";
 
-       
+
 
         public static string GetUrlBase()
         {
 
             //return "192.168.42.64:8080";
 
-             return "192.168.0.4:8080";
+            return "192.168.0.4:8080";
 
-           //  return "104.248.186.97:8080";
+            //  return "104.248.186.97:8080";
 
-          //  return "10.0.3.2:8080";
+            //  return "10.0.3.2:8080";
         }
 
 

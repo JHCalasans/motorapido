@@ -24,8 +24,8 @@
                            VerticalTextAlignment="Center" TextColor="Black"
                     FontAttributes="Bold" Grid.ColumnSpan="2" HorizontalOptions="Center"></Label>
 
-                <Label Text="{Binding TextoStatus}"  HorizontalOptions="Center" HorizontalTextAlignment="Center"
-                    FontSize="18"  VerticalOptions="Center" VerticalTextAlignment="Center" 
+                <Label Text="{Binding TextoStatus, Mode=OneWay}"  HorizontalOptions="Center" HorizontalTextAlignment="Center"
+                    FontSize="18"  VerticalOptions="Center" VerticalTextAlignment="Center"  
                     FontAttributes="Bold" ></Label>
 
                 <Label Text="{Binding VeiculoSelecionado}"  HorizontalOptions="Center" HorizontalTextAlignment="Center"

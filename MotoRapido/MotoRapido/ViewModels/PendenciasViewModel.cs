@@ -44,6 +44,7 @@ namespace MotoRapido.ViewModels
                 {
                     NavigationParameters navParam = new NavigationParameters();
                     navParam.Add("ChamadaSelecionada", chamada);
+                    navParam.Add("IsPendencia", true);
                     await NavigationService.NavigateAsync("//NavigationPage/ResponderChamada", navParam, useModalNavigation: true);
 
                     //try

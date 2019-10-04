@@ -15,6 +15,7 @@ using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Net.WebSockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -70,7 +71,7 @@ namespace MotoRapido.ViewModels
 
         private String _textoStatus;
 
-        public string TextoStatus
+        public String TextoStatus
         {
             get => _textoStatus;
             set 
@@ -178,7 +179,8 @@ namespace MotoRapido.ViewModels
                 }
                 else
                 {
-
+                   
+                  
                     AreaPosicao = new RetornoVerificaPosicao("Buscando...");
                     // AreaPosicao.msgErro = "Buscando...";
                     TextoStatus = "Buscando...";
@@ -194,6 +196,15 @@ namespace MotoRapido.ViewModels
                         });
                         Localizar(UltimaLocalizacaoValida);
                     }
+
+                    //Ouvindo mensagem de resposta de localização
+                    MessagingCenter.Unsubscribe<RetornoVerificaPosicao>(this, "LocalizacaoResposta");
+                    MessagingCenter.Subscribe<RetornoVerificaPosicao>(this, "LocalizacaoResposta", (sender) =>
+                    {
+                        AreaPosicao = sender;
+                        TextoStatus = sender.informacaoPosicao;
+
+                    });
 
                     MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "IndisponivelResp");
                     MessagingCenter.Subscribe<MensagemRespostaSocket>(this, "IndisponivelResp", async (sender) =>
@@ -452,11 +463,12 @@ namespace MotoRapido.ViewModels
                         });
                         //Ouvindo mensagem de nova chamada
                         MessagingCenter.Unsubscribe<Chamada>(this, "NovaChamada");
-                        MessagingCenter.Subscribe<Chamada>(this, "NovaChamada", async (sender) =>
+                        MessagingCenter.Subscribe<Chamada>(this, "NovaChamada",  (sender) =>
                         {
-                            await DialogService.DisplayAlertAsync("Aviso", "chamadaaaa", "OK");
-                           // NavigationService.NavigateAsync("//NavigationPage/ResponderChamada", null, true);
-
+                            Device.BeginInvokeOnMainThread(async  () =>
+                            {
+                                await NavigationService.NavigateAsync("//NavigationPage/ResponderChamada", null, useModalNavigation: true);
+                            });
                         });
                         //Ouvindo mensagem de internet indisponível
                         MessagingCenter.Unsubscribe<App, Boolean>(this, "SemInternet");
@@ -484,9 +496,9 @@ namespace MotoRapido.ViewModels
                         MessagingCenter.Unsubscribe<RetornoVerificaPosicao>(this, "LocalizacaoResposta");
                         MessagingCenter.Subscribe<RetornoVerificaPosicao>(this, "LocalizacaoResposta", (sender) =>
                         {
-
                             AreaPosicao = sender;
                             TextoStatus = sender.informacaoPosicao;
+                        
                         });
 
                         MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "NovaMensagemChat");

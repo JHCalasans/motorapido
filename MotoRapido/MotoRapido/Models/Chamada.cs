@@ -119,5 +119,8 @@ namespace MotoRapido.Models
         {
             get { return !String.IsNullOrEmpty(observacao); }
         }
+        public int tempoParaResposta { get; set; }
+
+        public DateTime dataRecebimento { get; set; }
     }
 }

@@ -33,6 +33,8 @@ namespace MotoRapido.ViewModels
 
         private Boolean _expirouTempo { get; set; }
 
+        private Boolean _isPendencia { get; set; }
+
         public ResponderChamadaViewModel(INavigationService navigationService, IPageDialogService dialogService)
             : base(navigationService, dialogService)
         {
@@ -41,25 +43,30 @@ namespace MotoRapido.ViewModels
 
         public override void OnNavigatingTo(NavigationParameters parameters)
         {
-            string codChamadaVeiculo = null;
+            //string codChamadaVeiculo = null;
+            _isPendencia = parameters.ContainsKey("IsPendencia");
             if (parameters.ContainsKey("ChamadaSelecionada"))
             {
                 chamada = (Chamada)parameters["ChamadaSelecionada"];
-            }
+            }          
             else
             {
-                ValidaTempoEspera();
-                if (_expirouTempo)
-                    NavegarHome();
-                else
+
+
+                if (CrossSettings.Current.Contains("ChamadaParaResposta"))
                 {
-                    if (CrossSettings.Current.Contains("ChamadaParaResposta"))
+                    chamada = CrossSettings.Current.Get<Chamada>("ChamadaParaResposta");
+                    ValidaTempoEspera();
+                    if (_expirouTempo)
+                        NavegarHome();
+                    else
                     {
-                        codChamadaVeiculo = CrossSettings.Current.Get<string>("ChamadaParaResposta");
-                        BuscarChamada(codChamadaVeiculo);
+                        
+                        // BuscarChamada(codChamadaVeiculo);
                         //  CrossSettings.Current.Remove("ChamadaParaResposta");
                     }
                 }
+
             }
         }
 
@@ -74,7 +81,7 @@ namespace MotoRapido.ViewModels
             {
                 UserDialogs.Instance.ShowLoading("Carregando...");
 
-               // Plugin.Geolocator.Abstractions.Position pos = await GetCurrentPosition();
+                // Plugin.Geolocator.Abstractions.Position pos = await GetCurrentPosition();
 
                 //var json = JsonConvert.SerializeObject(Int64.Parse(codChamada));
                 // var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -116,9 +123,9 @@ namespace MotoRapido.ViewModels
 
             if (CrossSettings.Current.Contains("dataRecebimentoChamada"))
             {
-                string tempoEspera = CrossSettings.Current.Get<string>("tempoEsperaAceitacao");
-                DateTime dtRecebimento = CrossSettings.Current.Get<DateTime>("dataRecebimentoChamada");
-                if (DateTime.Now.Subtract(TimeSpan.FromSeconds(Double.Parse(tempoEspera))) > dtRecebimento)
+               // int tempoEspera = chamada.tempoParaResposta;//CrossSettings.Current.Get<string>("tempoEsperaAceitacao");
+                //DateTime dtRecebimento = CrossSettings.Current.Get<DateTime>("dataRecebimentoChamada");
+                if (DateTime.Now.Subtract(TimeSpan.FromSeconds(chamada.tempoParaResposta)) > chamada.dataRecebimento)
                 {
                     CrossSettings.Current.Remove("tempoEsperaAceitacao");
                     CrossSettings.Current.Remove("dataRecebimentoChamada");
@@ -157,16 +164,22 @@ namespace MotoRapido.ViewModels
                     CrossSettings.Current.Remove("ChamadaParaResposta");
                     var response = await IniciarCliente(true).PostAsync("motorista/cancelarChamada", content);
 
+                    var navParam = new NavigationParameters();
+                    if(!_isPendencia)
+                        CrossSettings.Current.Set("RecusouChamada", true);
+                    else
+                        CrossSettings.Current.Set("RecusouChamadaPendente", true);
+
                     if (response.IsSuccessStatusCode)
                     {
                         // CrossSettings.Current.Remove("ChamadaParaResposta");
-                        await DialogService.DisplayAlertAsync("Aviso", "Corrida recusada.", "OK");
-                        await NavigationService.NavigateAsync("/NavigationPage/Home", useModalNavigation: true);
+                        await DialogService.DisplayAlertAsync("Aviso", "Corrida recusada.", "OK");                       
+                        await NavigationService.NavigateAsync("//NavigationPage/Home");
                     }
                     else
                     {
                         await DialogService.DisplayAlertAsync("Aviso", response.Content.ReadAsStringAsync().Result, "OK");
-                        await NavigationService.NavigateAsync("/NavigationPage/Home", useModalNavigation: true);
+                        await NavigationService.NavigateAsync("//NavigationPage/Home");
                     }
                 }
                 catch (AccessViolationException e)
