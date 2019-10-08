@@ -17,6 +17,7 @@
     <None Remove="Imagens\btn_mensagens.png" />
     <None Remove="Imagens\btn_ocupado.png" />
     <None Remove="Imagens\btn_pendencia.png" />
+    <None Remove="Imagens\ic_launcher.png" />
     <None Remove="Imagens\livre.png" />
     <None Remove="Imagens\logo_novo.png" />
     <None Remove="Imagens\ocupado.png" />
@@ -39,6 +40,7 @@
     <EmbeddedResource Include="Imagens\btn_mensagens.png" />
     <EmbeddedResource Include="Imagens\btn_ocupado.png" />
     <EmbeddedResource Include="Imagens\btn_pendencia.png" />
+    <EmbeddedResource Include="Imagens\ic_launcher.png" />
     <EmbeddedResource Include="Imagens\livre.png" />
     <EmbeddedResource Include="Imagens\logo_novo.png" />
     <EmbeddedResource Include="Imagens\ocupado.png" />
@@ -54,7 +56,7 @@
   <ItemGroup>
     <PackageReference Include="Acr.Settings" Version="9.0.0" />
     <PackageReference Include="Acr.UserDialogs" Version="7.0.1" />
-    <PackageReference Include="Com.OneSignal" Version="3.1.1" />
+    <PackageReference Include="Com.OneSignal" Version="3.5.0" />
     <PackageReference Include="Matcha.BackgroundService" Version="1.0.5478" />
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="2.1.1" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="2.1.1" />

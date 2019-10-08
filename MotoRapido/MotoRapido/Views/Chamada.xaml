@@ -8,7 +8,8 @@
              xmlns:maps="clr-namespace:Xamarin.Forms.GoogleMaps;assembly=Xamarin.Forms.GoogleMaps"
              x:Class="MotoRapido.Views.Chamada"
              Title="Rota"
-             NavigationPage.HasNavigationBar="False">
+             NavigationPage.HasNavigationBar="False"
+             Visual="Material">
 
     <StackLayout>
         <maps:Map VerticalOptions="FillAndExpand" x:Name="map"  MyLocationEnabled="True" >

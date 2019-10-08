@@ -4,7 +4,8 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MotoRapido.Views.Configuracao"
-             Title="Configurações">
+             Title="Configurações"
+             Visual="Material">
 
     <StackLayout>
         <TableView Intent="Menu" >

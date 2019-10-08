@@ -174,7 +174,7 @@ namespace MotoRapido
         }
 
 
-        protected override void OnResume()
+        protected override async void OnResume()
         {
             base.OnResume();
             IsInForeground = true;
@@ -183,6 +183,7 @@ namespace MotoRapido
             {
                 MessagingCenter.Send(this, "GPSHabilitou");
             }
+          
         }
 
         // Called when your app is in focus and a notificaiton is recieved.

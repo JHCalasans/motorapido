@@ -10,6 +10,7 @@
     using Plugin.Connectivity;
     using Plugin.Geolocator;
     using Plugin.Geolocator.Abstractions;
+    using Plugin.LocalNotifications;
     using Prism.Mvvm;
     using Prism.Navigation;
     using Prism.Services;
@@ -443,9 +444,16 @@
             else
             {
                 //  CrossSettings.Current.Set("ChamadaParaResposta", chamadaNova);
-                // CrossLocalNotifications.Current.Show("Nova Chamada", "nova chamada");
+                 CrossLocalNotifications.Current.Show("Nova Chamada", "Nova chamada recebida!");
             }
         }
+
+        public static void TesteMensagemChamada()
+        {
+            CrossSettings.Current.Set("ChamadaParaResposta", true);
+          CrossLocalNotifications.Current.Show("Nova Chamada", "Nova chamada recebida!");            
+        }
+
 
 
         public static void RemoverInfoPendente(Int64 codInfoPendente)
@@ -521,13 +529,13 @@
         public static string GetUrlBase()
         {
 
-            //return "192.168.42.64:8080";
+           // return "192.168.42.64:8080";
 
-            return "192.168.0.4:8080";
+           // return "192.168.0.4:8080";
 
             //  return "104.248.186.97:8080";
 
-            //  return "10.0.3.2:8080";
+              return "10.0.3.2:8080";
         }
 
 

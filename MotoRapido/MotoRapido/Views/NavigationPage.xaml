@@ -7,8 +7,9 @@
                 BarBackgroundColor="#2d6fa0">
 
     <!--<NavigationPage.ToolbarItems>
-        <ToolbarItem Text="Sair" Priority="0" Order="Secondary"></ToolbarItem>
+        <ToolbarItem Text="Sair" Priority="0" Order="Secondary" Im></ToolbarItem>
         
     </NavigationPage.ToolbarItems>-->
+   
   
 </NavigationPage>

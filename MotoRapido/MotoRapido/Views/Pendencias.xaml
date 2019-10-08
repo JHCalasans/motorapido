@@ -6,7 +6,8 @@
              x:Class="MotoRapido.Views.Pendencias"
              xmlns:local="clr-namespace:MotoRapido.Customs"
              xmlns:behaviors1="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
-             Title="Chamadas Pendentes">
+             Title="Chamadas Pendentes"
+             Visual="Material">
 
     <StackLayout >
         <Label Text="Chamadas" HorizontalOptions="Center" FontSize="Large" FontAttributes="Bold"></Label>

@@ -4,7 +4,8 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MotoRapido.Views.ResponderChamada"
-             Title="Chamada">
+             Title="Chamada"
+             Visual="Material">
 
 
 
@@ -33,6 +34,13 @@
           
         </StackLayout>
 
+
+        <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Margin="0,15,0,0">
+            <Label Text="{Binding TextoContador}" FontAttributes="Bold"></Label>
+            <Label Text="{Binding ContadorSegundos}" IsVisible="{Binding MostraContador}"></Label>
+        </StackLayout>
+        
+        
     </StackLayout>
   
 </ContentPage>

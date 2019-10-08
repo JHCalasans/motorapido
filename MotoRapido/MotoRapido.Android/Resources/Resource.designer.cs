@@ -7069,58 +7069,61 @@ namespace MotoRapido.Droid
 			public const int uiScrollGestures = 2130903558;
 			
 			// aapt resource value: 0x7F030207
-			public const int uiTiltGestures = 2130903559;
+			public const int uiScrollGesturesDuringRotateOrZoom = 2130903559;
 			
 			// aapt resource value: 0x7F030208
-			public const int uiZoomControls = 2130903560;
+			public const int uiTiltGestures = 2130903560;
 			
 			// aapt resource value: 0x7F030209
-			public const int uiZoomGestures = 2130903561;
+			public const int uiZoomControls = 2130903561;
 			
 			// aapt resource value: 0x7F03020A
-			public const int useCompatPadding = 2130903562;
+			public const int uiZoomGestures = 2130903562;
 			
 			// aapt resource value: 0x7F03020B
-			public const int useViewLifecycle = 2130903563;
+			public const int useCompatPadding = 2130903563;
 			
 			// aapt resource value: 0x7F03020C
-			public const int viewInflaterClass = 2130903564;
+			public const int useViewLifecycle = 2130903564;
 			
 			// aapt resource value: 0x7F03020D
-			public const int voiceIcon = 2130903565;
+			public const int viewInflaterClass = 2130903565;
 			
 			// aapt resource value: 0x7F03020E
-			public const int windowActionBar = 2130903566;
+			public const int voiceIcon = 2130903566;
 			
 			// aapt resource value: 0x7F03020F
-			public const int windowActionBarOverlay = 2130903567;
+			public const int windowActionBar = 2130903567;
 			
 			// aapt resource value: 0x7F030210
-			public const int windowActionModeOverlay = 2130903568;
+			public const int windowActionBarOverlay = 2130903568;
 			
 			// aapt resource value: 0x7F030211
-			public const int windowFixedHeightMajor = 2130903569;
+			public const int windowActionModeOverlay = 2130903569;
 			
 			// aapt resource value: 0x7F030212
-			public const int windowFixedHeightMinor = 2130903570;
+			public const int windowFixedHeightMajor = 2130903570;
 			
 			// aapt resource value: 0x7F030213
-			public const int windowFixedWidthMajor = 2130903571;
+			public const int windowFixedHeightMinor = 2130903571;
 			
 			// aapt resource value: 0x7F030214
-			public const int windowFixedWidthMinor = 2130903572;
+			public const int windowFixedWidthMajor = 2130903572;
 			
 			// aapt resource value: 0x7F030215
-			public const int windowMinWidthMajor = 2130903573;
+			public const int windowFixedWidthMinor = 2130903573;
 			
 			// aapt resource value: 0x7F030216
-			public const int windowMinWidthMinor = 2130903574;
+			public const int windowMinWidthMajor = 2130903574;
 			
 			// aapt resource value: 0x7F030217
-			public const int windowNoTitle = 2130903575;
+			public const int windowMinWidthMinor = 2130903575;
 			
 			// aapt resource value: 0x7F030218
-			public const int zOrderOnTop = 2130903576;
+			public const int windowNoTitle = 2130903576;
+			
+			// aapt resource value: 0x7F030219
+			public const int zOrderOnTop = 2130903577;
 			
 			static Attribute()
 			{
@@ -10736,148 +10739,154 @@ namespace MotoRapido.Droid
 			public const int common_google_play_services_install_title = 2131558448;
 			
 			// aapt resource value: 0x7F0D0031
-			public const int common_google_play_services_notification_ticker = 2131558449;
+			public const int common_google_play_services_notification_channel_name = 2131558449;
 			
 			// aapt resource value: 0x7F0D0032
-			public const int common_google_play_services_unknown_issue = 2131558450;
+			public const int common_google_play_services_notification_ticker = 2131558450;
 			
 			// aapt resource value: 0x7F0D0033
-			public const int common_google_play_services_unsupported_text = 2131558451;
+			public const int common_google_play_services_unknown_issue = 2131558451;
 			
 			// aapt resource value: 0x7F0D0034
-			public const int common_google_play_services_update_button = 2131558452;
+			public const int common_google_play_services_unsupported_text = 2131558452;
 			
 			// aapt resource value: 0x7F0D0035
-			public const int common_google_play_services_update_text = 2131558453;
+			public const int common_google_play_services_update_button = 2131558453;
 			
 			// aapt resource value: 0x7F0D0036
-			public const int common_google_play_services_update_title = 2131558454;
+			public const int common_google_play_services_update_text = 2131558454;
 			
 			// aapt resource value: 0x7F0D0037
-			public const int common_google_play_services_updating_text = 2131558455;
+			public const int common_google_play_services_update_title = 2131558455;
 			
 			// aapt resource value: 0x7F0D0038
-			public const int common_google_play_services_wear_update_text = 2131558456;
+			public const int common_google_play_services_updating_text = 2131558456;
 			
 			// aapt resource value: 0x7F0D0039
-			public const int common_open_on_phone = 2131558457;
+			public const int common_google_play_services_wear_update_text = 2131558457;
 			
 			// aapt resource value: 0x7F0D003A
-			public const int common_signin_button_text = 2131558458;
+			public const int common_open_on_phone = 2131558458;
 			
 			// aapt resource value: 0x7F0D003B
-			public const int common_signin_button_text_long = 2131558459;
+			public const int common_signin_button_text = 2131558459;
 			
 			// aapt resource value: 0x7F0D003C
-			public const int fab_transformation_scrim_behavior = 2131558460;
+			public const int common_signin_button_text_long = 2131558460;
 			
 			// aapt resource value: 0x7F0D003D
-			public const int fab_transformation_sheet_behavior = 2131558461;
+			public const int fab_transformation_scrim_behavior = 2131558461;
 			
 			// aapt resource value: 0x7F0D003E
-			public const int gcm_fallback_notification_channel_label = 2131558462;
+			public const int fab_transformation_sheet_behavior = 2131558462;
 			
 			// aapt resource value: 0x7F0D003F
-			public const int hide_bottom_view_on_scroll_behavior = 2131558463;
+			public const int fcm_fallback_notification_channel_label = 2131558463;
 			
 			// aapt resource value: 0x7F0D0040
-			public const int library_name = 2131558464;
+			public const int gcm_fallback_notification_channel_label = 2131558464;
 			
 			// aapt resource value: 0x7F0D0041
-			public const int mr_button_content_description = 2131558465;
+			public const int hide_bottom_view_on_scroll_behavior = 2131558465;
 			
 			// aapt resource value: 0x7F0D0042
-			public const int mr_cast_button_connected = 2131558466;
+			public const int library_name = 2131558466;
 			
 			// aapt resource value: 0x7F0D0043
-			public const int mr_cast_button_connecting = 2131558467;
+			public const int mr_button_content_description = 2131558467;
 			
 			// aapt resource value: 0x7F0D0044
-			public const int mr_cast_button_disconnected = 2131558468;
+			public const int mr_cast_button_connected = 2131558468;
 			
 			// aapt resource value: 0x7F0D0045
-			public const int mr_cast_dialog_title_view_placeholder = 2131558469;
+			public const int mr_cast_button_connecting = 2131558469;
 			
 			// aapt resource value: 0x7F0D0046
-			public const int mr_chooser_searching = 2131558470;
+			public const int mr_cast_button_disconnected = 2131558470;
 			
 			// aapt resource value: 0x7F0D0047
-			public const int mr_chooser_title = 2131558471;
+			public const int mr_cast_dialog_title_view_placeholder = 2131558471;
 			
 			// aapt resource value: 0x7F0D0048
-			public const int mr_controller_album_art = 2131558472;
+			public const int mr_chooser_searching = 2131558472;
 			
 			// aapt resource value: 0x7F0D0049
-			public const int mr_controller_casting_screen = 2131558473;
+			public const int mr_chooser_title = 2131558473;
 			
 			// aapt resource value: 0x7F0D004A
-			public const int mr_controller_close_description = 2131558474;
+			public const int mr_controller_album_art = 2131558474;
 			
 			// aapt resource value: 0x7F0D004B
-			public const int mr_controller_collapse_group = 2131558475;
+			public const int mr_controller_casting_screen = 2131558475;
 			
 			// aapt resource value: 0x7F0D004C
-			public const int mr_controller_disconnect = 2131558476;
+			public const int mr_controller_close_description = 2131558476;
 			
 			// aapt resource value: 0x7F0D004D
-			public const int mr_controller_expand_group = 2131558477;
+			public const int mr_controller_collapse_group = 2131558477;
 			
 			// aapt resource value: 0x7F0D004E
-			public const int mr_controller_no_info_available = 2131558478;
+			public const int mr_controller_disconnect = 2131558478;
 			
 			// aapt resource value: 0x7F0D004F
-			public const int mr_controller_no_media_selected = 2131558479;
+			public const int mr_controller_expand_group = 2131558479;
 			
 			// aapt resource value: 0x7F0D0050
-			public const int mr_controller_pause = 2131558480;
+			public const int mr_controller_no_info_available = 2131558480;
 			
 			// aapt resource value: 0x7F0D0051
-			public const int mr_controller_play = 2131558481;
+			public const int mr_controller_no_media_selected = 2131558481;
 			
 			// aapt resource value: 0x7F0D0052
-			public const int mr_controller_stop = 2131558482;
+			public const int mr_controller_pause = 2131558482;
 			
 			// aapt resource value: 0x7F0D0053
-			public const int mr_controller_stop_casting = 2131558483;
+			public const int mr_controller_play = 2131558483;
 			
 			// aapt resource value: 0x7F0D0054
-			public const int mr_controller_volume_slider = 2131558484;
+			public const int mr_controller_stop = 2131558484;
 			
 			// aapt resource value: 0x7F0D0055
-			public const int mr_dialog_device_header = 2131558485;
+			public const int mr_controller_stop_casting = 2131558485;
 			
 			// aapt resource value: 0x7F0D0056
-			public const int mr_dialog_route_header = 2131558486;
+			public const int mr_controller_volume_slider = 2131558486;
 			
 			// aapt resource value: 0x7F0D0057
-			public const int mr_system_route_name = 2131558487;
+			public const int mr_dialog_device_header = 2131558487;
 			
 			// aapt resource value: 0x7F0D0058
-			public const int mr_user_route_category_name = 2131558488;
+			public const int mr_dialog_route_header = 2131558488;
 			
 			// aapt resource value: 0x7F0D0059
-			public const int mtrl_chip_close_icon_content_description = 2131558489;
+			public const int mr_system_route_name = 2131558489;
 			
 			// aapt resource value: 0x7F0D005A
-			public const int password_toggle_content_description = 2131558490;
+			public const int mr_user_route_category_name = 2131558490;
 			
 			// aapt resource value: 0x7F0D005B
-			public const int path_password_eye = 2131558491;
+			public const int mtrl_chip_close_icon_content_description = 2131558491;
 			
 			// aapt resource value: 0x7F0D005C
-			public const int path_password_eye_mask_strike_through = 2131558492;
+			public const int password_toggle_content_description = 2131558492;
 			
 			// aapt resource value: 0x7F0D005D
-			public const int path_password_eye_mask_visible = 2131558493;
+			public const int path_password_eye = 2131558493;
 			
 			// aapt resource value: 0x7F0D005E
-			public const int path_password_strike_through = 2131558494;
+			public const int path_password_eye_mask_strike_through = 2131558494;
 			
 			// aapt resource value: 0x7F0D005F
-			public const int search_menu_title = 2131558495;
+			public const int path_password_eye_mask_visible = 2131558495;
 			
 			// aapt resource value: 0x7F0D0060
-			public const int status_bar_notification_info_overflow = 2131558496;
+			public const int path_password_strike_through = 2131558496;
+			
+			// aapt resource value: 0x7F0D0061
+			public const int search_menu_title = 2131558497;
+			
+			// aapt resource value: 0x7F0D0062
+			public const int status_bar_notification_info_overflow = 2131558498;
 			
 			static String()
 			{
@@ -12920,7 +12929,7 @@ namespace MotoRapido.Droid
 			// aapt resource value: 10
 			public const int AppCompatTextView_textAllCaps = 10;
 			
-			// aapt resource value: { 0x1010057,0x10100AE,0x7F030000,0x7F030001,0x7F030002,0x7F030003,0x7F030004,0x7F030005,0x7F030006,0x7F030007,0x7F030008,0x7F030009,0x7F03000A,0x7F03000B,0x7F03000C,0x7F03000E,0x7F03000F,0x7F030010,0x7F030011,0x7F030012,0x7F030013,0x7F030014,0x7F030015,0x7F030016,0x7F030017,0x7F030018,0x7F030019,0x7F03001A,0x7F03001B,0x7F03001C,0x7F03001D,0x7F03001E,0x7F030021,0x7F03002E,0x7F03002F,0x7F030030,0x7F030031,0x7F030038,0x7F03004B,0x7F030059,0x7F03005A,0x7F03005B,0x7F03005C,0x7F03005D,0x7F030062,0x7F030063,0x7F030074,0x7F030079,0x7F03009A,0x7F03009B,0x7F03009C,0x7F03009D,0x7F03009E,0x7F03009F,0x7F0300A0,0x7F0300A1,0x7F0300A2,0x7F0300A5,0x7F0300B4,0x7F0300BD,0x7F0300BE,0x7F0300BF,0x7F0300C2,0x7F0300C4,0x7F0300C7,0x7F0300C8,0x7F0300C9,0x7F0300CA,0x7F0300CB,0x7F030101,0x7F03010F,0x7F030136,0x7F030137,0x7F03013A,0x7F03013B,0x7F03013C,0x7F03013D,0x7F03013E,0x7F03013F,0x7F030140,0x7F030169,0x7F03016A,0x7F03016B,0x7F030171,0x7F030173,0x7F03017A,0x7F03017B,0x7F03017C,0x7F03017D,0x7F030186,0x7F030187,0x7F030188,0x7F030189,0x7F030196,0x7F030197,0x7F0301AD,0x7F0301D4,0x7F0301D5,0x7F0301D6,0x7F0301D7,0x7F0301D9,0x7F0301DA,0x7F0301DB,0x7F0301DC,0x7F0301DF,0x7F0301E0,0x7F0301FA,0x7F0301FB,0x7F0301FC,0x7F0301FD,0x7F03020C,0x7F03020E,0x7F03020F,0x7F030210,0x7F030211,0x7F030212,0x7F030213,0x7F030214,0x7F030215,0x7F030216,0x7F030217 }
+			// aapt resource value: { 0x1010057,0x10100AE,0x7F030000,0x7F030001,0x7F030002,0x7F030003,0x7F030004,0x7F030005,0x7F030006,0x7F030007,0x7F030008,0x7F030009,0x7F03000A,0x7F03000B,0x7F03000C,0x7F03000E,0x7F03000F,0x7F030010,0x7F030011,0x7F030012,0x7F030013,0x7F030014,0x7F030015,0x7F030016,0x7F030017,0x7F030018,0x7F030019,0x7F03001A,0x7F03001B,0x7F03001C,0x7F03001D,0x7F03001E,0x7F030021,0x7F03002E,0x7F03002F,0x7F030030,0x7F030031,0x7F030038,0x7F03004B,0x7F030059,0x7F03005A,0x7F03005B,0x7F03005C,0x7F03005D,0x7F030062,0x7F030063,0x7F030074,0x7F030079,0x7F03009A,0x7F03009B,0x7F03009C,0x7F03009D,0x7F03009E,0x7F03009F,0x7F0300A0,0x7F0300A1,0x7F0300A2,0x7F0300A5,0x7F0300B4,0x7F0300BD,0x7F0300BE,0x7F0300BF,0x7F0300C2,0x7F0300C4,0x7F0300C7,0x7F0300C8,0x7F0300C9,0x7F0300CA,0x7F0300CB,0x7F030101,0x7F03010F,0x7F030136,0x7F030137,0x7F03013A,0x7F03013B,0x7F03013C,0x7F03013D,0x7F03013E,0x7F03013F,0x7F030140,0x7F030169,0x7F03016A,0x7F03016B,0x7F030171,0x7F030173,0x7F03017A,0x7F03017B,0x7F03017C,0x7F03017D,0x7F030186,0x7F030187,0x7F030188,0x7F030189,0x7F030196,0x7F030197,0x7F0301AD,0x7F0301D4,0x7F0301D5,0x7F0301D6,0x7F0301D7,0x7F0301D9,0x7F0301DA,0x7F0301DB,0x7F0301DC,0x7F0301DF,0x7F0301E0,0x7F0301FA,0x7F0301FB,0x7F0301FC,0x7F0301FD,0x7F03020D,0x7F03020F,0x7F030210,0x7F030211,0x7F030212,0x7F030213,0x7F030214,0x7F030215,0x7F030216,0x7F030217,0x7F030218 }
 			public static int[] AppCompatTheme = new int[] {
 					16842839,
 					16842926,
@@ -13032,8 +13041,7 @@ namespace MotoRapido.Droid
 					2130903547,
 					2130903548,
 					2130903549,
-					2130903564,
-					2130903566,
+					2130903565,
 					2130903567,
 					2130903568,
 					2130903569,
@@ -13042,7 +13050,8 @@ namespace MotoRapido.Droid
 					2130903572,
 					2130903573,
 					2130903574,
-					2130903575};
+					2130903575,
+					2130903576};
 			
 			// aapt resource value: 2
 			public const int AppCompatTheme_actionBarDivider = 2;
@@ -13920,7 +13929,7 @@ namespace MotoRapido.Droid
 			// aapt resource value: 7
 			public const int DrawerArrowToggle_thickness = 7;
 			
-			// aapt resource value: { 0x7F030041,0x7F030042,0x7F03004A,0x7F0300CC,0x7F0300DF,0x7F0300E0,0x7F0300FB,0x7F030103,0x7F03014E,0x7F030175,0x7F03017F,0x7F03018C,0x7F03020A }
+			// aapt resource value: { 0x7F030041,0x7F030042,0x7F03004A,0x7F0300CC,0x7F0300DF,0x7F0300E0,0x7F0300FB,0x7F030103,0x7F03014E,0x7F030175,0x7F03017F,0x7F03018C,0x7F03020B }
 			public static int[] FloatingActionButton = new int[] {
 					2130903105,
 					2130903106,
@@ -13934,7 +13943,7 @@ namespace MotoRapido.Droid
 					2130903413,
 					2130903423,
 					2130903436,
-					2130903562};
+					2130903563};
 			
 			// aapt resource value: 0
 			public const int FloatingActionButton_backgroundTint = 0;
@@ -14224,7 +14233,7 @@ namespace MotoRapido.Droid
 			// aapt resource value: 2
 			public const int LoadingImageView_imageAspectRatioAdjust = 2;
 			
-			// aapt resource value: { 0x7F030035,0x7F030066,0x7F030067,0x7F030068,0x7F030069,0x7F03006A,0x7F03006B,0x7F03006C,0x7F030123,0x7F030124,0x7F030125,0x7F030126,0x7F030141,0x7F030144,0x7F030203,0x7F030204,0x7F030205,0x7F030206,0x7F030207,0x7F030208,0x7F030209,0x7F03020B,0x7F030218 }
+			// aapt resource value: { 0x7F030035,0x7F030066,0x7F030067,0x7F030068,0x7F030069,0x7F03006A,0x7F03006B,0x7F03006C,0x7F030123,0x7F030124,0x7F030125,0x7F030126,0x7F030141,0x7F030144,0x7F030203,0x7F030204,0x7F030205,0x7F030206,0x7F030207,0x7F030208,0x7F030209,0x7F03020A,0x7F03020C,0x7F030219 }
 			public static int[] MapAttrs = new int[] {
 					2130903093,
 					2130903142,
@@ -14247,8 +14256,9 @@ namespace MotoRapido.Droid
 					2130903559,
 					2130903560,
 					2130903561,
-					2130903563,
-					2130903576};
+					2130903562,
+					2130903564,
+					2130903577};
 			
 			// aapt resource value: 0
 			public const int MapAttrs_ambientEnabled = 0;
@@ -14305,19 +14315,22 @@ namespace MotoRapido.Droid
 			public const int MapAttrs_uiScrollGestures = 17;
 			
 			// aapt resource value: 18
-			public const int MapAttrs_uiTiltGestures = 18;
+			public const int MapAttrs_uiScrollGesturesDuringRotateOrZoom = 18;
 			
 			// aapt resource value: 19
-			public const int MapAttrs_uiZoomControls = 19;
+			public const int MapAttrs_uiTiltGestures = 19;
 			
 			// aapt resource value: 20
-			public const int MapAttrs_uiZoomGestures = 20;
+			public const int MapAttrs_uiZoomControls = 20;
 			
 			// aapt resource value: 21
-			public const int MapAttrs_useViewLifecycle = 21;
+			public const int MapAttrs_uiZoomGestures = 21;
 			
 			// aapt resource value: 22
-			public const int MapAttrs_zOrderOnTop = 22;
+			public const int MapAttrs_useViewLifecycle = 22;
+			
+			// aapt resource value: 23
+			public const int MapAttrs_zOrderOnTop = 23;
 			
 			// aapt resource value: { 0x10101B7,0x10101B8,0x10101B9,0x10101BA,0x7F030041,0x7F030042,0x7F0300B6,0x7F030104,0x7F030106,0x7F030107,0x7F030108,0x7F03010A,0x7F03010B,0x7F03017F,0x7F0301A2,0x7F0301A3 }
 			public static int[] MaterialButton = new int[] {
@@ -14904,7 +14917,7 @@ namespace MotoRapido.Droid
 			// aapt resource value: 0
 			public const int ScrollingViewBehavior_Layout_behavior_overlapTop = 0;
 			
-			// aapt resource value: { 0x10100DA,0x101011F,0x1010220,0x1010264,0x7F03008D,0x7F0300A6,0x7F0300BC,0x7F0300F5,0x7F03010C,0x7F030127,0x7F030178,0x7F030179,0x7F030184,0x7F030185,0x7F0301A5,0x7F0301AA,0x7F03020D }
+			// aapt resource value: { 0x10100DA,0x101011F,0x1010220,0x1010264,0x7F03008D,0x7F0300A6,0x7F0300BC,0x7F0300F5,0x7F03010C,0x7F030127,0x7F030178,0x7F030179,0x7F030184,0x7F030185,0x7F0301A5,0x7F0301AA,0x7F03020E }
 			public static int[] SearchView = new int[] {
 					16842970,
 					16843039,
@@ -14922,7 +14935,7 @@ namespace MotoRapido.Droid
 					2130903429,
 					2130903461,
 					2130903466,
-					2130903565};
+					2130903566};
 			
 			// aapt resource value: 0
 			public const int SearchView_android_focusable = 0;

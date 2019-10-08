@@ -5,7 +5,8 @@
              xmlns:behaviors1="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="MotoRapido.Views.Historico"
-             Title="Histórico">
+             Title="Histórico"
+             Visual="Material">
 
     <StackLayout>
         <Label Text="Chamadas" HorizontalOptions="Center" FontSize="Large" FontAttributes="Bold"> </Label>

@@ -10,6 +10,20 @@
              Title="Início" 
              Visual="Material">
 
+    <NavigationPage.TitleView>
+        <Grid ColumnSpacing="15" >           
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+           
+            <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.ic_launcher.png}" Grid.Column="0" HorizontalOptions="Start" WidthRequest="50" HeightRequest="50">                
+            </Image>
+            <Label Text="Motorápido" Grid.Column="1" TextColor="White" VerticalOptions="CenterAndExpand" FontAttributes="Bold" FontSize="Medium"></Label>
+
+        </Grid>
+    </NavigationPage.TitleView>
+
     <StackLayout >
 
         <!--<StackLayout  BackgroundColor="{Binding CorDeFundoStatus}" Margin="0,5,0,0" HeightRequest="30">
