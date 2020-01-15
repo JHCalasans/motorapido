@@ -10,7 +10,7 @@
     <StackLayout>
         <TableView Intent="Menu" >
             <TableRoot>
-                <TableSection  >
+                <!--<TableSection  >
                     <ViewCell >
                         <StackLayout VerticalOptions="Center" Orientation="Vertical">
                             <Label Text="Alterar Senha" FontSize="Large" VerticalOptions="Center" VerticalTextAlignment="Center"></Label>
@@ -20,7 +20,7 @@
                                
                         </StackLayout>
                     </ViewCell>
-                </TableSection>
+                </TableSection>-->
                 <TableSection >
                     <ViewCell >
                         <StackLayout VerticalOptions="Center" Orientation="Vertical">

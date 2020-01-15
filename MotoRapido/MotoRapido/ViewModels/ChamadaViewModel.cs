@@ -438,6 +438,7 @@ namespace MotoRapido.ViewModels
                     UserDialogs.Instance.ShowLoading("Processando...");
                     Chamada chamadaFinal = CrossSettings.Current.Get<Chamada>("ChamadaEmCorrida");
 
+
                     MessagingCenter.Unsubscribe<ViewModelBase>(this, "MudancaValor");
 
                     MessagingCenter.Unsubscribe<ViewModelBase>(this, "MudancaPosicao");

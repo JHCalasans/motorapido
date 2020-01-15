@@ -72,5 +72,7 @@ namespace MotoRapido.Models
 
         public String idAparelho { get; set; }
 
+        public Int32 IDMotorista { get; set; }
+
     }
 }

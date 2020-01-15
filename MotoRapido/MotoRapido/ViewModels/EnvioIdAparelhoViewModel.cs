@@ -39,7 +39,8 @@ namespace MotoRapido.ViewModels
 
                 var json = JsonConvert.SerializeObject(motorista);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
-                using (var response = await IniciarCliente(false).PostAsync("motorista/enviarID", content))
+
+                using (var response = await IniciarCliente(false, 20000).PostAsync("motorista/enviarID", content))
                 {
                     //var response = await ChamarServicoPost(true, "login", content);
                     if (response != null)

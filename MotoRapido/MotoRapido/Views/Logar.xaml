@@ -16,7 +16,7 @@
                AbsoluteLayout.LayoutFlags="All"></Image>
 
 
-        <Entry Placeholder="login"  AbsoluteLayout.LayoutBounds="0.5,0.55,200,40"
+        <Entry Placeholder="ID"  AbsoluteLayout.LayoutBounds="0.5,0.55,200,40"  Keyboard="Numeric"
                AbsoluteLayout.LayoutFlags="PositionProportional" Visual="Default"
                Text="{Binding Login}" HorizontalTextAlignment="Center" PlaceholderColor="Gray"></Entry>
         

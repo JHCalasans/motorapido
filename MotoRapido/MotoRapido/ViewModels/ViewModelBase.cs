@@ -1,7 +1,6 @@
 ﻿namespace MotoRapido.ViewModels
 {
     using Acr.Settings;
-    using Acr.UserDialogs;
     using Microsoft.AppCenter.Crashes;
     using MotoRapido.BD.Repositorio;
     using MotoRapido.Customs;
@@ -522,6 +521,34 @@
         }
 
 
+        protected HttpClient IniciarCliente(bool comChave, int timeOutMiliSegundos)
+        {
+
+            if (CrossConnectivity.Current.IsConnected)
+            {
+               
+                    var client = new HttpClient
+                    {
+                        Timeout = TimeSpan.FromMilliseconds(timeOutMiliSegundos),
+                        BaseAddress = new Uri(_urlBase)
+                        
+                    };
+                    if (comChave)
+                    {
+                        client.DefaultRequestHeaders.Add("Authentication", MotoristaLogado.chaveServicos);
+                        client.DefaultRequestHeaders.Add("CodMotorista", MotoristaLogado.codigo.ToString());
+                    }
+                    return client;
+                
+            
+            }
+            else
+            {
+                throw new AccessViolationException("Sem conexão com internet(Tente mais tarde)!");
+            }
+
+        }
+
         private static readonly String _urlBase = "http://" + GetUrlBase() + "/motorapido/wes/";
 
 
@@ -529,13 +556,15 @@
         public static string GetUrlBase()
         {
 
-           // return "192.168.42.64:8080";
+          //  return "192.168.42.64:8080";
 
            // return "192.168.0.4:8080";
 
-            //  return "104.248.186.97:8080";
+           //  return "104.248.186.97:8080";
 
-              return "10.0.3.2:8080";
+            //  return "10.0.3.2:8080";
+
+            return "172.18.6.61:8080";
         }
 
 

@@ -19,7 +19,7 @@ namespace MotoRapido.ViewModels
 {
     public class ConfiguracaoViewModel : ViewModelBase
     {
-        public DelegateCommand AlterarSenhaCommand => new DelegateCommand(AlterarSenha);
+       // public DelegateCommand AlterarSenhaCommand => new DelegateCommand(AlterarSenha);
 
         public DelegateCommand AlterarVeiculoCommand => new DelegateCommand(AlterarVeiculo);
 
@@ -81,54 +81,54 @@ namespace MotoRapido.ViewModels
 
         }
 
-        public async void AlterarSenha()
-        {
-            try
-            {
-                var resposta = await UserDialogs.Instance.PromptAsync(new PromptConfig()
-                       .SetTitle("Nova Senha")
-                       .SetOkText("Ok")
-                       .SetCancelText("Cancelar")
-                       .SetInputMode(InputType.Password));
-                if (resposta.Ok)
-                {
-                    UserDialogs.Instance.ShowLoading("Processando...", MaskType.Gradient);
-                    Motorista motorista = new Motorista();
-                    motorista.codigo = MotoristaLogado.codigo;
-                    motorista.senha = resposta.Value;
+        //public async void AlterarSenha()
+        //{
+        //    try
+        //    {
+        //        var resposta = await UserDialogs.Instance.PromptAsync(new PromptConfig()
+        //               .SetTitle("Nova Senha")
+        //               .SetOkText("Ok")
+        //               .SetCancelText("Cancelar")
+        //               .SetInputMode(InputType.Password));
+        //        if (resposta.Ok)
+        //        {
+        //            UserDialogs.Instance.ShowLoading("Processando...", MaskType.Gradient);
+        //            Motorista motorista = new Motorista();
+        //            motorista.codigo = MotoristaLogado.codigo;
+        //            motorista.senha = resposta.Value;
 
-                    var json = JsonConvert.SerializeObject(motorista);
-                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+        //            var json = JsonConvert.SerializeObject(motorista);
+        //            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                    var client = new HttpClient();
-                    client.Timeout = TimeSpan.FromMilliseconds(25000);
-
-
-                    // var response = await ChamarServicoPost(true, "iniciarCorrida", content);
-                    using (var response = await IniciarCliente(true).PostAsync("motorista/alterarSenha", content))
-                    {
-
-                        UserDialogs.Instance.HideLoading();
-
-                        await DialogService.DisplayAlertAsync("AVISO",
-                            "Senha Alterada Com Sucesso", "Ok");
+        //            var client = new HttpClient();
+        //            client.Timeout = TimeSpan.FromMilliseconds(25000);
 
 
-                    }
-                }
-            }
-            catch (AccessViolationException e)
-            {
-                await DialogService.DisplayAlertAsync("Aviso", e.Message, "OK");
-            }
-            catch (Exception ex)
-            {
-                Crashes.TrackError(ex);
-                UserDialogs.Instance.HideLoading();
-                await DialogService.DisplayAlertAsync("Aviso", "Falha ao tentar alterar senha", "Ok");
-            }
+        //            // var response = await ChamarServicoPost(true, "iniciarCorrida", content);
+        //            using (var response = await IniciarCliente(true).PostAsync("motorista/alterarSenha", content))
+        //            {
 
-        }
+        //                UserDialogs.Instance.HideLoading();
+
+        //                await DialogService.DisplayAlertAsync("AVISO",
+        //                    "Senha Alterada Com Sucesso", "Ok");
+
+
+        //            }
+        //        }
+        //    }
+        //    catch (AccessViolationException e)
+        //    {
+        //        await DialogService.DisplayAlertAsync("Aviso", e.Message, "OK");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Crashes.TrackError(ex);
+        //        UserDialogs.Instance.HideLoading();
+        //        await DialogService.DisplayAlertAsync("Aviso", "Falha ao tentar alterar senha", "Ok");
+        //    }
+
+        //}
 
         public async void AlterarVeiculo()
         {
