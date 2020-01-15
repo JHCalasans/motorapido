@@ -1,6 +1,7 @@
 ﻿using Acr.Settings;
 using Acr.UserDialogs;
 using Microsoft.AppCenter.Crashes;
+using MotoRapido.Interfaces;
 using MotoRapido.Models;
 using Newtonsoft.Json;
 using Prism.Commands;
@@ -48,6 +49,7 @@ namespace MotoRapido.ViewModels
 
         private async void Logar()
         {
+
             if (String.IsNullOrEmpty(Login))
                 await DialogService.DisplayAlertAsync("Aviso", "Informe o Login", "OK");
             else if (String.IsNullOrEmpty(Senha))
