@@ -23,12 +23,12 @@ namespace MotoRapido.ViewModels
 
         public DelegateCommand LoginCommand => new DelegateCommand(Logar);
 
-        private String _login;
+        private String _idMoto;
 
-        public String Login
+        public String IdMoto
         {
-            get { return _login; }
-            set { SetProperty(ref _login, value); }
+            get { return _idMoto; }
+            set { SetProperty(ref _idMoto, value); }
 
         }
 
@@ -50,7 +50,7 @@ namespace MotoRapido.ViewModels
         private async void Logar()
         {
 
-            if (String.IsNullOrEmpty(Login))
+            if (String.IsNullOrEmpty(IdMoto))
                 await DialogService.DisplayAlertAsync("Aviso", "Informe o Login", "OK");
             else if (String.IsNullOrEmpty(Senha))
                 await DialogService.DisplayAlertAsync("Aviso", "Informe a Senha", "OK");
@@ -61,7 +61,7 @@ namespace MotoRapido.ViewModels
                     UserDialogs.Instance.ShowLoading("Carregando...");
                     Motorista motorista = new Motorista();
                     motorista.senha = HashPassword(Senha);
-                    motorista.login = Login;
+                    motorista.IDMotorista = Int32.Parse(IdMoto);
                     motorista.idAparelho = App.DeviceID;
                     motorista.idPush = App.OneSignalID;
 

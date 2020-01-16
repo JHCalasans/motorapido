@@ -18,7 +18,7 @@
 
         <Entry Placeholder="ID"  AbsoluteLayout.LayoutBounds="0.5,0.55,200,40"  Keyboard="Numeric"
                AbsoluteLayout.LayoutFlags="PositionProportional" Visual="Default"
-               Text="{Binding Login}" HorizontalTextAlignment="Center" PlaceholderColor="Gray"></Entry>
+               Text="{Binding IdMoto}" HorizontalTextAlignment="Center" PlaceholderColor="Gray"></Entry>
         
         <Entry Placeholder="senha"  
                AbsoluteLayout.LayoutBounds="0.5,0.65,200,40" AbsoluteLayout.LayoutFlags="PositionProportional" Visual="Default"

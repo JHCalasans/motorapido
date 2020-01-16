@@ -37,7 +37,7 @@
             </TableRoot>
 
         </TableView>
-        <Button VerticalOptions="End"  Text="Sair" BackgroundColor="Transparent" TextColor="Red" Command="{Binding LogOffCommand}"></Button>
+        <Button VerticalOptions="End"  Text="Sair" BackgroundColor="#DD0000" TextColor="White" Command="{Binding LogOffCommand}" HeightRequest="50" ></Button>
     </StackLayout>
 
 </ContentPage>
