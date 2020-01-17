@@ -29,28 +29,10 @@ namespace MotoRapido.ViewModels
 
         }
 
-        private static void NovaThread()
-        {
-            int c = 0;
-            while (true)
-            {
-                IAudio audio = Xamarin.Forms.DependencyService.Get<IAudio>();
-                audio.PlayAudio();
-                Thread.Sleep(TimeSpan.FromSeconds(1));
-                if (c == 4)
-                    break;
-
-                c++;
-            }
-            
-        }
+       
 
         private async void Enviar()
         {
-
-            //Thread t = new Thread(NovaThread);
-            //t.Start();
-
 
             try
             {

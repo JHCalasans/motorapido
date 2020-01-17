@@ -4,6 +4,7 @@
     using Microsoft.AppCenter.Crashes;
     using MotoRapido.BD.Repositorio;
     using MotoRapido.Customs;
+    using MotoRapido.Interfaces;
     using MotoRapido.Models;
     using Newtonsoft.Json;
     using Plugin.Connectivity;
@@ -434,8 +435,10 @@
         public static void TratarMensagemChamada(string json)
         {
             var chamadaNova = JsonConvert.DeserializeObject<Chamada>(json);
-            chamadaNova.dataRecebimento = DateTime.Now;
+            chamadaNova.dataRecebimento = DateTime.Now; 
             CrossSettings.Current.Set("ChamadaParaResposta", chamadaNova);
+            Thread t = new Thread(NovaThread);
+            t.Start();
             if (App.IsInForeground)
                 MessagingCenter.Send(chamadaNova, "NovaChamada");
             //  Device.BeginInvokeOnMainThread(async () => await App.Current.MainPage.DisplayAlert("Nova Chamada", "Nova Chamada", "OK"));
@@ -443,14 +446,35 @@
             else
             {
                 //  CrossSettings.Current.Set("ChamadaParaResposta", chamadaNova);
-                 CrossLocalNotifications.Current.Show("Nova Chamada", "Nova chamada recebida!");
+
+               
+                CrossLocalNotifications.Current.Show("Nova Chamada", "Nova chamada recebida!");
+
             }
+        }
+
+        private static void NovaThread()
+        {
+            int c = 0;
+            while (true)
+            {
+                IAudio audio = Xamarin.Forms.DependencyService.Get<IAudio>();
+                audio.PlayAudio();
+                Thread.Sleep(TimeSpan.FromSeconds(1));
+                if (c == 4)
+                    break;
+
+                c++;
+            }
+
         }
 
         public static void TesteMensagemChamada()
         {
-            CrossSettings.Current.Set("ChamadaParaResposta", true);
-          CrossLocalNotifications.Current.Show("Nova Chamada", "Nova chamada recebida!");            
+            Thread t = new Thread(NovaThread);
+            t.Start();
+            //CrossSettings.Current.Set("ChamadaParaResposta", true);
+            CrossLocalNotifications.Current.Show("Nova Chamada", "Nova chamada recebida!");            
         }
 
 
