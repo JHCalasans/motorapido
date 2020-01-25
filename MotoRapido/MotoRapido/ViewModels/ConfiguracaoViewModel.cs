@@ -1,17 +1,12 @@
 ﻿using Acr.Settings;
 using Acr.UserDialogs;
 using Microsoft.AppCenter.Crashes;
-using MotoRapido.Customs;
-using MotoRapido.Models;
 using Newtonsoft.Json;
 using Plugin.Geolocator;
 using Prism.Commands;
-using Prism.Mvvm;
 using Prism.Navigation;
 using Prism.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 

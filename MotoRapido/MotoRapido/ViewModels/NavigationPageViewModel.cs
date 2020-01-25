@@ -1,12 +1,8 @@
-﻿using Prism.Commands;
-using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Prism.Mvvm;
 
 namespace MotoRapido.ViewModels
 {
-	public class NavigationPageViewModel : BindableBase
+    public class NavigationPageViewModel : BindableBase
 	{
         public NavigationPageViewModel()
         {

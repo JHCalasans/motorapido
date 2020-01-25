@@ -1,18 +1,12 @@
-﻿using Prism.Commands;
-using Prism.Mvvm;
-using Prism.Navigation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Prism.Services;
-using System.Threading.Tasks;
-using Plugin.Geolocator.Abstractions;
+﻿using Microsoft.AppCenter.Crashes;
 using Plugin.Geolocator;
-using System.Diagnostics;
-using Plugin.Permissions.Abstractions;
 using Plugin.Permissions;
-using Microsoft.AppCenter.Crashes;
+using Plugin.Permissions.Abstractions;
+using Prism.Commands;
+using Prism.Navigation;
+using Prism.Services;
+using System;
+using System.Diagnostics;
 
 namespace MotoRapido.ViewModels
 {

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MotoRapido.Models;
+﻿using MotoRapido.Models;
 
 namespace MotoRapido.Interfaces
 {

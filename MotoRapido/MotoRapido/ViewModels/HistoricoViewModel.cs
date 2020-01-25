@@ -1,16 +1,11 @@
-﻿using Prism.Commands;
-using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using MotoRapido.Models;
 using Prism.Navigation;
 using Prism.Services;
 using System.Collections.ObjectModel;
-using MotoRapido.Models;
 
 namespace MotoRapido.ViewModels
 {
-	public class HistoricoViewModel : ViewModelBase
+    public class HistoricoViewModel : ViewModelBase
     {
 
 

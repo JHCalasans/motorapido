@@ -2,8 +2,6 @@
 using Prism.Mvvm;
 using SQLite;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MotoRapido.Models
 {

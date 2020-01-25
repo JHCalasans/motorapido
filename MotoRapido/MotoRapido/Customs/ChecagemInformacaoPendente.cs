@@ -1,17 +1,7 @@
-﻿using Acr.Settings;
-using Matcha.BackgroundService;
-using MotoRapido.Models;
+﻿using Matcha.BackgroundService;
 using MotoRapido.ViewModels;
-using Newtonsoft.Json;
-using Plugin.Connectivity;
-using Plugin.LocalNotifications;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using Xamarin.Essentials;
 
 namespace MotoRapido.Customs
 {

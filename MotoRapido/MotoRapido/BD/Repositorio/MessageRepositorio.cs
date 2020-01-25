@@ -1,7 +1,5 @@
-﻿using System;
+﻿using MotoRapido.Models;
 using System.Collections.Generic;
-using System.Text;
-using MotoRapido.Models;
 
 namespace MotoRapido.BD.Repositorio
 {

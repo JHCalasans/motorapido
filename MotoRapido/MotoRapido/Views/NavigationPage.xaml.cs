@@ -1,6 +1,4 @@
-﻿using Xamarin.Forms;
-
-namespace MotoRapido.Views
+﻿namespace MotoRapido.Views
 {
     public partial class NavigationPage : Xamarin.Forms.NavigationPage
     {

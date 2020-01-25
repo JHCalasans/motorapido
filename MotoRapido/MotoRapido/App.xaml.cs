@@ -1,17 +1,14 @@
 ﻿using Acr.Settings;
 using Com.OneSignal;
 using Com.OneSignal.Abstractions;
-using Matcha.BackgroundService;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
-using MotoRapido.Customs;
 using MotoRapido.Views;
 using Prism.Navigation;
 using Prism.Unity;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;

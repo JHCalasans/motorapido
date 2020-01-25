@@ -25,8 +25,10 @@ namespace MotoRapido.ViewModels
         public MensagemViewModel(INavigationService navigationService, IPageDialogService dialogService)
             : base(navigationService, dialogService)
         {
-            ListMessages = new ObservableCollection<Message>(ObterMensagens());
-
+            var tempList = ObterMensagens();
+            var nvList = tempList.OrderBy(msg => msg.codMessage).ToList();
+            ListMessages = new ObservableCollection<Message>(nvList);
+           
         }
 
         public async void EnviarNovaMensagem()

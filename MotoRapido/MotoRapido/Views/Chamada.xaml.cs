@@ -1,7 +1,4 @@
-﻿using MotoRapido.Customs;
-using MotoRapido.ViewModels;
-using Xamarin.Forms;
-using Xamarin.Forms.GoogleMaps;
+﻿using Xamarin.Forms;
 
 namespace MotoRapido.Views
 {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MotoRapido.Models
+﻿namespace MotoRapido.Models
 {
     public class TextValue
     {

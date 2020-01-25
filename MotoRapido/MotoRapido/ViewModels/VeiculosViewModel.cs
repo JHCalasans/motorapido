@@ -4,19 +4,17 @@ using Microsoft.AppCenter.Crashes;
 using MotoRapido.Models;
 using Newtonsoft.Json;
 using Prism.Commands;
-using Prism.Mvvm;
 using Prism.Navigation;
 using Prism.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 
 namespace MotoRapido.ViewModels
 {
-	public class VeiculosViewModel : ViewModelBase
+    public class VeiculosViewModel : ViewModelBase
 	{
 
         public DelegateCommand<RetornoVeiculosMotorista> SelecionarVeiculoCommand =>

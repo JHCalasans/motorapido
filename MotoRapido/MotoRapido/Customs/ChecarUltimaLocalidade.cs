@@ -1,11 +1,7 @@
 ﻿using Acr.Settings;
 using Matcha.BackgroundService;
 using MotoRapido.ViewModels;
-using Prism.Navigation;
-using Prism.Services;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MotoRapido.Customs
