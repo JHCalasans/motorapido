@@ -57,7 +57,7 @@ namespace MotoRapido.ViewModels
                     UserDialogs.Instance.ShowLoading("Carregando...");
                     Motorista motorista = new Motorista();
                     motorista.senha = HashPassword(Senha);
-                    motorista.IDMotorista = Int32.Parse(IdMoto);
+                    motorista.iDMotorista = Int32.Parse(IdMoto);
                     motorista.idAparelho = App.DeviceID;
                     motorista.idPush = App.OneSignalID;
 

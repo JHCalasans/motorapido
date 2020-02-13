@@ -271,6 +271,18 @@ namespace MotoRapido.ViewModels
                 }
                 else
                 {
+                    Pin localAtualPin = new Pin()
+                    {
+                        Type = PinType.Place,
+                        Label = "Atual",
+                        Position = new Position(pos.Latitude, pos.Longitude),
+                        IsDraggable = true,
+                       // Icon = BitmapDescriptorFactory.FromBundle("capacete.png")
+                        Icon = BitmapDescriptorFactory.DefaultMarker(Color.Blue)
+                    };
+                     Pins.Add(localAtualPin);
+                  //  MoveToRegionReq.MoveToRegion(MapSpan.FromCenterAndRadius(localAtualPin.Position, Distance.FromKilometers(0.3)));
+
                     Pin inicioPin = new Pin()
                     {
                         Type = PinType.Place,
