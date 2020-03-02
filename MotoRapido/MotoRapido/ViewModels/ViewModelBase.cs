@@ -711,20 +711,20 @@
             if (CrossSettings.Current.Contains("ChamadaEmCorrida"))
             {
                 AreaPosicao.msgErro = "Chamada Em Andamento!";
-                double distancia = Location.CalculateDistance(new Location(UltimaLocalizacaoValida.Latitude, UltimaLocalizacaoValida.Longitude),
-                    new Location(position.Latitude, position.Longitude), DistanceUnits.Kilometers);
+                //double distancia = Location.CalculateDistance(new Location(UltimaLocalizacaoValida.Latitude, UltimaLocalizacaoValida.Longitude),
+                //    new Location(position.Latitude, position.Longitude), DistanceUnits.Kilometers);
 
 
-                chamadatemp.distanciaPercorrida = chamadatemp.distanciaPercorrida + (float)distancia;
+                //chamadatemp.distanciaPercorrida = chamadatemp.distanciaPercorrida + (float)distancia;
 
-                if (distancia > 0)
-                {
-                    chamadatemp.valorFinal = (float.Parse(chamadatemp.valorFinal) + (chamadatemp.valorPorDistancia * (float)distancia)).ToString("N2");
-                    CrossSettings.Current.Set("ChamadaEmCorrida", chamadatemp);
+                //if (distancia > 0)
+                //{
+                //    chamadatemp.valorFinal = (float.Parse(chamadatemp.valorFinal) + (chamadatemp.valorPorDistancia * (float)distancia)).ToString("N2");
+                //    CrossSettings.Current.Set("ChamadaEmCorrida", chamadatemp);
 
-                }
-                else
-                    CrossSettings.Current.Set("ChamadaEmCorrida", chamadatemp);
+                //}
+                //else
+                //    CrossSettings.Current.Set("ChamadaEmCorrida", chamadatemp);
             }
             else if (CrossSettings.Current.Contains("ChamadaAceita"))
             {

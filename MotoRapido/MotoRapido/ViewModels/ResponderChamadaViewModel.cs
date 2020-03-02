@@ -286,6 +286,7 @@ namespace MotoRapido.ViewModels
                     {
                         var respStr = await response.Content.ReadAsStringAsync();
                         chamada = JsonConvert.DeserializeObject<Chamada>(respStr);
+                        chamada.valorFinal = chamada.valorPrevisto.ToString();
                         CrossSettings.Current.Remove("ChamadaAceita");
                         CrossSettings.Current.Set("ChamadaAceita", chamada);
                         CrossSettings.Current.Remove("tempoEsperaAceitacao");

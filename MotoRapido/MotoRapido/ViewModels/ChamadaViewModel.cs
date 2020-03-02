@@ -133,6 +133,7 @@ namespace MotoRapido.ViewModels
             if (CrossSettings.Current.Contains("ChamadaAceita"))
             {
                 Chamada = CrossSettings.Current.Get<Chamada>("ChamadaAceita");
+                Chamada.valorFinal = Chamada.valorPrevisto.ToString();
                 TextoValor = "Previsão R$" + Chamada.valorPrevisto;
                 TextoBotaoFinal = "Cancelar";
                 ShowBotaoInicio = true;
@@ -451,7 +452,7 @@ namespace MotoRapido.ViewModels
                     Chamada chamadaFinal = CrossSettings.Current.Get<Chamada>("ChamadaEmCorrida");
 
 
-                    MessagingCenter.Unsubscribe<ViewModelBase>(this, "MudancaValor");
+                  //  MessagingCenter.Unsubscribe<ViewModelBase>(this, "MudancaValor");
 
                     MessagingCenter.Unsubscribe<ViewModelBase>(this, "MudancaPosicao");
 
