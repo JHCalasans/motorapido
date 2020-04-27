@@ -61,6 +61,7 @@
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="2.1.1" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="2.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="Plugin.Badge" Version="2.2.1" />
     <PackageReference Include="Plugin.Permissions" Version="3.0.0.12" />
     <PackageReference Include="PureWebSockets" Version="3.0.0" />
     <PackageReference Include="sqlite-net-pcl" Version="1.5.231" />

@@ -14,6 +14,8 @@ namespace MotoRapido.Models
 
         public String destino { get; set; }
 
+        public String valor { get; set; }
+
         public bool showDestino
         {
             get { return situacao.Equals("FINALIZADA"); }

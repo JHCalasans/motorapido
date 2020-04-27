@@ -547,6 +547,9 @@ namespace MotoRapido.ViewModels
                     if (response.IsSuccessStatusCode)
                     {
                         var respStr = await response.Content.ReadAsStringAsync();
+                        Device.OpenUri(new Uri("https://www.waze.com/ul?ll=" + Chamada.latitudeDestino +"," +
+                            Chamada.longitudeDestino+"&navigate=yes&zoom=17"));
+
 
                     }
                     else

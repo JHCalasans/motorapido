@@ -78,9 +78,14 @@ namespace MotoRapido.Models
         public String longitudeDestino { get; set; }
 
 
-        public String destinoFormatado
+        public String partidaFormatada
         {
             get { return logradouroOrigem + $" - {numeroOrigem}; " + bairroOrigem; }
+        }
+
+        public String destinoFormatado
+        {
+            get { return logradouroDestino + $" - {numeroDestino}; " + bairroDestino; }
         }
 
         public String polylines { get; set; }

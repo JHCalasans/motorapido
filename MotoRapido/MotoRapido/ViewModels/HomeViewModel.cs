@@ -322,6 +322,7 @@ namespace MotoRapido.ViewModels
         private async void IrParaHistorico()
         {
 
+
             try
             {
                 UserDialogs.Instance.ShowLoading("Carregando...");

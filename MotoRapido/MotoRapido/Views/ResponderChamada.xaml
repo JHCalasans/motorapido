@@ -10,19 +10,19 @@
 
 
     <StackLayout HorizontalOptions="Center">
-        <Label Text="Chamada"  HorizontalOptions="Center" FontSize="Medium"  TextDecorations="Underline"
+        <Label Text="Chamada"  HorizontalOptions="Center" FontSize="Large"  TextDecorations="Underline"
                FontAttributes="Bold" Margin="0,80,0,20">
         </Label>
-        <Label Text="{Binding chamada.destinoFormatado}" HorizontalOptions="Center"/>
+        <Label Text="{Binding chamada.partidaFormatada}" HorizontalOptions="Center"  FontSize="Large"/>
 
         <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-            <Label Text="Cliente : " FontAttributes="Bold"></Label>
-            <Label Text="{Binding chamada.cliente.nome}"></Label>
+            <Label Text="Cliente : " FontAttributes="Bold" FontSize="Large"></Label>
+            <Label Text="{Binding chamada.cliente.nome}"  FontSize="Large"></Label>
         </StackLayout>
 
         <StackLayout Orientation="Horizontal" HorizontalOptions="Center" IsVisible="{Binding chamada.existeObs}">
-            <Label Text="Obs : " FontAttributes="Bold"></Label>
-            <Label Text="{Binding chamada.observacao}"></Label>
+            <Label Text="Obs : " FontAttributes="Bold"  FontSize="Large"></Label>
+            <Label Text="{Binding chamada.observacao}"  FontSize="Large"></Label>
         </StackLayout>
 
 

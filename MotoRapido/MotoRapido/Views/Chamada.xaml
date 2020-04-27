@@ -19,6 +19,19 @@
                 <bindings:MoveToRegionBehavior Request="{Binding MoveToRegionReq}"></bindings:MoveToRegionBehavior>
             </maps:Map.Behaviors>
         </maps:Map>
+
+        <Frame>
+            <StackLayout>
+                <StackLayout Orientation="Horizontal" HorizontalOptions="Center" >
+                    <Label Text="Partida : " FontAttributes="Bold" FontSize="Medium"  HorizontalTextAlignment="Start"></Label>
+                    <Label Text="{Binding Chamada.partidaFormatada}" HorizontalOptions="Center"  FontSize="Medium" WidthRequest="300"></Label>
+                </StackLayout>
+                <StackLayout Orientation="Horizontal" HorizontalOptions="Center" >
+                    <Label Text="Destino : " FontAttributes="Bold" FontSize="Medium"  HorizontalTextAlignment="Start"></Label>
+                    <Label Text="{Binding Chamada.destinoFormatado}" HorizontalOptions="Center"  FontSize="Medium" WidthRequest="300"></Label>
+                </StackLayout>
+            </StackLayout>
+        </Frame>
         <StackLayout Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="Center" >
             <Button Text="Iniciar" BackgroundColor="Green" Padding="0,0,10,0" IsVisible="{Binding ShowBotaoInicio}"
                     Command="{Binding IniciarCorridaCommand}"></Button>

@@ -37,9 +37,13 @@
                                         <Label Text="Situação: " TextColor="Black" VerticalOptions="Center" WidthRequest="80"></Label>
                                         <Label Text="{Binding situacao}" TextColor="Gray"></Label>
                                     </StackLayout>
-                                    <StackLayout Orientation="Horizontal" IsVisible="{Binding showDestino}">
+                                    <StackLayout Orientation="Horizontal">
                                         <Label Text="Destino: " TextColor="Black" VerticalOptions="Center" WidthRequest="80"></Label>
                                         <Label Text="{Binding destino}" TextColor="Gray"></Label>
+                                    </StackLayout>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="Valor: " TextColor="Black" VerticalOptions="Center" WidthRequest="80"></Label>
+                                        <Label Text="{Binding valor}" TextColor="Gray"></Label>
                                     </StackLayout>
                                 </StackLayout>
                             </StackLayout>
