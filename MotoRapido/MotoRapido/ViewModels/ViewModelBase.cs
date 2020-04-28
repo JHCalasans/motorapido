@@ -655,20 +655,6 @@
 
 
 
-                // if (UltimaLocalizacaoValida == null)
-                // {
-                //   Position pos;
-                //while (_posicaoTeste == new Position(0, 0) || _posicaoTeste == null)
-                //   await  GetCurrentPosition();
-
-                //  PositionEventArgs args = new PositionEventArgs(pos);
-                // CrossSettings.Current.Set("UltimaLocalizacaoValida", await GetCurrentPosition());
-                // PositionChanged(null, args);
-                //pos = await GetCurrentPosition();
-                //CrossSettings.Current.Set("UltimaLocalizacaoValida", pos);
-                //Localizar(pos);
-                //  }
-
                 CrossGeolocator.Current.PositionChanged += PositionChanged;
                 CrossGeolocator.Current.PositionError += PositionError;
 

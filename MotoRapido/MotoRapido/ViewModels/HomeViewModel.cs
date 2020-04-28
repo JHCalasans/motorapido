@@ -58,6 +58,13 @@ namespace MotoRapido.ViewModels
             set { SetProperty(ref _estaLivre, value); }
         }
 
+        private Boolean _existePendencia;
+
+        public Boolean ExistePendencia
+        {
+            get { return _existePendencia; }
+            set { SetProperty(ref _existePendencia, value); }
+        }
 
         private Color _corDeFundoStatus;
 
@@ -127,20 +134,6 @@ namespace MotoRapido.ViewModels
                         {
                             IniciarTimerPosicao();
                         }
-                        //else
-                        //{
-                        //    //CrossSettings.Current.Set("GPSDesabilitado", true);
-                        //    MessagingCenter.Subscribe<App, Boolean>(this, "GPSHabilitou", (sender, args) =>
-                        //    {
-                        //        if (MotoristaLogado.disponivel.Equals("S") && args)
-                        //            BuscarLocalizacao();
-
-                        //        else if (MotoristaLogado.disponivel.Equals("S") && !args)
-                        //            AreaPosicao.msgErro = "Favor ativar gps no celular.";
-                        //    });
-                        //    AreaPosicao.msgErro = "Favor ativar gps no celular.";
-                        //    // await DialogService.DisplayAlertAsync("Aviso", "Favor ativar gps no celular.", "OK");
-                        //}
                         if (UltimaLocalizacaoValida == null)
                         {
                             // Thread.Sleep(TimeSpan.FromSeconds(5));
@@ -501,6 +494,7 @@ namespace MotoRapido.ViewModels
                         
                         });
 
+                        //Ouvindo mensagem de chat
                         MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "NovaMensagemChat");
                         MessagingCenter.Subscribe<MensagemRespostaSocket>(this, "NovaMensagemChat", (sender) =>
                         {
@@ -512,6 +506,14 @@ namespace MotoRapido.ViewModels
                                 MessageDateTime = DateTime.ParseExact(resposta[1], "dd/MM/yyyy hh:mm", System.Globalization.CultureInfo.InvariantCulture)
                             };
                             GravarMensagem(message);
+
+                        });
+
+                        //Ouvindo mensagem de nova pendência
+                        MessagingCenter.Unsubscribe<MensagemRespostaSocket>(this, "NovaPendencia");
+                        MessagingCenter.Subscribe<MensagemRespostaSocket>(this, "NovaPendencia", (sender) =>
+                        {
+                            ExistePendencia = sender.msg.Equals("true");
 
                         });
 

@@ -180,6 +180,8 @@ namespace MotoRapido.Customs
                 case "TesteChamada": TesteMensagemChamada(); break;
                 case "IndisponivelResp": MessagingCenter.Send(new MensagemRespostaSocket() { msg = "Motorista Indisponível" }, "IndisponivelResp"); break;
                 case "NovaMensagemChat": MessagingCenter.Send(new MensagemRespostaSocket() { msg = resp[1] + "=>" + resp[2] }, "NovaMensagemChat"); break;
+                case "NovaPendencia": MessagingCenter.Send(new MensagemRespostaSocket() { msg = resp[1] }, "NovaPendencia"); break;
+
                     //CrossNotifications.Current.Send(new Notification() {Title = "Nova Chamada", Vibrate = true })   
             }
             // WebSocketClientClass._ws, "ErroPosicaoArea", resp[0] + DateTime.No

@@ -95,7 +95,8 @@
                     <TapGestureRecognizer Command="{Binding PendenciasCommand}" NumberOfTapsRequired="1"></TapGestureRecognizer>
                 </Image.GestureRecognizers>
             </Image>
-            <plugin:Badge BadgeText="1" BadgeTextColor="White" BackgroundColor="Red" Grid.Row="1" Grid.Column="1" BadgeFontSize="15" VerticalOptions="Start"   Margin="10,-10,0,0" HorizontalOptions="Start" > </plugin:Badge>
+            <plugin:Badge BadgeText="!" BadgeTextColor="White" IsVisible="{Binding ExistePendencia}"
+                          BackgroundColor="Red" Grid.Row="1" Grid.Column="1" BadgeFontSize="15" VerticalOptions="Start"   Margin="10,-10,0,0" HorizontalOptions="Start" > </plugin:Badge>
           
             <Image Source="{customs:EmbeddedImage  MotoRapido.Imagens.btn_historico.png}" Grid.Row="2" Grid.Column="0" WidthRequest="160" HeightRequest="160">
                 <Image.GestureRecognizers>
