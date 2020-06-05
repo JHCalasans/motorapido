@@ -1,10 +1,12 @@
 ﻿using Acr.Settings;
 using Acr.UserDialogs;
 using Microsoft.AppCenter.Crashes;
+using MotoRapido.Interfaces;
 using MotoRapido.Models;
 using Newtonsoft.Json;
 using Plugin.Connectivity;
 using Plugin.Geolocator;
+using Plugin.LocalNotifications;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using Prism.Commands;
@@ -298,9 +300,10 @@ namespace MotoRapido.ViewModels
                 await DialogService.DisplayAlertAsync("Aviso", "Motorista Offline", "OK");
         }
 
-        private async void IrParaConfig()
+        private async  void IrParaConfig()
         {
-            await NavigationService.NavigateAsync("Configuracao");
+             await NavigationService.NavigateAsync("Configuracao");
+           
         }
 
         private async void IrParaChamada()
@@ -506,6 +509,8 @@ namespace MotoRapido.ViewModels
                                 MessageDateTime = DateTime.ParseExact(resposta[1], "dd/MM/yyyy hh:mm", System.Globalization.CultureInfo.InvariantCulture)
                             };
                             GravarMensagem(message);
+                            IAudio audio = Xamarin.Forms.DependencyService.Get<IAudio>();
+                            audio.PlayAudioChat();
 
                         });
 

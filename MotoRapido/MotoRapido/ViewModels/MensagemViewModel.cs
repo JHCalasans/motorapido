@@ -1,4 +1,5 @@
 ﻿using MotoRapido.Customs;
+using MotoRapido.Interfaces;
 using MotoRapido.Models;
 using Prism.Commands;
 using Prism.Navigation;
@@ -66,6 +67,7 @@ namespace MotoRapido.ViewModels
                 };
                 ListMessages.Add(message);
                 GravarMensagem(message, ListMessages);
+               
             });
         }
 

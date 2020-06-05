@@ -1,7 +1,9 @@
 ﻿using Acr.UserDialogs;
 using Android.App;
+using Android.Content;
 using Android.Content.PM;
 using Android.Locations;
+using Android.Media;
 using Android.OS;
 using Android.Runtime;
 using Matcha.BackgroundService.Droid;
@@ -53,6 +55,7 @@ namespace MotoRapido.Droid
             LocationManager mlocManager = (LocationManager)GetSystemService(LocationService);
             App.IsGPSEnable = mlocManager.IsProviderEnabled(LocationManager.GpsProvider);
             ObterID();
+
 
             LoadApplication(new App(new AndroidInitializer()));
 
